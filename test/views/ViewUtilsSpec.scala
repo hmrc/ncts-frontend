@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package viewmodels
+package views
 
-sealed trait LegendSize
+import base.SpecBase
 
-object LegendSize {
-  case object ExtraLarge extends WithCssClass("govuk-fieldset__legend--xl") with LegendSize
-  case object Large      extends WithCssClass("govuk-fieldset__legend--l") with LegendSize
-  case object Medium     extends WithCssClass("govuk-fieldset__legend--m") with LegendSize
-  case object Small      extends WithCssClass("govuk-fieldset__legend--s") with LegendSize
+class ViewUtilsSpec extends SpecBase {
+
+  "ViewUtils" - {
+    "titleNoForm should produce a title with no form" in {
+      val application = applicationBuilder().build()
+      ViewUtils.titleNoForm("testTime", None)(messages(application)) mustBe "testTime - ncts-frontend - GOV.UK"
+    }
+
+  }
 }
