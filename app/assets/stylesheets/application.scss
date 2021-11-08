@@ -1,0 +1,7 @@
+$govuk-assets-path: "/ncts-frontend/assets/lib/govuk-frontend/govuk/assets/";
+$hmrc-assets-path: "/ncts-frontend/assets/lib/hmrc-frontend/hmrc/";
+@import "lib/hmrc-frontend/hmrc/all";
+@import "lib/govuk-frontend/govuk/all";
+
+// Components
+@import "components/_typography";
