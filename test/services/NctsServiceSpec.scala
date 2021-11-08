@@ -22,8 +22,6 @@ import models.responses.ErrorResponse.StatusResponseError
 import models.responses.StatusResponse
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar.mock
-import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
 
@@ -31,25 +29,24 @@ class NctsServiceSpec extends SpecBase {
 
   val nctsConnector = mock[NctsConnector]
   val service = new NctsService(nctsConnector)
-  implicit val hc = HeaderCarrier()
 
   "checkStatus" - {
     "return a valid status response" in {
-
       when(nctsConnector.checkStatus()(any())) thenReturn Future.successful(Right(StatusResponse(online = true)))
       val result = service.checkStatus().futureValue
 
       result.fold(
         _ => "should not return an error response",
-        response => response.online mustBe true
+        response => response mustBe StatusResponse(online = true)
       )
     }
+
     "return an error response when error occurs" in {
-      when(nctsConnector.checkStatus()(any())) thenReturn Future.successful(Left(StatusResponseError("error")))
+      when(nctsConnector.checkStatus()(any())) thenReturn Future.successful(Left(StatusResponseError("something went wrong")))
       val result = service.checkStatus().futureValue
 
       result.fold(
-        errorResponse => errorResponse mustBe StatusResponseError("error"),
+        errorResponse => errorResponse mustBe StatusResponseError("something went wrong"),
         _ => "should not succeed"
       )
     }

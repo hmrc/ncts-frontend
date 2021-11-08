@@ -16,6 +16,8 @@
 
 package controllers
 
+import models.responses.ErrorResponse.StatusResponseError
+import models.responses.StatusResponse
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.NctsService
@@ -33,18 +35,10 @@ class ServiceStatusCheckController @Inject()(
                                             ) extends FrontendBaseController with I18nSupport {
 
 
-
   def onPageLoad(): Action[AnyContent] = Action.async { implicit request =>
-
-    nctsService.checkStatus().flatMap(statusResponseEither =>
-      statusResponseEither.fold(
-        _ => Future.successful(NoContent),
-        statusResponse => Future.successful(Ok(view())) //TODO: Pass statusResponse to the view to display the status
-      ))
+    nctsService.checkStatus().flatMap {
+      case Left(StatusResponseError(_)) => Future.successful(InternalServerError)
+      case Right(StatusResponse(_)) => Future.successful(Ok(view())) //TODO: Pass statusResponse to the view to display the status
+    }
   }
-
-  /*    for {
-    statusResponseEither <- nctsService.checkStatus()
-    statusResponse <- Future.fromTry(statusResponseEither.left.map(err => new Exception(err.toString)).toTry)
-  } yield Ok(view()) //TODO: Pass statusResponse to the view to display the status*/
 }

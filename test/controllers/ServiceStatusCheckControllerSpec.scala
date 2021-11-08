@@ -17,10 +17,10 @@
 package controllers
 
 import base.SpecBase
+import models.responses.ErrorResponse.StatusResponseError
 import models.responses.StatusResponse
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -40,7 +40,6 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
   "Service Status Check Controller" - {
 
     "must return OK and the correct view for a GET" in {
-
       when(nctsService.checkStatus()(any())) thenReturn Future(Right(StatusResponse(true)))
 
       val application = applicationBuilder().overrides(mocks).build()
@@ -55,6 +54,19 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
       }
     }
 
-    "must throw"
+    "must return INTERNAL_SERVER_ERROR when backend returns an error response" in {
+      when(nctsService.checkStatus()(any())) thenReturn Future(Left(StatusResponseError("something went wrong")))
+
+      val application = applicationBuilder().overrides(mocks).build()
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.ServiceStatusCheckController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result) mustBe INTERNAL_SERVER_ERROR
+      }
+    }
   }
 }
