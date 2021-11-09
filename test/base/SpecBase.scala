@@ -20,18 +20,27 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.WsScalaTestClient
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
+import uk.gov.hmrc.http.HeaderCarrier
 
 trait SpecBase
   extends AnyFreeSpec
     with Matchers
+    with WsScalaTestClient
+    with GuiceOneAppPerSuite
+    with MockitoSugar
     with TryValues
     with OptionValues
     with ScalaFutures
     with IntegrationPatience {
+
+  implicit val hc = HeaderCarrier()
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 

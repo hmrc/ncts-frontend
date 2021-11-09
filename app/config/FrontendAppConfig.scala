@@ -21,9 +21,10 @@ import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
-class FrontendAppConfig @Inject() (configuration: Configuration) {
+class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
 
   val host: String    = configuration.get[String]("host")
   val appName: String = configuration.get[String]("appName")
@@ -38,6 +39,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/ncts-frontend"
 
   val languageTranslationEnabled: Boolean = configuration.get[Boolean]("features.welsh-translation")
+
+  private val nctsServiceName = "ncts"
+  val nctsUrl: String = s"${servicesConfig.baseUrl(nctsServiceName)}/$nctsServiceName"
 
   def languageMap: Map[String, Lang] = Map(
     "en" -> Lang("en"),
