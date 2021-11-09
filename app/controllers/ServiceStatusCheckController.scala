@@ -16,13 +16,12 @@
 
 package controllers
 
-import models.responses.ErrorResponse.StatusResponseError
 import models.responses.StatusResponse
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.NctsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.{IndexView, ServiceAvailability}
+import views.html.ServiceAvailability
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -37,8 +36,8 @@ class ServiceStatusCheckController @Inject()(
 
   def onPageLoad(): Action[AnyContent] = Action.async { implicit request =>
     nctsService.checkStatus().flatMap {
-      case Left(StatusResponseError(_)) => Future.successful(Ok(view(StatusResponse(true))))
-      case Right(StatusResponse(_)) => Future.successful(Ok(view(StatusResponse(true)))) //TODO: Pass statusResponse to the view to display the status
+      case Right(statusResponse: StatusResponse) => Future.successful(Ok(view(statusResponse)))
+      case _ => Future.successful(InternalServerError)
     }
   }
 }
