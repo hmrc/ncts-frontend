@@ -21,7 +21,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.NctsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.IndexView
+import views.html.ServiceAvailability
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -30,13 +30,13 @@ import scala.concurrent.Future
 class ServiceStatusCheckController @Inject()(
                                               val controllerComponents: MessagesControllerComponents,
                                               nctsService: NctsService,
-                                              view: IndexView
+                                              view: ServiceAvailability
                                             ) extends FrontendBaseController with I18nSupport {
 
 
   def onPageLoad(): Action[AnyContent] = Action.async { implicit request =>
     nctsService.checkStatus().flatMap {
-      case Right(statusResponse: StatusResponse) => Future.successful(Ok(view())) //TODO: Pass statusResponse to the view to display the status
+      case Right(statusResponse: StatusResponse) => Future.successful(Ok(view(statusResponse)))
       case _ => Future.successful(InternalServerError)
     }
   }

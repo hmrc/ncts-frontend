@@ -1,0 +1,32 @@
+// cards
+.cards__item:focus {
+    background-color: #fd0!important;
+}
+
+.cards__item {
+    background-color: #f8f8f8;
+    display: block;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-decoration: none;
+}
+
+h2.cards__item__header {
+    color: #1d70b8;
+}
+.cards__item:hover {
+    background-color: #005ea5;
+    color: #fff;
+}
+.cards__item:hover .cards__item__header:hover {
+    color: #fff;
+}
+.cards__item:hover p, .cards__item:hover h3 {
+    color: #fff;
+}
+.cards__item:focus p {
+    color: #0b0c0c;
+}
+.cards__item:focus h3 {
+    color: #1d70b8;
+}
