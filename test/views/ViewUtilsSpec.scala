@@ -23,7 +23,7 @@ class ViewUtilsSpec extends SpecBase {
   "ViewUtils" - {
     "titleNoForm should produce a title with no form" in {
       val application = applicationBuilder().build()
-      ViewUtils.titleNoForm("testTime", None)(messages(application)) mustBe "testTime - ncts-frontend - GOV.UK"
+      ViewUtils.titleNoForm("testTime", None)(messages(application)) mustBe "testTime - New Computerised Transit System: service availability and issues - GOV.UK"
     }
 
   }

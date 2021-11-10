@@ -1,4 +1,4 @@
-service.name = ncts-frontend
+service.name = New Computerised Transit System: service availability and issues
 
 site.back = Back
 site.remove = Remove
@@ -34,10 +34,6 @@ error.non_numeric = Give a value using only numbers
 error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
-
-index.title = ncts-frontend
-index.heading = ncts-frontend
-index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
 
 checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
