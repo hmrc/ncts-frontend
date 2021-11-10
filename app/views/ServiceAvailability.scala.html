@@ -33,7 +33,7 @@
         <div class="govuk-grid-column-one-third">
             <div class="cards__item">
                 <h2 class="govuk-heading-s cards__item__header">@messages("service.availability.web.channel.card")</h2>
-                @if(status.online){
+                @if(status.departuresWebHealthy){
                     <p class="govuk-body">@messages("service.availability.web.channel.card.available.description")</p>
                     <span class="govuk-tag govuk-tag--green">@messages("service.availability.web.channel.card.available")</span>
                 } else {
