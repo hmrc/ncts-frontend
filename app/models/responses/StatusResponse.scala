@@ -19,7 +19,7 @@ package models.responses
 import models.responses.ErrorResponse.StatusResponseError
 import org.slf4j.LoggerFactory
 import play.api.http.Status.OK
-import play.api.libs.json.{JsError, JsSuccess, Json, Reads}
+import play.api.libs.json.{JsError, JsSuccess, Json, Reads, Writes}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 case class StatusResponse(online: Boolean)
@@ -30,18 +30,43 @@ object StatusResponse {
 
   implicit val reads: Reads[StatusResponse] = Json.reads[StatusResponse]
 
+  implicit val writes: Writes[StatusResponse] = Json.writes[StatusResponse]
+
   implicit object StatusResponseReads extends HttpReads[Either[ErrorResponse, StatusResponse]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, StatusResponse] =
       response.status match {
-        case OK =>
+        case OK =>{
+        println("")
+        println("")
+        println("")
+        println("OK OK ")
+        println("")
+        println("")
+        println("")
+        println("")
+        println("")
+
           response.json.validate[StatusResponse] match {
             case JsSuccess(model, _) =>
               Right(model)
-            case JsError(error) =>
+            case JsError(error) =>{
+
+
               val errorMessage = error.flatMap(_._2.map(_.message)).mkString("\n")
+
+              println("")
+              println("")
+              println("READER " + errorMessage)
+              println("")
+              println("")
+              println("")
               logger.error(s"Error parsing StatusResponse: $errorMessage")
               Left(StatusResponseError(s"Response in an unexpected format: $errorMessage"))
+            }
+
           }
+
+        }
         case status =>
           logger.error(s"Error retrieving StatusResponse : Status '$status' \n ${response.body}")
           Left(StatusResponseError(s"Unexpected error occurred when checking service status: ${response.body}"))

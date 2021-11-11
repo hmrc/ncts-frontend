@@ -23,6 +23,7 @@ import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.MessagesApi
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.ws.WSClient
 import play.api.test.FakeRequest
 import play.api.{Application, Environment, Mode}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
@@ -60,6 +61,11 @@ trait SpecCommonHelper extends PlaySpec
   lazy val appConfig = app.injector.instanceOf[FrontendAppConfig]
 
   lazy val fakeRequest = FakeRequest("", "").withSession(SessionKeys.sessionId -> "foo")
+
+
+  protected val ws: WSClient = app.injector.instanceOf[WSClient]
+
+  protected val baseUrl = s"http://localhost:11111/ncts"
 
   override def beforeEach(): Unit = {
     resetWiremock()
