@@ -22,7 +22,7 @@ import play.api.http.Status.OK
 import play.api.libs.json.{JsError, JsSuccess, Json, Reads, Writes}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
-case class StatusResponse(online: Boolean)
+case class StatusResponse(departuresWebHealthy: Boolean)
 
 object StatusResponse {
 
@@ -35,38 +35,15 @@ object StatusResponse {
   implicit object StatusResponseReads extends HttpReads[Either[ErrorResponse, StatusResponse]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, StatusResponse] =
       response.status match {
-        case OK =>{
-        println("")
-        println("")
-        println("")
-        println("OK OK ")
-        println("")
-        println("")
-        println("")
-        println("")
-        println("")
-
+        case OK =>
           response.json.validate[StatusResponse] match {
             case JsSuccess(model, _) =>
               Right(model)
-            case JsError(error) =>{
-
-
+            case JsError(error) =>
               val errorMessage = error.flatMap(_._2.map(_.message)).mkString("\n")
-
-              println("")
-              println("")
-              println("READER " + errorMessage)
-              println("")
-              println("")
-              println("")
               logger.error(s"Error parsing StatusResponse: $errorMessage")
               Left(StatusResponseError(s"Response in an unexpected format: $errorMessage"))
-            }
-
           }
-
-        }
         case status =>
           logger.error(s"Error retrieving StatusResponse : Status '$status' \n ${response.body}")
           Left(StatusResponseError(s"Unexpected error occurred when checking service status: ${response.body}"))

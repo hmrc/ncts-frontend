@@ -17,11 +17,11 @@
 package utils
 
 import config.FrontendAppConfig
-import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
 import org.scalatest._
+import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.ws.WSClient
 import play.api.test.FakeRequest
@@ -34,19 +34,10 @@ trait SpecCommonHelper extends PlaySpec
   with GivenWhenThen with TestSuite with ScalaFutures with IntegrationPatience
   with WiremockHelper
   with GuiceOneServerPerSuite with TryValues
-  with BeforeAndAfterEach with BeforeAndAfterAll with Eventually  {
+  with BeforeAndAfterEach with BeforeAndAfterAll with Eventually {
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
   implicit val hc: HeaderCarrier = HeaderCarrier()
-
-  val config: Map[String, Any] = {
-    Map[String, Any](
-      "metrics.enabled" -> false,
-      "auditing.consumer.baseUri.host" -> mockHost,
-      "auditing.consumer.baseUri.port" -> mockPort,
-      "microservice.services.ncts.base-url" -> "http://localhost:11111"
-    )
-  }
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))
@@ -57,15 +48,25 @@ trait SpecCommonHelper extends PlaySpec
   val mockPort = WiremockHelper.wiremockPort.toString
   val mockUrl = s"http://$mockHost:$mockPort"
 
-  implicit lazy val messagesApi = app.injector.instanceOf[MessagesApi]
+  val config: Map[String, Any] = {
+    Map[String, Any](
+      "metrics.enabled" -> false,
+      "auditing.consumer.baseUri.host" -> mockHost,
+      "auditing.consumer.baseUri.port" -> mockPort,
+      "microservice.services.ncts.host" -> mockHost,
+      "microservice.services.ncts.port" -> mockPort
+    )
+  }
+
+  implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(Lang.defaultLang))
+
   lazy val appConfig = app.injector.instanceOf[FrontendAppConfig]
 
   lazy val fakeRequest = FakeRequest("", "").withSession(SessionKeys.sessionId -> "foo")
 
-
   protected val ws: WSClient = app.injector.instanceOf[WSClient]
 
-  protected val baseUrl = s"http://localhost:11111/ncts"
+  protected val baseUrl = s"http://localhost:${port}/new-computerised-transit-system-service-availability-and-issues"
 
   override def beforeEach(): Unit = {
     resetWiremock()

@@ -16,50 +16,42 @@
 
 package connectors
 
-import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import models.responses.StatusResponse
-import play.api.libs.json.{Json, Writes}
-import play.api.libs.ws.WSResponse
+import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers.OK
 import utils.SpecCommonHelper
 
 class NctsConnectorISpec extends SpecCommonHelper {
 
-  import scala.concurrent.duration._
-  import scala.concurrent.{Await, Future}
-
-  val connector = app.injector.instanceOf[NctsConnector]
-
-
-  def jsonOf[A: Writes](obj: A): String =
-    Json.toJson(obj).toString()
-
-  implicit val defaultTimeout: FiniteDuration = 5 seconds
-
-  implicit def extractAwait[A](future: Future[A]): A = await[A](future)
-
-  def await[A](future: Future[A])(implicit timeout: Duration): A = Await.result(future, timeout)
-
   "check status" should {
 
-    "return AddressLookupOnRamp(modulusUrl)" in {
+    "return OK with the correct view for a successful response when service is healthy" in {
 
-      stubFor(
-        get(
-          urlEqualTo(
-            "/ncts/status-check"
-          )
-        ).willReturn(
-          aResponse()
-            .withStatus(OK)
-            .withBody(jsonOf(StatusResponse(online = true)))
-        )
-      )
+      stubGet("/ncts/status-check", OK, Json.toJson(StatusResponse(departuresWebHealthy = true)).toString)
 
-      val response: WSResponse =
-        await(ws.url(s"${baseUrl}/status-check").get())
+      val response = ws.url(s"${baseUrl}/service-availability").get()
 
-      response.status mustBe OK
+      whenReady(response) { result =>
+        result.status mustBe OK
+        result.body must include(messages("service.availability.heading"))
+        result.body must include(messages("service.availability.web.channel.card.available"))
+        result.body must include(messages("service.availability.web.channel.card.available.description"))
+      }
+    }
+
+    "return OK with the correct view for a successful response when service is not healthy" in {
+
+      stubGet("/ncts/status-check", OK, Json.toJson(StatusResponse(departuresWebHealthy = false)).toString)
+
+      val response = ws.url(s"${baseUrl}/service-availability").get()
+
+      whenReady(response) { result =>
+        result.status mustBe OK
+        result.body must include(messages("service.availability.heading"))
+        result.body must include(messages("service.availability.web.channel.card.unavailable.description"))
+        result.body must include(messages("service.availability.web.channel.card.unavailable"))
+      }
     }
   }
 }
