@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package connectors
+package controllers
 
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import models.responses.StatusResponse
-import play.api.libs.json.{JsValue, Json}
-import play.api.test.Helpers.OK
+import play.api.libs.json.Json
+import play.api.test.Helpers._
 import utils.SpecCommonHelper
 
-class NctsConnectorISpec extends SpecCommonHelper {
+class ServiceStatusCheckControllerISpec extends SpecCommonHelper {
 
   "check status" should {
 
     "return OK with the correct view for a successful response when service is healthy" in {
-
       stubGet("/ncts/status-check", OK, Json.toJson(StatusResponse(departuresWebHealthy = true)).toString)
 
       val response = ws.url(s"${baseUrl}/service-availability").get()
@@ -41,7 +39,6 @@ class NctsConnectorISpec extends SpecCommonHelper {
     }
 
     "return OK with the correct view for a successful response when service is not healthy" in {
-
       stubGet("/ncts/status-check", OK, Json.toJson(StatusResponse(departuresWebHealthy = false)).toString)
 
       val response = ws.url(s"${baseUrl}/service-availability").get()
@@ -51,6 +48,26 @@ class NctsConnectorISpec extends SpecCommonHelper {
         result.body must include(messages("service.availability.heading"))
         result.body must include(messages("service.availability.web.channel.card.unavailable.description"))
         result.body must include(messages("service.availability.web.channel.card.unavailable"))
+      }
+    }
+
+    "return INTERNAL_SERVER_ERROR when fail to parse the json response" in {
+      stubGet("/ncts/status-check", OK, "")
+
+      val response = ws.url(s"${baseUrl}/service-availability").get()
+
+      whenReady(response) { result =>
+        result.status mustBe INTERNAL_SERVER_ERROR
+      }
+    }
+
+    "return INTERNAL_SERVER_ERROR when there is an error" in {
+      stubGet("/ncts/status-check", SERVICE_UNAVAILABLE, Json.toJson(StatusResponse(departuresWebHealthy = false)).toString)
+
+      val response = ws.url(s"${baseUrl}/service-availability").get()
+
+      whenReady(response) { result =>
+        result.status mustBe INTERNAL_SERVER_ERROR
       }
     }
   }

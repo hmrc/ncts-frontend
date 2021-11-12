@@ -16,31 +16,28 @@
 
 package utils
 
-import config.FrontendAppConfig
 import org.scalatest._
-import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.Application
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.ws.WSClient
-import play.api.test.FakeRequest
-import play.api.{Application, Environment, Mode}
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext
 
 trait SpecCommonHelper extends PlaySpec
-  with GivenWhenThen with TestSuite with ScalaFutures with IntegrationPatience
+  with ScalaFutures with IntegrationPatience
   with WiremockHelper
-  with GuiceOneServerPerSuite with TryValues
-  with BeforeAndAfterEach with BeforeAndAfterAll with Eventually {
+  with GuiceOneServerPerSuite
+  with BeforeAndAfterEach with BeforeAndAfterAll {
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
-    .in(Environment.simple(mode = Mode.Dev))
     .configure(config)
     .build
 
@@ -59,10 +56,6 @@ trait SpecCommonHelper extends PlaySpec
   }
 
   implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(Lang.defaultLang))
-
-  lazy val appConfig = app.injector.instanceOf[FrontendAppConfig]
-
-  lazy val fakeRequest = FakeRequest("", "").withSession(SessionKeys.sessionId -> "foo")
 
   protected val ws: WSClient = app.injector.instanceOf[WSClient]
 
