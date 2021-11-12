@@ -16,7 +16,13 @@ lazy val root = (project in file("."))
   .settings(SbtDistributablesPlugin.publishingSettings: _*)
   .settings(inConfig(Test)(testSettings): _*)
   .configs(IntegrationTest)
-  .settings(integrationTestSettings(): _*)
+  .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
+  .settings(
+    Keys.fork in IntegrationTest := true,
+    unmanagedSourceDirectories in IntegrationTest := (baseDirectory in IntegrationTest) (base => Seq(base / "it")).value,
+    parallelExecution in IntegrationTest := false,
+    javaOptions += "-Dlogger.resource=logback-test.xml"
+  )
   .settings(majorVersion := 0)
   .settings(useSuperShell in ThisBuild := false)
   .settings(
@@ -80,20 +86,5 @@ lazy val testSettings: Seq[Def.Setting[_]] = Seq(
   fork        := true,
   javaOptions ++= Seq(
     "-Dconfig.resource=test.application.conf"
-  )
-)
-
-lazy val itSettings = Defaults.itSettings ++ Seq(
-  unmanagedSourceDirectories := Seq(
-    baseDirectory.value / "it",
-    baseDirectory.value / "test" / "generators"
-  ),
-  unmanagedResourceDirectories := Seq(
-    baseDirectory.value / "it" / "resources"
-  ),
-  parallelExecution := false,
-  fork := true,
-  javaOptions ++= Seq(
-    "-Dconfig.resource=it.application.conf"
   )
 )
