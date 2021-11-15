@@ -19,7 +19,7 @@ package models.responses
 import models.responses.ErrorResponse.StatusResponseError
 import org.slf4j.LoggerFactory
 import play.api.http.Status.OK
-import play.api.libs.json.{JsError, JsSuccess, Json, Reads}
+import play.api.libs.json.{JsError, JsSuccess, Json, OFormat}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 case class StatusResponse(departuresWebHealthy: Boolean)
@@ -28,7 +28,7 @@ object StatusResponse {
 
   private val logger = LoggerFactory.getLogger(classOf[StatusResponse])
 
-  implicit val reads: Reads[StatusResponse] = Json.reads[StatusResponse]
+  implicit val format: OFormat[StatusResponse] = Json.format[StatusResponse]
 
   implicit object StatusResponseReads extends HttpReads[Either[ErrorResponse, StatusResponse]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, StatusResponse] =

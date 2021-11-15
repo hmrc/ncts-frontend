@@ -20,6 +20,7 @@ object AppDependencies {
     "com.typesafe.play"       %% "play-test"               % PlayVersion.current,
     "org.mockito"             %% "mockito-scala"           % "1.16.0",
     "org.scalacheck"          %% "scalacheck"              % "1.15.3",
+    "com.github.tomakehurst"  %  "wiremock-jre8"           % "2.23.2",
     "com.vladsch.flexmark"    %  "flexmark-all"            % "0.35.10" // Required to stay at this version - see https://github.com/scalatest/scalatest/issues/1736
   ).map(_ % "test, it")
 
