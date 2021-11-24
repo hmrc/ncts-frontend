@@ -37,11 +37,11 @@ class NctsConnectorSpec extends SpecBase {
   "Ncts Connector" - {
     "should return a valid response" in {
       when(mockHttp.GET[Either[ErrorResponse, StatusResponse]](any(), any(), any())(any(), any(), any()))
-        .thenReturn(Future.successful(Right(StatusResponse(departuresWebHealthy = true))))
+        .thenReturn(Future.successful(Right(StatusResponse(departuresApiHealthy = true))))
 
       val result = nctsConnector.checkStatus().futureValue
 
-      result mustBe Right(StatusResponse(departuresWebHealthy = true))
+      result mustBe Right(StatusResponse(departuresApiHealthy = true))
     }
 
     "should return a scheme response error when an error occurs" in {

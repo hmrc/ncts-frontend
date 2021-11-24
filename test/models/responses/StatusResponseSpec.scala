@@ -30,11 +30,11 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
       val json =
         """
           |{
-          |  "departuresWebHealthy": true
+          |  "departuresApiHealthy": true
           |}
           """.stripMargin
 
-      val expectedResult = StatusResponse(departuresWebHealthy = true)
+      val expectedResult = StatusResponse(departuresApiHealthy = true)
 
       val httpResponse = HttpResponse(Status.OK, json)
 

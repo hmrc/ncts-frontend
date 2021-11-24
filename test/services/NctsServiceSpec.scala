@@ -32,12 +32,12 @@ class NctsServiceSpec extends SpecBase {
 
   "checkStatus" - {
     "return a valid status response" in {
-      when(nctsConnector.checkStatus()(any())) thenReturn Future.successful(Right(StatusResponse(departuresWebHealthy = true)))
+      when(nctsConnector.checkStatus()(any())) thenReturn Future.successful(Right(StatusResponse(departuresApiHealthy = true)))
       val result = service.checkStatus().futureValue
 
       result.fold(
         _ => "should not return an error response",
-        response => response mustBe StatusResponse(departuresWebHealthy = true)
+        response => response mustBe StatusResponse(departuresApiHealthy = true)
       )
     }
 
