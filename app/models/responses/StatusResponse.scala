@@ -22,7 +22,7 @@ import play.api.http.Status.OK
 import play.api.libs.json.{JsError, JsSuccess, Json, OFormat}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
-case class StatusResponse(departuresWebHealthy: Boolean)
+case class StatusResponse(gbDeparturesHealthy: Boolean)
 
 object StatusResponse {
 
