@@ -54,8 +54,7 @@ unauthorised.heading = You can’t access this service with this account
 
 service.availability.title=New Computerised Transit System: service availability and issues
 service.availability.heading=New Computerised Transit System: service availability and issues
-service.availability.web.channel.card=Web Channel
-service.availability.web.channel.card.available.description=All services are available
-service.availability.web.channel.card.unavailable.description=All services are unavailable
-service.availability.web.channel.card.available=Available
-service.availability.web.channel.card.unavailable=Unavailable
+service.availability.ncts.gb=NCTS GB
+service.availability.ncts.xi=NCTS XI
+service.availability.status.available=Available
+service.availability.status.unavailable=Unavailable

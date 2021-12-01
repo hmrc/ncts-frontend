@@ -30,17 +30,43 @@
     <h1 class="govuk-heading-xl">@messages("service.availability.heading")</h1>
 
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-third">
-            <div class="cards__item">
-                <h2 class="govuk-heading-s cards__item__header">@messages("service.availability.web.channel.card")</h2>
-                @if(status.gbDeparturesHealthy){
-                    <p class="govuk-body">@messages("service.availability.web.channel.card.available.description")</p>
-                    <span class="govuk-tag govuk-tag--green">@messages("service.availability.web.channel.card.available")</span>
-                } else {
-                    <p class="govuk-body">@messages("service.availability.web.channel.card.unavailable.description")</p>
-                    <span class="govuk-tag govuk-tag--red">@messages("service.availability.web.channel.card.unavailable")</span>
-                }
-            </div>
+        <div class="govuk-grid-column-two-thirds">
+            <table class="govuk-table">
+                <caption class="govuk-table__caption govuk-table__caption--m">Channel status</caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Channel name</th>
+                        <th scope="col" class="govuk-table__header">Availability status</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">@messages("service.availability.ncts.gb")</th>
+                        @if(status.gbDeparturesHealthy){
+                        <td class="govuk-table__cell">
+                            <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
+                        </td>
+                        } else {
+                        <td class="govuk-table__cell">
+                              <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.unavailable")</span>
+                        </td>
+                        }
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">@messages("service.availability.ncts.xi")</th>
+                        <!--TODO: Change the below hard coded value when XI channel is implemented-->
+                        @if(false){
+                        <td class="govuk-table__cell">
+                            <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
+                        </td>
+                        } else {
+                        <td class="govuk-table__cell">
+                            <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.unavailable")</span>
+                        </td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 }

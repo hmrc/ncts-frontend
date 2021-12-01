@@ -33,8 +33,8 @@ class ServiceStatusCheckControllerISpec extends SpecCommonHelper {
       whenReady(response) { result =>
         result.status mustBe OK
         result.body must include(messages("service.availability.heading"))
-        result.body must include(messages("service.availability.web.channel.card.available"))
-        result.body must include(messages("service.availability.web.channel.card.available.description"))
+        result.body must include(messages("service.availability.ncts.gb"))
+        result.body must include(messages("service.availability.status.available"))
       }
     }
 
@@ -46,8 +46,8 @@ class ServiceStatusCheckControllerISpec extends SpecCommonHelper {
       whenReady(response) { result =>
         result.status mustBe OK
         result.body must include(messages("service.availability.heading"))
-        result.body must include(messages("service.availability.web.channel.card.unavailable.description"))
-        result.body must include(messages("service.availability.web.channel.card.unavailable"))
+        result.body must include(messages("service.availability.ncts.gb"))
+        result.body must include(messages("service.availability.status.unavailable"))
       }
     }
 
