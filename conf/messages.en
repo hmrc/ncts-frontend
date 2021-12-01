@@ -52,8 +52,8 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-service.availability.title=New Computerised Transit System: service availability and issues
-service.availability.heading=New Computerised Transit System: service availability and issues
+service.availability.title=Service availability
+service.availability.heading=Service availability
 service.availability.ncts.gb=NCTS GB
 service.availability.ncts.xi=NCTS XI
 service.availability.status.available=Available
