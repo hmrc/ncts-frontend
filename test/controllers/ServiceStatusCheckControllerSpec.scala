@@ -39,8 +39,8 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
 
   "Service Status Check Controller" - {
 
-    "must return OK and the correct view for a GET" in {
-      when(nctsService.checkStatus()(any())) thenReturn Future(Right(StatusResponse(true)))
+    "must return OK and the correct view for a GET for GB" in {
+      when(nctsService.checkStatus()(any())) thenReturn Future(Right(StatusResponse(true,false)))
 
       val application = applicationBuilder().overrides(mocks).build()
 
@@ -53,6 +53,22 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
         status(result) mustBe OK
       }
     }
+
+    "must return OK and the correct view for a GET for XI" in {
+      when(nctsService.checkStatus()(any())) thenReturn Future(Right(StatusResponse(false,true)))
+
+      val application = applicationBuilder().overrides(mocks).build()
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.ServiceStatusCheckController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result) mustBe OK
+      }
+    }
+
 
     "must return INTERNAL_SERVER_ERROR when backend returns an error response" in {
       when(nctsService.checkStatus()(any())) thenReturn Future(Left(StatusResponseError("something went wrong")))
