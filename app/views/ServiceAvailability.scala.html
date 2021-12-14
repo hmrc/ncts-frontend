@@ -55,7 +55,7 @@
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">@messages("service.availability.ncts.xi")</th>
                         <!--TODO: Change the below hard coded value when XI channel is implemented-->
-                        @if(false){
+                        @if(status.xiDeparturesHealthy){
                         <td class="govuk-table__cell">
                             <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
                         </td>

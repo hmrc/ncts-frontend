@@ -30,11 +30,12 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
       val json =
         """
           |{
-          |  "gbDeparturesHealthy": true
+          |  "gbDeparturesHealthy": true,
+          |  "xiDeparturesHealthy": false
           |}
           """.stripMargin
 
-      val expectedResult = StatusResponse(gbDeparturesHealthy = true)
+      val expectedResult = StatusResponse(gbDeparturesHealthy = true,xiDeparturesHealthy = false)
 
       val httpResponse = HttpResponse(Status.OK, json)
 
@@ -43,6 +44,24 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
       result mustBe expectedResult
     }
 
+
+    "return a StatusResponse when status is OK and can be parsed for Xi" in {
+      val json =
+        """
+          |{
+          |  "gbDeparturesHealthy": false,
+          |  "xiDeparturesHealthy": true
+          |}
+          """.stripMargin
+
+      val expectedResult = StatusResponse(gbDeparturesHealthy = false,xiDeparturesHealthy = true)
+
+      val httpResponse = HttpResponse(Status.OK, json)
+
+      val Right(result) = StatusResponseReads.read("GET", "url", httpResponse)
+
+      result mustBe expectedResult
+    }
     "return StatusResponseError" when {
       "the response is on an invalid format" in {
         val invalidJson =
@@ -52,7 +71,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
             |}
           """.stripMargin
 
-        val expectedResult = StatusResponseError("Response in an unexpected format: error.path.missing")
+        val expectedResult = StatusResponseError("Response in an unexpected format: error.path.missing\nerror.path.missing")
 
         val httpResponse = HttpResponse(Status.OK, invalidJson)
 
