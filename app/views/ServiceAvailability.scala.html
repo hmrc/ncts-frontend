@@ -32,17 +32,17 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <table class="govuk-table">
-                <caption class="govuk-table__caption govuk-table__caption--m">System Core Status - Arrivals</caption>
+                <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.arrivals")</caption>
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header">System Core Name</th>
-                        <th scope="col" class="govuk-table__header">Availability status</th>
+                        <th scope="col" class="govuk-table__header">@messages("service.availability.system.name")</th>
+                        <th scope="col" class="govuk-table__header">@messages("service.availability.system.availability")</th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">@messages("service.availability.ncts.gb.arrivals")</td>
-                        @if(status.gbDeparturesHealthy){
+                        @if(status.gbArrivalsHealthy){
                         <td class="govuk-table__cell">
                             <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
                         </td>
@@ -54,8 +54,7 @@
                     </tr>
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">@messages("service.availability.ncts.xi.arrivals")</td>
-                        <!--TODO: Change the below hard coded value when XI channel is implemented-->
-                        @if(status.xiDeparturesHealthy){
+                        @if(status.xiArrivalsHealthy){
                         <td class="govuk-table__cell">
                             <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
                         </td>
@@ -68,11 +67,11 @@
                 </tbody>
             </table>
             <table class="govuk-table">
-                <caption class="govuk-table__caption govuk-table__caption--m">System Core Status - Departures</caption>
+                <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.departures")</caption>
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header">System Core Name</th>
-                        <th scope="col" class="govuk-table__header">Availability status</th>
+                        <th scope="col" class="govuk-table__header">@messages("service.availability.system.name")</th>
+                        <th scope="col" class="govuk-table__header">@messages("service.availability.system.availability")</th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
