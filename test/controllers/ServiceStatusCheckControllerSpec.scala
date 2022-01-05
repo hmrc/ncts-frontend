@@ -39,8 +39,15 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
 
   "Service Status Check Controller" - {
 
-    "must return OK and the correct view for a GET with GB true and XI false" in {
-      when(nctsService.checkStatus()(any())) thenReturn Future(Right(StatusResponse(true,false)))
+    "must return OK and the correct view for a GET with GB/XI departures true and GB/XI arrivals false" in {
+      when(nctsService.checkStatus()(any())) thenReturn
+        Future(Right(
+          StatusResponse(
+            gbDeparturesHealthy = true,
+            xiDeparturesHealthy = true,
+            gbArrivalsHealthy = false,
+            xiArrivalsHealthy = false
+          )))
 
       val application = applicationBuilder().overrides(mocks).build()
 
@@ -54,8 +61,14 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
       }
     }
 
-    "must return OK and the correct view for a GET with XI true and GB false" in {
-      when(nctsService.checkStatus()(any())) thenReturn Future(Right(StatusResponse(false,true)))
+    "must return OK and the correct view for a GET with GB/XI departures false and GB/XI arrivals true" in {
+      when(nctsService.checkStatus()(any())) thenReturn
+        Future(Right(StatusResponse(
+          gbDeparturesHealthy = false,
+          xiDeparturesHealthy = false,
+          gbArrivalsHealthy = true,
+          xiArrivalsHealthy = true
+        )))
 
       val application = applicationBuilder().overrides(mocks).build()
 

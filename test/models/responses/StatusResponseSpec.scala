@@ -26,17 +26,23 @@ import uk.gov.hmrc.http.HttpResponse
 class StatusResponseSpec extends AnyWordSpec with Matchers {
 
   "StatusResponseReads" should {
-    "return a StatusResponse when status is OK and can be parsed" in {
+    "return a StatusResponse when status is OK and can be parsed for GB/XI departures true and GB/XI arrivals false" in {
       val json =
         """
           |{
           |  "gbDeparturesHealthy": true,
-          |  "xiDeparturesHealthy": false
+          |  "xiDeparturesHealthy": true,
+          |  "gbArrivalsHealthy": false,
+          |  "xiArrivalsHealthy": false
           |}
           """.stripMargin
 
-      val expectedResult = StatusResponse(gbDeparturesHealthy = true,xiDeparturesHealthy = false)
-
+      val expectedResult = StatusResponse(
+        gbDeparturesHealthy = true,
+        xiDeparturesHealthy = true,
+        gbArrivalsHealthy = false,
+        xiArrivalsHealthy = false
+      )
       val httpResponse = HttpResponse(Status.OK, json)
 
       val Right(result) = StatusResponseReads.read("GET", "url", httpResponse)
@@ -44,24 +50,30 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
       result mustBe expectedResult
     }
 
-
-    "return a StatusResponse when status is OK and can be parsed for Xi" in {
+    "return a StatusResponse when status is OK and can be parsed for GB/XI departures false and GB/XI arrivals true" in {
       val json =
         """
           |{
           |  "gbDeparturesHealthy": false,
-          |  "xiDeparturesHealthy": true
+          |  "xiDeparturesHealthy": false,
+          |  "gbArrivalsHealthy": true,
+          |  "xiArrivalsHealthy": true
           |}
           """.stripMargin
 
-      val expectedResult = StatusResponse(gbDeparturesHealthy = false,xiDeparturesHealthy = true)
-
+      val expectedResult = StatusResponse(
+        gbDeparturesHealthy = false,
+        xiDeparturesHealthy = false,
+        gbArrivalsHealthy = true,
+        xiArrivalsHealthy = true
+      )
       val httpResponse = HttpResponse(Status.OK, json)
 
       val Right(result) = StatusResponseReads.read("GET", "url", httpResponse)
 
       result mustBe expectedResult
     }
+
     "return StatusResponseError" when {
       "the response is on an invalid format" in {
         val invalidJson =
@@ -71,13 +83,11 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
             |}
           """.stripMargin
 
-        val expectedResult = StatusResponseError("Response in an unexpected format: error.path.missing\nerror.path.missing")
-
         val httpResponse = HttpResponse(Status.OK, invalidJson)
 
-        val Left(result) = StatusResponseReads.read("GET", "url", httpResponse)
+        val result = StatusResponseReads.read("GET", "url", httpResponse)
 
-        result mustBe expectedResult
+        result mustBe 'left
       }
 
       "the response has an unexpected error" in {

@@ -54,7 +54,13 @@ unauthorised.heading = You can’t access this service with this account
 
 service.availability.title=Service availability
 service.availability.heading=Service availability
-service.availability.ncts.gb=NCTS GB
-service.availability.ncts.xi=NCTS XI
+service.availability.status.arrivals=System Core Status - Arrivals
+service.availability.status.departures=System Core Status - Departures
+service.availability.system.name=System Core Name
+service.availability.system.availability=Availability status
+service.availability.ncts.gb.departures=NCTS GB Departures
+service.availability.ncts.xi.departures=NCTS XI Departures
+service.availability.ncts.gb.arrivals=NCTS GB Arrivals
+service.availability.ncts.xi.arrivals=NCTS XI Arrivals
 service.availability.status.available=Available
 service.availability.status.unavailable=Unavailable
