@@ -14,16 +14,28 @@
  * limitations under the License.
  */
 
-package config
+package controllers
 
-import com.google.inject.AbstractModule
+import base.SpecBase
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
 
-import java.time.{Clock, ZoneOffset}
+class IndexControllerSpec extends SpecBase {
 
-class Module extends AbstractModule {
+  "IndexController" - {
 
-  override def configure(): Unit = {
+    "must redirect to the service status page" in {
 
-    bind(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC))
+      val application = applicationBuilder().build()
+
+      running(application) {
+
+        val request = FakeRequest(GET, routes.IndexController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result) mustBe SEE_OTHER
+      }
+    }
   }
 }
