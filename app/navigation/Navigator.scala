@@ -25,9 +25,8 @@ import pages._
 @Singleton
 class Navigator @Inject()() {
 
-  private val normalRoutes: Page => Call = {
-    case _ => routes.ServiceStatusCheckController.onPageLoad()
-  }
+  private val normalRoutes: Page => Call =
+    _ => routes.ServiceStatusCheckController.onPageLoad
 
   def nextPage(page: Page): Call = normalRoutes(page)
 }
