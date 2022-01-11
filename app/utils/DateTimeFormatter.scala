@@ -14,11 +14,24 @@
  * limitations under the License.
  */
 
-package models.responses
+package utils
 
-trait ErrorResponse
+import java.time.format.{DateTimeFormatter => DateTimeGen}
+import java.time.{LocalDate, LocalTime}
 
-object ErrorResponse {
-  final case class StatusResponseError(message: String) extends ErrorResponse
-  final case class DowntimeConfigParseError(message: String) extends ErrorResponse
+object DateTimeFormatter {
+  def formatDate(localDate: LocalDate): String = {
+    val formatter = DateTimeGen.ofPattern("EEEE dd MMMM yyyy")
+    formatter.format(localDate)
+  }
+
+  def formatTime(localTime: LocalTime): String = {
+    val formatter = if(localTime.getMinute > 0){
+      DateTimeGen.ofPattern("h:mma")
+    } else {
+      DateTimeGen.ofPattern("ha")
+    }
+
+    formatter.format(localTime)
+  }
 }
