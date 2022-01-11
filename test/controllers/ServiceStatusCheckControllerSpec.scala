@@ -53,7 +53,7 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.ServiceStatusCheckController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.ServiceStatusCheckController.onPageLoad.url)
 
         val result = route(application, request).value
 
@@ -74,7 +74,7 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.ServiceStatusCheckController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.ServiceStatusCheckController.onPageLoad.url)
 
         val result = route(application, request).value
 
@@ -90,7 +90,7 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.ServiceStatusCheckController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.ServiceStatusCheckController.onPageLoad.url)
 
         val result = route(application, request).value
 

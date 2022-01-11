@@ -30,7 +30,7 @@ class IndexControllerSpec extends SpecBase {
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.IndexController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.IndexController.onPageLoad.url)
 
         val result = route(application, request).value
 

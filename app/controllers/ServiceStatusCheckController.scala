@@ -34,7 +34,7 @@ class ServiceStatusCheckController @Inject()(
                                             ) extends FrontendBaseController with I18nSupport {
 
 
-  def onPageLoad(): Action[AnyContent] = Action.async { implicit request =>
+  def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     nctsService.checkStatus().flatMap {
       case Right(statusResponse: StatusResponse) => Future.successful(Ok(view(statusResponse)))
       case _ => Future.successful(InternalServerError)

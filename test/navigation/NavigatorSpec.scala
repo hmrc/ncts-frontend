@@ -31,7 +31,7 @@ class NavigatorSpec extends SpecBase {
       "must go from a page that doesn't exist in the route map to Index" in {
 
         case object UnknownPage extends Page
-        navigator.nextPage(UnknownPage) mustBe routes.ServiceStatusCheckController.onPageLoad()
+        navigator.nextPage(UnknownPage) mustBe routes.ServiceStatusCheckController.onPageLoad
       }
     }
 

@@ -14,80 +14,24 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 @import views.html.helper.CSPNonce
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.backlink.BackLink
+@import config.FrontendAppConfig
 
 @this(
-    appConfig: FrontendAppConfig,
-    govukLayout: GovukLayout,
-    govukBackLink: GovukBackLink,
-    hmrcHead: HmrcHead,
-    hmrcStandardHeader: HmrcStandardHeader,
-    hmrcStandardFooter: HmrcStandardFooter,
-    hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
-    hmrcLanguageSelect: HmrcLanguageSelect,
-    hmrcTimeoutDialog: HmrcTimeoutDialog,
-    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
-    hmrcScripts: HmrcScripts,
-    betaBanner: StandardBetaBanner
+    hmrcLayout: HmrcLayout,
+    standardBetaBanner: StandardBetaBanner,
+    appConfig: FrontendAppConfig
 )
 
-@(pageTitle: String, showBackLink: Boolean = true, timeout: Boolean = true, showSignOut: Boolean = true)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+@(pageTitle: String)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
-@head = {
-<!--[if gt IE 8]><!--><link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" /><!--<![endif]-->
-
-    @hmrcHead(
-        nonce     = CSPNonce.get,
-        headBlock = None
-    )
-}
-
-@additionalScripts = {
-    <script src='@controllers.routes.Assets.versioned("javascripts/application.min.js")'></script>
-}
-
-@beforeContent = {
-
-    @if(appConfig.languageTranslationEnabled) {
-        @hmrcLanguageSelect(LanguageSelect(
-            if (messages.lang.code == "cy") Cy else En,
-            (En, routes.LanguageSwitchController.switchToLanguage("en").url),
-            (Cy, routes.LanguageSwitchController.switchToLanguage("cy").url)
-        ))
-    }
-
-    @if(showBackLink) {
-        @govukBackLink(BackLink(
-            href    = "#",
-            content = Text(messages("site.back")
-            )
-        ))
-    }
-}
-
-@content = {
-    @contentBlock
-
-    <div class="govuk-!-margin-top-8">
-        @hmrcReportTechnicalIssueHelper()
-    </div>
-}
-
-@govukLayout(
+@hmrcLayout(
     pageTitle   = Some(pageTitle),
-    headBlock   = Some(head),
-    headerBlock = Some(hmrcStandardHeader(
-        serviceUrl  = Some(routes.ServiceStatusCheckController.onPageLoad().url),
-        signOutUrl  = None,
-        phaseBanner = Some(betaBanner(appConfig.feedbackUrl))
-    )),
-    beforeContentBlock = Some(beforeContent),
-    footerBlock        = Some(hmrcStandardFooter()),
-    scriptsBlock       = Some(hmrcScripts(
-        nonce        = CSPNonce.get,
-        scriptsBlock = Some(additionalScripts)
-    ))
-)(content)
+    isWelshTranslationAvailable = appConfig.languageTranslationEnabled,
+    serviceUrl  = Some(routes.ServiceStatusCheckController.onPageLoad.url),
+    signOutUrl  = None,
+    phaseBanner = Some(standardBetaBanner(url = appConfig.feedbackUrl)),
+    nonce = CSPNonce.get
+)(contentBlock)

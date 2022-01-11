@@ -23,8 +23,7 @@
 @(status: StatusResponse)(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle    = titleNoForm(messages("service.availability.title")),
-    showBackLink = false
+    pageTitle    = titleNoForm(messages("service.availability.title"))
 ) {
 
     <h1 class="govuk-heading-xl">@messages("service.availability.heading")</h1>
