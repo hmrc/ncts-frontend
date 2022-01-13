@@ -23,6 +23,9 @@ import org.scalatest.wordspec.AnyWordSpec
 import play.api.http.Status
 import uk.gov.hmrc.http.HttpResponse
 
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 class StatusResponseSpec extends AnyWordSpec with Matchers {
 
   "StatusResponseReads" should {
@@ -33,7 +36,8 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
           |  "gbDeparturesHealthy": true,
           |  "xiDeparturesHealthy": true,
           |  "gbArrivalsHealthy": false,
-          |  "xiArrivalsHealthy": false
+          |  "xiArrivalsHealthy": false,
+          |  "createdTs":"2022-01-01T10:25:55"
           |}
           """.stripMargin
 
@@ -41,11 +45,18 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
         gbDeparturesHealthy = true,
         xiDeparturesHealthy = true,
         gbArrivalsHealthy = false,
-        xiArrivalsHealthy = false
+        xiArrivalsHealthy = false,
+        createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
       )
+      println("Hi there : ")
+      println("Hi there : ")
+      println("Hi there : " + expectedResult.createdTs.minusSeconds(30).format(DateTimeFormatter.ofPattern("HH:mm")))
+      println("Hi there : ")
+      println("Hi there : ")
       val httpResponse = HttpResponse(Status.OK, json)
 
       val Right(result) = StatusResponseReads.read("GET", "url", httpResponse)
+
 
       result mustBe expectedResult
     }
@@ -57,7 +68,8 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
           |  "gbDeparturesHealthy": false,
           |  "xiDeparturesHealthy": false,
           |  "gbArrivalsHealthy": true,
-          |  "xiArrivalsHealthy": true
+          |  "xiArrivalsHealthy": true,
+          |  "createdTs":"2022-01-01T10:25:55"
           |}
           """.stripMargin
 
@@ -65,7 +77,9 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
         gbDeparturesHealthy = false,
         xiDeparturesHealthy = false,
         gbArrivalsHealthy = true,
-        xiArrivalsHealthy = true
+        xiArrivalsHealthy = true,
+        createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+
       )
       val httpResponse = HttpResponse(Status.OK, json)
 

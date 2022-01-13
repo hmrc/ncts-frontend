@@ -22,11 +22,14 @@ import play.api.http.Status.OK
 import play.api.libs.json.{JsError, JsSuccess, Json, OFormat}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
+import java.time.LocalDateTime
+
 case class StatusResponse(
                            gbDeparturesHealthy: Boolean,
                            xiDeparturesHealthy: Boolean,
                            gbArrivalsHealthy: Boolean,
-                           xiArrivalsHealthy: Boolean
+                           xiArrivalsHealthy: Boolean,
+                           createdTs: LocalDateTime = LocalDateTime.now()
                          )
 
 object StatusResponse {
