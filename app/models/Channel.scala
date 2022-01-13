@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-package models.responses
+package models
 
-trait ErrorResponse
+import play.api.libs.json.Reads
 
-object ErrorResponse {
-  final case class StatusResponseError(message: String) extends ErrorResponse
-  final case class DowntimeConfigParseError(message: String) extends ErrorResponse
+object Channel extends Enumeration {
+
+  type Channel
+
+  val gbDepartures, xiDepartures, gbArrivals, xiArrivals = Value
+
+  implicit val reads: Reads[Channel.Value] = json => json.validate[String].map(Channel.withName)
+
 }

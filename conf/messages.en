@@ -15,6 +15,10 @@ date.day = Day
 date.month = Month
 date.year = Year
 
+error.title = Sorry, there is a problem with the service
+error.heading = Sorry, there is a problem with the service
+error.message = Try again later.
+
 timeout.title = You’re about to be signed out
 timeout.message = For security reasons, you will be signed out of this service in
 timeout.keepAlive = Stay signed in
@@ -64,3 +68,21 @@ service.availability.ncts.gb.arrivals=NCTS GB Arrivals
 service.availability.ncts.xi.arrivals=NCTS XI Arrivals
 service.availability.status.available=Available
 service.availability.status.unavailable=Unavailable
+
+service.planned-downtime.title=Planned downtime
+service.planned-downtime.heading=Planned downtime
+service.planned-downtime.ncts.arrivals=NCTS Arrivals
+service.planned-downtime.ncts.departures=NCTS Departures
+service.planned-downtime.system.name=System Core Name
+service.planned-downtime.start=Downtime start
+service.planned-downtime.end=Downtime end
+service.planned-downtime.date=Date:
+service.planned-downtime.time=Time:
+service.planned-downtime.ncts.gb.departures=NCTS GB Departures
+service.planned-downtime.ncts.xi.departures=NCTS XI Departures
+service.planned-downtime.ncts.gb.arrivals=NCTS GB Arrivals
+service.planned-downtime.ncts.xi.arrivals=NCTS XI Arrivals
+service.planned-downtime.p1=Data submitted using these system cores during this time will be held and processed when the service is available again.
+service.planned-downtime.p2=We apologise for any inconvenience this may cause.
+service.planned-downtime.no.downtime.planned.arrivals=There is no downtime currently planned for NCTS Arrivals system cores.
+service.planned-downtime.no.downtime.planned.departures=There is no downtime currently planned for NCTS Departures system cores.

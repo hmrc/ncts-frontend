@@ -17,6 +17,7 @@
 package config
 
 import com.google.inject.{Inject, Singleton}
+import com.typesafe.config.ConfigList
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
@@ -47,5 +48,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     "en" -> Lang("en"),
     "cy" -> Lang("cy")
   )
+
+  lazy val plannedDowntimesConfig: Option[ConfigList] = configuration.getOptional[ConfigList]("planned-downtime")
 
 }
