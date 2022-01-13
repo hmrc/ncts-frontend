@@ -17,7 +17,7 @@
 package utils
 
 import java.time.format.{DateTimeFormatter => DateTimeGen}
-import java.time.{LocalDate, LocalTime}
+import java.time.{LocalDate, LocalDateTime, LocalTime}
 
 object DateTimeFormatter {
   def formatDate(localDate: LocalDate): String = {
@@ -34,4 +34,8 @@ object DateTimeFormatter {
 
     formatter.format(localTime)
   }
+
+  def formatDateTime(dateTime: LocalDateTime): String =
+    dateTime.format(DateTimeGen.ofPattern("h:mma"))
+
 }

@@ -24,7 +24,6 @@ import play.api.http.Status
 import uk.gov.hmrc.http.HttpResponse
 
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class StatusResponseSpec extends AnyWordSpec with Matchers {
 
@@ -48,15 +47,10 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
         xiArrivalsHealthy = false,
         createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
       )
-      println("Hi there : ")
-      println("Hi there : ")
-      println("Hi there : " + expectedResult.createdTs.minusSeconds(30).format(DateTimeFormatter.ofPattern("HH:mm")))
-      println("Hi there : ")
-      println("Hi there : ")
+
       val httpResponse = HttpResponse(Status.OK, json)
 
       val Right(result) = StatusResponseReads.read("GET", "url", httpResponse)
-
 
       result mustBe expectedResult
     }

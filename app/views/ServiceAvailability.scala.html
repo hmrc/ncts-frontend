@@ -15,7 +15,7 @@
  *@
 
 @import models.responses.StatusResponse
-@import java.time.format.DateTimeFormatter
+@import utils.DateTimeFormatter._
 
 @this(
     layout: templates.Layout
@@ -34,8 +34,8 @@
             <table class="govuk-table">
                 <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.arrivals")
                     <div class="govuk-inset-text bottom_padding">
-                        <p>@messages("service.arrival.delay")
-                            <b>@status.createdTs.minusMinutes(30).format(DateTimeFormatter.ofPattern("h:mma"))</b>
+                        <p>@messages("service.availability.arrivals.lastUpdated")
+                            <b>@formatDateTime(status.createdTs.minusMinutes(30))</b>
                         </p>
                     </div>
                 </caption>
@@ -76,8 +76,8 @@
             <table class="govuk-table">
                 <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.departures")
                     <div class="govuk-inset-text bottom_padding">
-                        <p>@messages("service.departure.delay")
-                            <b>@status.createdTs.minusSeconds(30).format(DateTimeFormatter.ofPattern("h:mma"))</b>
+                        <p>@messages("service.availability.departures.lastUpdated")
+                            <b>@formatDateTime(status.createdTs.minusSeconds(30))</b>
                         </p>
                     </div>
                 </caption>

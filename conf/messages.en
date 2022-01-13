@@ -68,6 +68,8 @@ service.availability.ncts.gb.arrivals=NCTS GB Arrivals
 service.availability.ncts.xi.arrivals=NCTS XI Arrivals
 service.availability.status.available=Available
 service.availability.status.unavailable=Unavailable
+service.availability.arrivals.lastUpdated=Arrival system core status as of
+service.availability.departures.lastUpdated=Departures system core status as of
 
 service.planned-downtime.title=Planned downtime
 service.planned-downtime.heading=Planned downtime
@@ -86,8 +88,3 @@ service.planned-downtime.p1=Data submitted using these system cores during this 
 service.planned-downtime.p2=We apologise for any inconvenience this may cause.
 service.planned-downtime.no.downtime.planned.arrivals=There is no downtime currently planned for NCTS Arrivals system cores.
 service.planned-downtime.no.downtime.planned.departures=There is no downtime currently planned for NCTS Departures system cores.
-
-
-
-service.arrival.delay=Arrival system core status as of
-service.departure.delay=Departures system core status as of

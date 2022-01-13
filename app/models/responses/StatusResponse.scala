@@ -29,7 +29,7 @@ case class StatusResponse(
                            xiDeparturesHealthy: Boolean,
                            gbArrivalsHealthy: Boolean,
                            xiArrivalsHealthy: Boolean,
-                           createdTs: LocalDateTime = LocalDateTime.now()
+                           createdTs: LocalDateTime
                          )
 
 object StatusResponse {

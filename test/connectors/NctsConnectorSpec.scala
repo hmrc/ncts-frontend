@@ -24,6 +24,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import uk.gov.hmrc.http.HttpClient
 
+import java.time.LocalDateTime
 import scala.concurrent.Future
 
 class NctsConnectorSpec extends SpecBase {
@@ -40,7 +41,8 @@ class NctsConnectorSpec extends SpecBase {
         gbDeparturesHealthy = true,
         xiDeparturesHealthy = true,
         gbArrivalsHealthy = false,
-        xiArrivalsHealthy = false
+        xiArrivalsHealthy = false,
+        createdTs = LocalDateTime.now()
       )
 
       when(mockHttp.GET[Either[ErrorResponse, StatusResponse]](any(), any(), any())(any(), any(), any()))
@@ -56,7 +58,8 @@ class NctsConnectorSpec extends SpecBase {
         gbDeparturesHealthy = false,
         xiDeparturesHealthy = false,
         gbArrivalsHealthy = true,
-        xiArrivalsHealthy = true
+        xiArrivalsHealthy = true,
+        createdTs = LocalDateTime.now()
       )
 
       when(mockHttp.GET[Either[ErrorResponse, StatusResponse]](any(), any(), any())(any(), any(), any()))
