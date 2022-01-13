@@ -14,11 +14,24 @@
  * limitations under the License.
  */
 
-package models.responses
+package models
 
-trait ErrorResponse
+import models.Channel.gbArrivals
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+import play.api.libs.json.{JsString, JsSuccess}
 
-object ErrorResponse {
-  final case class StatusResponseError(message: String) extends ErrorResponse
-  final case class DowntimeConfigParseError(message: String) extends ErrorResponse
+class ChannelSpec extends AnyWordSpec with Matchers {
+
+  "Channel" should {
+    "read correctly from JSON" in {
+      val json: JsString = JsString("gbArrivals")
+
+      val expectedResult = JsSuccess(gbArrivals)
+
+      json.validate[models.Channel.Value] mustBe expectedResult
+
+    }
+
+  }
 }
