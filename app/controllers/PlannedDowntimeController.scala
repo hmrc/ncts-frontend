@@ -28,16 +28,14 @@ class PlannedDowntimeController @Inject()(
                                               val controllerComponents: MessagesControllerComponents,
                                               val plannedDowntimeService: PlannedDowntimeService,
                                               view: views.html.PlannedDowntime,
-                                              errorHandler: ErrorHandler,
+                                              errorHandler: ErrorHandler
                                             ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
 
     plannedDowntimeService.getPlannedDowntime match {
       case Right(downtimes) => Ok(view(downtimes))
-      case Left(_) =>
-        InternalServerError(
-          errorHandler.standardErrorTemplate())
+      case Left(_) => InternalServerError(errorHandler.standardErrorTemplate())
     }
   }
 
