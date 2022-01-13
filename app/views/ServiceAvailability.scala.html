@@ -15,6 +15,7 @@
  *@
 
 @import models.responses.StatusResponse
+@import utils.DateTimeFormatter._
 
 @this(
     layout: templates.Layout
@@ -31,7 +32,14 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <table class="govuk-table">
-                <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.arrivals")</caption>
+                <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.arrivals")
+                    <div class="govuk-inset-text bottom_padding">
+                        <p>@messages("service.availability.arrivals.lastUpdated")
+                            <b>@formatDateTime(status.createdTs.minusMinutes(30))</b>
+                        </p>
+                    </div>
+                </caption>
+
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header">@messages("service.availability.system.name")</th>
@@ -66,7 +74,13 @@
                 </tbody>
             </table>
             <table class="govuk-table">
-                <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.departures")</caption>
+                <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.departures")
+                    <div class="govuk-inset-text bottom_padding">
+                        <p>@messages("service.availability.departures.lastUpdated")
+                            <b>@formatDateTime(status.createdTs.minusSeconds(30))</b>
+                        </p>
+                    </div>
+                </caption>
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header">@messages("service.availability.system.name")</th>

@@ -68,6 +68,8 @@ service.availability.ncts.gb.arrivals=NCTS GB Arrivals
 service.availability.ncts.xi.arrivals=NCTS XI Arrivals
 service.availability.status.available=Available
 service.availability.status.unavailable=Unavailable
+service.availability.arrivals.lastUpdated=Arrival system core status as of
+service.availability.departures.lastUpdated=Departures system core status as of
 
 service.planned-downtime.title=Planned downtime
 service.planned-downtime.heading=Planned downtime

@@ -23,6 +23,7 @@ import models.responses.StatusResponse
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 
+import java.time.LocalDateTime
 import scala.concurrent.Future
 
 class NctsServiceSpec extends SpecBase {
@@ -38,7 +39,8 @@ class NctsServiceSpec extends SpecBase {
             gbDeparturesHealthy = true,
             xiDeparturesHealthy = false,
             gbArrivalsHealthy = true,
-            xiArrivalsHealthy = false
+            xiArrivalsHealthy = false,
+            createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
           )))
 
       val result = service.checkStatus().futureValue
@@ -49,7 +51,8 @@ class NctsServiceSpec extends SpecBase {
           gbDeparturesHealthy = true,
           xiDeparturesHealthy = false,
           gbArrivalsHealthy = true,
-          xiArrivalsHealthy = false
+          xiArrivalsHealthy = false,
+          createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
         )
       )
     }

@@ -26,6 +26,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.NctsService
 
+import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -46,7 +47,8 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
             gbDeparturesHealthy = true,
             xiDeparturesHealthy = true,
             gbArrivalsHealthy = false,
-            xiArrivalsHealthy = false
+            xiArrivalsHealthy = false,
+            createdTs = LocalDateTime.now()
           )))
 
       val application = applicationBuilder().overrides(mocks).build()
@@ -67,7 +69,8 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
           gbDeparturesHealthy = false,
           xiDeparturesHealthy = false,
           gbArrivalsHealthy = true,
-          xiArrivalsHealthy = true
+          xiArrivalsHealthy = true,
+          createdTs = LocalDateTime.now()
         )))
 
       val application = applicationBuilder().overrides(mocks).build()

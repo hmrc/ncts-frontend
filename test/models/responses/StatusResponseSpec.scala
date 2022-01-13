@@ -23,6 +23,8 @@ import org.scalatest.wordspec.AnyWordSpec
 import play.api.http.Status
 import uk.gov.hmrc.http.HttpResponse
 
+import java.time.LocalDateTime
+
 class StatusResponseSpec extends AnyWordSpec with Matchers {
 
   "StatusResponseReads" should {
@@ -33,7 +35,8 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
           |  "gbDeparturesHealthy": true,
           |  "xiDeparturesHealthy": true,
           |  "gbArrivalsHealthy": false,
-          |  "xiArrivalsHealthy": false
+          |  "xiArrivalsHealthy": false,
+          |  "createdTs":"2022-01-01T10:25:55"
           |}
           """.stripMargin
 
@@ -41,8 +44,10 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
         gbDeparturesHealthy = true,
         xiDeparturesHealthy = true,
         gbArrivalsHealthy = false,
-        xiArrivalsHealthy = false
+        xiArrivalsHealthy = false,
+        createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
       )
+
       val httpResponse = HttpResponse(Status.OK, json)
 
       val Right(result) = StatusResponseReads.read("GET", "url", httpResponse)
@@ -57,7 +62,8 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
           |  "gbDeparturesHealthy": false,
           |  "xiDeparturesHealthy": false,
           |  "gbArrivalsHealthy": true,
-          |  "xiArrivalsHealthy": true
+          |  "xiArrivalsHealthy": true,
+          |  "createdTs":"2022-01-01T10:25:55"
           |}
           """.stripMargin
 
@@ -65,7 +71,9 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
         gbDeparturesHealthy = false,
         xiDeparturesHealthy = false,
         gbArrivalsHealthy = true,
-        xiArrivalsHealthy = true
+        xiArrivalsHealthy = true,
+        createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+
       )
       val httpResponse = HttpResponse(Status.OK, json)
 
