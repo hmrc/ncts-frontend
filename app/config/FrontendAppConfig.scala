@@ -49,6 +49,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     "cy" -> Lang("cy")
   )
 
-  lazy val plannedDowntimesConfig: Option[ConfigList] = configuration.getOptional[ConfigList]("planned-downtime")
+  val plannedDowntimesConfig: Option[ConfigList] = configuration.getOptional[ConfigList]("planned-downtime")
+
+  val govUKOtherIssuesLink: String = configuration.get[String]("govUKLinks.govUKOtherIssuesLink")
 
 }

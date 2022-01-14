@@ -28,12 +28,17 @@ class ServiceStatusCheckControllerISpec extends SpecCommonHelper {
   "check status" should {
 
     "return OK with the correct view for a successful response when service is healthy" in {
-      stubGet("/ncts/status-check", OK, Json.toJson(StatusResponse(gbDeparturesHealthy = true, xiDeparturesHealthy = true, gbArrivalsHealthy = true, xiArrivalsHealthy = true, createdTs = LocalDateTime.now())).toString)
+      stubGet("/ncts/status-check", OK,
+        Json.toJson(StatusResponse(
+          gbDeparturesHealthy = true, xiDeparturesHealthy = true, gbArrivalsHealthy = true,
+          xiArrivalsHealthy = true, createdTs = LocalDateTime.now())).toString)
 
       val response = ws.url(s"${baseUrl}/service-availability").get()
 
       whenReady(response) { result =>
         result.status mustBe OK
+
+        result.body must include("Back")
         result.body must include(messages("service.availability.heading"))
         result.body must include(messages("service.availability.ncts.gb.departures"))
         result.body must include(messages("service.availability.status.available"))
@@ -48,7 +53,9 @@ class ServiceStatusCheckControllerISpec extends SpecCommonHelper {
     }
 
     "return OK with the correct view for a successful response when service is not healthy" in {
-      stubGet("/ncts/status-check", OK, Json.toJson(StatusResponse(gbDeparturesHealthy = false, xiDeparturesHealthy = false, gbArrivalsHealthy = false, xiArrivalsHealthy = false, createdTs = LocalDateTime.now())).toString)
+      stubGet("/ncts/status-check", OK,
+        Json.toJson(StatusResponse(gbDeparturesHealthy = false, xiDeparturesHealthy = false, gbArrivalsHealthy = false,
+          xiArrivalsHealthy = false, createdTs = LocalDateTime.now())).toString)
 
       val response = ws.url(s"${baseUrl}/service-availability").get()
 
@@ -78,7 +85,9 @@ class ServiceStatusCheckControllerISpec extends SpecCommonHelper {
     }
 
     "return INTERNAL_SERVER_ERROR when there is an error" in {
-      stubGet("/ncts/status-check", SERVICE_UNAVAILABLE, Json.toJson(StatusResponse(gbDeparturesHealthy = false, xiDeparturesHealthy = false, gbArrivalsHealthy = true, xiArrivalsHealthy = true, createdTs = LocalDateTime.now())).toString)
+      stubGet("/ncts/status-check", SERVICE_UNAVAILABLE,
+        Json.toJson(StatusResponse(gbDeparturesHealthy = false, xiDeparturesHealthy = false, gbArrivalsHealthy = true,
+          xiArrivalsHealthy = true, createdTs = LocalDateTime.now())).toString)
 
       val response = ws.url(s"${baseUrl}/service-availability").get()
 

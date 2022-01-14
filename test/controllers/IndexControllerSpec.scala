@@ -24,7 +24,7 @@ class IndexControllerSpec extends SpecBase {
 
   "IndexController" - {
 
-    "must redirect to the service status page" in {
+    "must return OK" in {
 
       val application = applicationBuilder().build()
 
@@ -34,7 +34,7 @@ class IndexControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustBe SEE_OTHER
+        status(result) mustBe OK
       }
     }
   }

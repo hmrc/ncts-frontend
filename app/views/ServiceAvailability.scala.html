@@ -24,13 +24,14 @@
 @(status: StatusResponse)(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle    = titleNoForm(messages("service.availability.title"))
+    pageTitle = titleNoForm(messages("service.availability.title")),
+    backUrl = Some(controllers.routes.IndexController.onPageLoad.url)
 ) {
 
     <h1 class="govuk-heading-xl">@messages("service.availability.heading")</h1>
 
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
+        <div class="govuk-grid-column-two-thirds">
             <table class="govuk-table">
                 <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.arrivals")
                     <div class="govuk-inset-text bottom_padding">
@@ -115,5 +116,7 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
     </div>
 }

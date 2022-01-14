@@ -14,17 +14,49 @@
  * limitations under the License.
  *@
 
+@import config.FrontendAppConfig
+
 @this(
-    layout: templates.Layout
+    layout: templates.Layout,
+    appConfig: FrontendAppConfig
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle    = titleNoForm(messages("index.title"))
+    pageTitle = titleNoForm(messages("index.title"))
 ) {
+
+    <span class="govuk-caption-xl gem-c-title__context">
+        @messages("index.guidance")
+    </span>
 
     <h1 class="govuk-heading-xl">@messages("index.heading")</h1>
 
-    <p class="govuk-body">@messages("index.guidance")</p>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+            <a href="@controllers.routes.ServiceStatusCheckController.onPageLoad.url" class="cards__item">
+                <h3 class="govuk-heading-s cards__item__header">@messages("index.service.availability")</h3>
+            </a>
+        </div>
+        <div class="govuk-grid-column-one-third">
+            <a href="@controllers.routes.PlannedDowntimeController.onPageLoad.url" class="cards__item">
+                <h3 class="govuk-heading-s cards__item__header">@messages("index.service.planned.downtime")</h3>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-m govuk-!-padding-top-4">@messages("index.service.other.services")</h2>
+
+            <p class="govuk-body">
+                @messages("index.service.track.other.services.1")
+                <a href="@appConfig.govUKOtherIssuesLink"> @messages("index.service.track.other.services.2")</a>
+                @messages("index.service.track.other.services.3")
+            </p>
+        </div>
+    </div>
+
 }
