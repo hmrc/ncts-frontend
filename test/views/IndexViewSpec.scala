@@ -54,7 +54,7 @@ class IndexViewSpec extends SpecBase with Injecting {
     }
 
     "should have other services content" in {
-      document.body().getElementsByTag("h2").first()
+      document.body().getElementsByTag("h2").get(2)
         .text() mustBe "Other services"
     }
 

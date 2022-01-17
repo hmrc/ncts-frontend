@@ -14,7 +14,7 @@
     text-decoration: none;
 }
 
-h3.cards__item__header {
+h2.cards__item__header {
     color: #1d70b8;
 }
 .cards__item:hover {
@@ -24,13 +24,13 @@ h3.cards__item__header {
 .cards__item:hover .cards__item__header:hover {
     color: #fff;
 }
-.cards__item:hover p, .cards__item:hover h3 {
+.cards__item:hover p, .cards__item:hover h2 {
     color: #fff;
 }
 .cards__item:focus p {
     color: #0b0c0c;
 }
-.cards__item:focus h3 {
+.cards__item:focus h2 {
     color: #1d70b8;
 }
 
