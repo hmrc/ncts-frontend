@@ -1,4 +1,4 @@
-service.name = New Computerised Transit System: service availability and issues
+service.name = Service availability and Planned downtime
 
 site.back = Back
 site.remove = Remove
@@ -55,6 +55,16 @@ signedOut.guidance = We did not save your answers.
 
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
+
+index.title=Home
+index.guidance=Guidance
+index.heading=New Computerised Transit System (NCTS): service availability and planned downtime
+index.service.availability=Service availability
+index.service.planned.downtime=Planned downtime
+index.service.other.services=Other services
+index.service.track.other.services.1=Track
+index.service.track.other.services.2=availability and issues
+index.service.track.other.services.3= for other services.
 
 service.availability.title=Service availability
 service.availability.heading=Service availability

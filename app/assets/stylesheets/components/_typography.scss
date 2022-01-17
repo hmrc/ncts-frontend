@@ -6,12 +6,15 @@
 .cards__item {
     background-color: #f8f8f8;
     display: block;
-    padding: 20px;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 60px;
     margin-bottom: 20px;
     text-decoration: none;
 }
 
-h2.cards__item__header {
+h3.cards__item__header {
     color: #1d70b8;
 }
 .cards__item:hover {

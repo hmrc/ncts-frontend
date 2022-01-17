@@ -24,9 +24,9 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.WsScalaTestClient
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.HeaderCarrier
 
 trait SpecBase
@@ -38,9 +38,15 @@ trait SpecBase
     with TryValues
     with OptionValues
     with ScalaFutures
-    with IntegrationPatience {
+    with IntegrationPatience
+    with Injecting {
 
-  implicit val hc = HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+
+  implicit val fakeRequest: FakeRequest[_] = FakeRequest()
+
+  lazy val messagesApi: MessagesApi = inject[MessagesApi]
+  implicit lazy val messages: MessagesImpl = MessagesImpl(Lang("en-GB"), messagesApi)
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 

@@ -16,6 +16,7 @@
 
 package controllers
 
+import handlers.ErrorHandler
 import models.responses.StatusResponse
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -30,6 +31,7 @@ import scala.concurrent.Future
 class ServiceStatusCheckController @Inject()(
                                               val controllerComponents: MessagesControllerComponents,
                                               nctsService: NctsService,
+                                              errorHandler: ErrorHandler,
                                               view: ServiceAvailability
                                             ) extends FrontendBaseController with I18nSupport {
 
@@ -37,7 +39,7 @@ class ServiceStatusCheckController @Inject()(
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     nctsService.checkStatus().flatMap {
       case Right(statusResponse: StatusResponse) => Future.successful(Ok(view(statusResponse)))
-      case _ => Future.successful(InternalServerError)
+      case _ => Future.successful(InternalServerError(errorHandler.standardErrorTemplate()))
     }
   }
 }
