@@ -36,8 +36,7 @@ class LanguageSwitchControllerSpec extends SpecBase with Injecting {
       "must return the language map from config" in {
 
         langSwitchController.languageMap mustBe Map(
-          "en" -> Lang("en"),
-          "cy" -> Lang("cy")
+          "en" -> Lang("en")
         )
       }
     }

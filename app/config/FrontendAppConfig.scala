@@ -44,9 +44,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   private val nctsServiceName = "ncts"
   val nctsUrl: String = s"${servicesConfig.baseUrl(nctsServiceName)}/$nctsServiceName"
 
-  def languageMap: Map[String, Lang] = Map(
-    "en" -> Lang("en"),
-    "cy" -> Lang("cy")
+  val languageMap: Map[String, Lang] = Map(
+    "en" -> Lang("en")
   )
 
   val plannedDowntimesConfig: Option[ConfigList] = configuration.getOptional[ConfigList]("planned-downtime")
