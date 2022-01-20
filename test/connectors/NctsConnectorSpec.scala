@@ -42,6 +42,7 @@ class NctsConnectorSpec extends SpecBase {
         xiDeparturesHealthy = true,
         gbArrivalsHealthy = false,
         xiArrivalsHealthy = false,
+        apiChannelHealthy = false,
         createdTs = LocalDateTime.now()
       )
 
@@ -59,6 +60,7 @@ class NctsConnectorSpec extends SpecBase {
         xiDeparturesHealthy = false,
         gbArrivalsHealthy = true,
         xiArrivalsHealthy = true,
+        apiChannelHealthy = true,
         createdTs = LocalDateTime.now()
       )
 
@@ -70,7 +72,7 @@ class NctsConnectorSpec extends SpecBase {
       result mustBe Right(response)
     }
 
-    "should return a scheme response error when an error occurs" in {
+    "should return an error response when an error occurs" in {
       when(mockHttp.GET[Either[ErrorResponse, StatusResponse]](any(), any(), any())(any(), any(), any()))
         .thenReturn(Future.successful(Left(StatusResponseError("something went wrong"))))
 

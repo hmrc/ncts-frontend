@@ -40,6 +40,7 @@ class NctsServiceSpec extends SpecBase {
             xiDeparturesHealthy = false,
             gbArrivalsHealthy = true,
             xiArrivalsHealthy = false,
+            apiChannelHealthy = true,
             createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
           )))
 
@@ -52,6 +53,7 @@ class NctsServiceSpec extends SpecBase {
           xiDeparturesHealthy = false,
           gbArrivalsHealthy = true,
           xiArrivalsHealthy = false,
+          apiChannelHealthy = true,
           createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
         )
       )

@@ -79,10 +79,10 @@ class PlannedDowntimeControllerISpec extends SpecCommonHelper {
           .get(0).text() mustBe messages("service.planned-downtime.ncts.gb.arrivals")
 
         document.select("table:nth-child(2) > tbody > tr:nth-child(1) > td:nth-child(2)")
-          .get(0).text() mustBe "Date:Monday 15 March 2021 Time:8:15AM"
+          .get(0).text() mustBe "Date: Monday 15 March 2021 Time: 8:15AM"
 
         document.select("table:nth-child(2) > tbody > tr:nth-child(1) > td:nth-child(3)")
-          .get(0).text() mustBe "Date:Tuesday 16 March 2021 Time:5PM"
+          .get(0).text() mustBe "Date: Tuesday 16 March 2021 Time: 5PM"
       }
 
       "have a table for arrivals with a row for XI" in {
@@ -90,10 +90,10 @@ class PlannedDowntimeControllerISpec extends SpecCommonHelper {
           .get(0).text() mustBe messages("service.planned-downtime.ncts.xi.arrivals")
 
         document.select("table:nth-child(2) > tbody > tr:nth-child(2) > td:nth-child(2)")
-          .get(0).text() mustBe "Date:Monday 15 March 2021 Time:8AM"
+          .get(0).text() mustBe "Date: Monday 15 March 2021 Time: 8AM"
 
         document.select("table:nth-child(2) > tbody > tr:nth-child(2) > td:nth-child(3)")
-          .get(0).text() mustBe "Date:Tuesday 16 March 2021 Time:5PM"
+          .get(0).text() mustBe "Date: Tuesday 16 March 2021 Time: 5PM"
       }
 
       "have some content about submissions when the service is down and an apology for arrivals" in {
@@ -119,10 +119,10 @@ class PlannedDowntimeControllerISpec extends SpecCommonHelper {
           .get(0).text() mustBe messages("service.planned-downtime.ncts.gb.departures")
 
         document.select("table:nth-child(6) > tbody > tr:nth-child(1) > td:nth-child(2)")
-          .get(0).text() mustBe "Date:Monday 15 March 2021 Time:8AM"
+          .get(0).text() mustBe "Date: Monday 15 March 2021 Time: 8AM"
 
         document.select("table:nth-child(6) > tbody > tr:nth-child(1) > td:nth-child(3)")
-          .get(0).text() mustBe "Date:Tuesday 16 March 2021 Time:5:45PM"
+          .get(0).text() mustBe "Date: Tuesday 16 March 2021 Time: 5:45PM"
       }
 
       "have a table for departures with a row for XI" in {
@@ -130,10 +130,10 @@ class PlannedDowntimeControllerISpec extends SpecCommonHelper {
           .get(0).text() mustBe messages("service.planned-downtime.ncts.xi.departures")
 
         document.select("table:nth-child(6) > tbody > tr:nth-child(2) > td:nth-child(2)")
-          .get(0).text() mustBe "Date:Monday 15 March 2021 Time:8AM"
+          .get(0).text() mustBe "Date: Monday 15 March 2021 Time: 8AM"
 
         document.select("table:nth-child(6) > tbody > tr:nth-child(2) > td:nth-child(3)")
-          .get(0).text() mustBe "Date:Tuesday 16 March 2021 Time:5PM"
+          .get(0).text() mustBe "Date: Tuesday 16 March 2021 Time: 5PM"
       }
 
       "have some content about submissions when the service is down and an apology for departures" in {

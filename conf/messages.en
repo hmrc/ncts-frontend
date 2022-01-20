@@ -71,15 +71,20 @@ service.availability.heading=Service availability
 service.availability.status.arrivals=System Core Status - Arrivals
 service.availability.status.departures=System Core Status - Departures
 service.availability.system.name=System Core Name
-service.availability.system.availability=Availability status
+service.availability.system.availability=Availability Status
 service.availability.ncts.gb.departures=NCTS GB Departures
 service.availability.ncts.xi.departures=NCTS XI Departures
 service.availability.ncts.gb.arrivals=NCTS GB Arrivals
 service.availability.ncts.xi.arrivals=NCTS XI Arrivals
 service.availability.status.available=Available
-service.availability.status.unavailable=Unavailable
+service.availability.status.issues=Known issues
 service.availability.arrivals.lastUpdated=Arrival system core status as of
 service.availability.departures.lastUpdated=Departures system core status as of
+
+service.availability.submission.channels.status.heading=Submission Channels Status
+service.availability.submission.channels.status.p1=Submission channels status as of
+service.availability.submission.channels.status.core=System Core Name
+service.availability.submission.channels.status.xml.channel=XML Channel
 
 service.planned-downtime.title=Planned downtime
 service.planned-downtime.heading=Planned downtime
