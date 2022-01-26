@@ -35,7 +35,7 @@ class PlannedDowntimeController @Inject()(
 
     plannedDowntimeService.getPlannedDowntime match {
       case Right(downtimes) => Ok(view(downtimes))
-      case Left(_) => InternalServerError(errorHandler.standardErrorTemplate())
+      case Left(_) => errorHandler.showInternalServerError
     }
   }
 

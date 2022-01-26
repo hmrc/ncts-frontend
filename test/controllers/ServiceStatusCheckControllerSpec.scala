@@ -48,6 +48,7 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
             xiDeparturesHealthy = true,
             gbArrivalsHealthy = false,
             xiArrivalsHealthy = false,
+            apiChannelHealthy = false,
             createdTs = LocalDateTime.now()
           )))
 
@@ -70,6 +71,7 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
           xiDeparturesHealthy = false,
           gbArrivalsHealthy = true,
           xiArrivalsHealthy = true,
+          apiChannelHealthy = true,
           createdTs = LocalDateTime.now()
         )))
 

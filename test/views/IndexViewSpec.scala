@@ -40,7 +40,7 @@ class IndexViewSpec extends SpecBase with Injecting {
 
     "should have the correct heading" in {
       document.body().getElementsByTag("h1").first()
-        .text() mustBe "New Computerised Transit System (NCTS): service availability and planned downtime"
+        .text() mustBe "New Computerised Transit System (NCTS): Service availability and Planned downtime"
     }
 
     "should have a link to the service availability page" in {

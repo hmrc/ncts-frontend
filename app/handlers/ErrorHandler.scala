@@ -17,7 +17,8 @@
 package handlers
 
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Request
+import play.api.mvc.{Request, Result}
+import play.api.mvc.Results.InternalServerError
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import views.html.ErrorTemplate
@@ -30,7 +31,9 @@ class ErrorHandler @Inject()(
                               view: ErrorTemplate
                             ) extends FrontendErrorHandler with I18nSupport {
 
-  override def standardErrorTemplate(pageTitle: String = "error.title", heading: String = "error.heading",
-                                     message: String = "error.message")(implicit rh: Request[_]): Html =
-    view(pageTitle, heading, message)
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html = {
+    view("error.title", "error.heading", "error.message")
+  }
+
+  def showInternalServerError(implicit request: Request[_]): Result = InternalServerError(internalServerErrorTemplate)
 }
