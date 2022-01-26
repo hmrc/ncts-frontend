@@ -22,4 +22,7 @@ object ViewUtils {
 
   def titleNoForm(title: String, section: Option[String] = None)(implicit messages: Messages): String =
     s"${messages(title)} - ${section.fold("")(messages(_) + " - ")}${messages("service.name")} - ${messages("site.govuk")}"
+
+  def headingFromTitle(title: String)(implicit messages: Messages): String =
+    messages(title).split(" - ")(0)
 }
