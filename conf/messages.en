@@ -94,6 +94,9 @@ service.availability.issues.known=There have been known issues since
 service.availability.issues.p3=Technicians are aware of the problem and are working to fix this. You should continue to conduct business as usual if you are able to do so.
 service.availability.issues.p4=The NCTS Helpdesk will advise you by e-mail if the Business Continuity Procedure is to be invoked. Information on the Business Continuity Procedure can be found in the
 service.availability.issues.p5=Transit Manual Supplement.
+service.availability.issues.p6=If you trying to use the
+service.availability.issues.p7=for submissions and are experiencing issues, check your third-party software.
+service.availability.issues.xml.channel=XML channel
 
 service.planned-downtime.title=Planned downtime
 service.planned-downtime.heading=Planned downtime
