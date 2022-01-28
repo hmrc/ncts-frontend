@@ -86,6 +86,15 @@ service.availability.submission.channels.status.p1=Submission channels status as
 service.availability.submission.channels.status.core=System Core Name
 service.availability.submission.channels.status.xml.channel=XML Channel
 
+service.availability.issues.p1=The
+service.availability.issues.p2=and
+service.availability.issues.single.channel=system core is experiencing technical issues.
+service.availability.issues.both.channels=system cores are experiencing technical issues.
+service.availability.issues.known=There have been known issues since
+service.availability.issues.p3=Technicians are aware of the problem and are working to fix this. You should continue to conduct business as usual if you are able to do so.
+service.availability.issues.p4=The NCTS Helpdesk will advise you by e-mail if the Business Continuity Procedure is to be invoked. Information on the Business Continuity Procedure can be found in the
+service.availability.issues.p5=Transit Manual Supplement.
+
 service.planned-downtime.title=Planned downtime
 service.planned-downtime.heading=Planned downtime
 service.planned-downtime.ncts.arrivals=NCTS Arrivals

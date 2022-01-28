@@ -74,6 +74,41 @@
                     </tr>
                 </tbody>
             </table>
+
+                    @if(!status.gbArrivalsHealthy && !status.xiArrivalsHealthy){
+                        <p>
+                           @messages("service.availability.issues.p1")
+                           <b>@messages("service.availability.ncts.xi.arrivals")</b>
+                           @messages("service.availability.issues.p2")
+                           <b>@messages("service.availability.ncts.gb.arrivals")</b>
+                           @messages("service.availability.issues.both.channels")
+
+                            <!--TODO: change the hardcoded value-->
+                           @messages("service.availability.issues.known") <b>2:10pm.</b>
+                           @messages("service.availability.issues.p3")
+                        </p>
+                        <p>
+                            @messages("service.availability.issues.p4") <a href="https://www.gov.uk/government/publications/business-continuity-planning">@messages("service.availability.issues.p5")</a>
+                        </p>
+                    } else if (!status.gbArrivalsHealthy || !status.xiArrivalsHealthy){
+                        <p>
+                            @messages("service.availability.issues.p1")
+                            @if(!status.xiArrivalsHealthy) {
+                                <b>@messages("service.availability.ncts.xi.arrivals")</b>
+                            } else {
+                                <b>@messages("service.availability.ncts.gb.arrivals")</b>
+                            }
+                            @messages("service.availability.issues.single.channel")
+
+                            <!--TODO: change the hardcoded value-->
+                            @messages("service.availability.issues.known") <b>2:10pm.</b>
+                            @messages("service.availability.issues.p3")
+                        </p>
+                        <p>
+                            @messages("service.availability.issues.p4") <a href="https://www.gov.uk/government/publications/business-continuity-planning">@messages("service.availability.issues.p5")</a>
+                        </p>
+                    }
+
             <table class="govuk-table">
                 <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.departures")
                     <div class="govuk-inset-text bottom_padding">
@@ -115,6 +150,40 @@
                 </tr>
                 </tbody>
             </table>
+
+            @if(!status.gbDeparturesHealthy && !status.xiDeparturesHealthy){
+                <p>
+                    @messages("service.availability.issues.p1")
+                    <b>@messages("service.availability.ncts.xi.departures")</b>
+                    @messages("service.availability.issues.p2")
+                    <b>@messages("service.availability.ncts.gb.departures")</b>
+                    @messages("service.availability.issues.both.channels")
+
+                    <!--TODO: change the hardcoded value-->
+                    @messages("service.availability.issues.known") <b>2:10pm.</b>
+                    @messages("service.availability.issues.p3")
+                </p>
+                <p>
+                    @messages("service.availability.issues.p4") <a href="https://www.gov.uk/government/publications/business-continuity-planning">@messages("service.availability.issues.p5")</a>
+                </p>
+                } else if (!status.gbDeparturesHealthy || !status.xiDeparturesHealthy){
+                <p>
+                    @messages("service.availability.issues.p1")
+                    @if(!status.xiDeparturesHealthy) {
+                        <b>@messages("service.availability.ncts.xi.departures")</b>
+                    } else {
+                        <b>@messages("service.availability.ncts.gb.departures")</b>
+                    }
+                    @messages("service.availability.issues.single.channel")
+
+                    <!--TODO: change the hardcoded value-->
+                    @messages("service.availability.issues.known") <b>2:10pm.</b>
+                    @messages("service.availability.issues.p3")
+                </p>
+                <p>
+                    @messages("service.availability.issues.p4") <a href="https://www.gov.uk/government/publications/business-continuity-planning">@messages("service.availability.issues.p5")</a>
+                </p>
+            }
             @SubmissionChannelsAvailability(formatDateTime(status.createdTs), status.apiChannelHealthy)
         </div>
     </div>
