@@ -17,7 +17,7 @@
 @(gbHealthy: Boolean, xiHealthy: Boolean, gbHealthMessage: String, xiHealthMessage: String)(implicit request: Request[_], messages: Messages)
 
     @if(!gbHealthy && !xiHealthy){
-        <p>
+        <p class="govuk-body">
             @messages("service.availability.issues.p1")
             <b>@xiHealthMessage</b>
             @messages("service.availability.issues.p2")
@@ -28,11 +28,11 @@
             @messages("service.availability.issues.known") <b>2:10pm.</b>
             @messages("service.availability.issues.p3")
         </p>
-        <p>
+        <p class="govuk-body">
             @messages("service.availability.issues.p4") <a href="https://www.gov.uk/government/publications/business-continuity-planning">@messages("service.availability.issues.p5")</a>
         </p>
     } else if (!gbHealthy || !xiHealthy){
-        <p>
+        <p class="govuk-body">
             @messages("service.availability.issues.p1")
             @if(!xiHealthy) {
                 <b>@xiHealthMessage</b>
@@ -45,7 +45,7 @@
             @messages("service.availability.issues.known") <b>2:10pm.</b>
             @messages("service.availability.issues.p3")
         </p>
-        <p>
+        <p class="govuk-body">
             @messages("service.availability.issues.p4") <a href="https://www.gov.uk/government/publications/business-continuity-planning">@messages("service.availability.issues.p5")</a>
         </p>
     }

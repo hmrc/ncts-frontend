@@ -122,7 +122,7 @@
             @SubmissionChannelsAvailability(formatDateTime(status.createdTs), status.apiChannelHealthy)
             <!--TODO: Add the WEB Channel values to the below code once its implemented-->
             @if(!status.apiChannelHealthy && !status.apiChannelHealthy){
-                <p>
+                <p class="govuk-body">
                     @messages("service.availability.issues.p1")
                     <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
                     @messages("service.availability.issues.p2")
@@ -134,7 +134,7 @@
                     @messages("service.availability.issues.p3")
                 </p>
             } else if (!status.apiChannelHealthy || !status.apiChannelHealthy){
-                <p>
+                <p class="govuk-body">
                     @messages("service.availability.issues.p1")
                     @if(!status.apiChannelHealthy) {
                     <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
@@ -148,7 +148,7 @@
                     @messages("service.availability.issues.p3")
                 </p>
             } else {
-                <p>
+                <p class="govuk-body">
                     @messages("service.availability.issues.p6")
                     <b>@messages("service.availability.issues.xml.channel")</b>
                     @messages("service.availability.issues.p7")
