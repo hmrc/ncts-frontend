@@ -21,7 +21,7 @@ import java.time.{LocalDate, LocalDateTime, LocalTime}
 
 object DateTimeFormatter {
   def formatDate(localDate: LocalDate): String = {
-    val formatter = DateTimeGen.ofPattern("EEEE dd MMMM yyyy")
+    val formatter = DateTimeGen.ofPattern("EEEE d MMMM yyyy")
     formatter.format(localDate)
   }
 

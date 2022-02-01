@@ -29,6 +29,13 @@ class IndexViewSpec extends SpecBase with Injecting {
 
   "IndexView" - {
 
+    "should have the correct breadcrumbs" in {
+      breadcrumb(0, document).text() mustBe "Home"
+      breadcrumb(0, document).attr("href") mustBe govukHomeLink
+      breadcrumb(1, document).text() mustBe "Service availability and Planned downtime"
+      breadcrumb(1, document).attr("href") mustBe homeLink
+    }
+
     "should have the correct title" in {
       document.title() mustBe "Home - Service availability and Planned downtime - GOV.UK"
     }

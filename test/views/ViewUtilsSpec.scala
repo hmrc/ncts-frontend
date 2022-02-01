@@ -26,5 +26,10 @@ class ViewUtilsSpec extends SpecBase {
       ViewUtils.titleNoForm("testTime", None)(messages(application)) mustBe "testTime - Service availability and Planned downtime - GOV.UK"
     }
 
+    "headingFromTitle should produce a heading from the title" in {
+      val application = applicationBuilder().build()
+      ViewUtils.headingFromTitle("testTime")(messages(application)) mustBe "testTime"
+    }
+
   }
 }

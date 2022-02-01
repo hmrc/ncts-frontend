@@ -1,6 +1,5 @@
 service.name = Service availability and Planned downtime
 
-site.back = Back
 site.remove = Remove
 site.change = Change
 site.no = No
