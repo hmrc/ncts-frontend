@@ -35,6 +35,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       gbArrivalsHealthy = true,
       xiArrivalsHealthy = true,
       apiChannelHealthy = true,
+      webChannelHealthy = true,
       LocalDateTime.of(2022, 1, 24, 0, 0, 0)
     )).body)
 
@@ -101,6 +102,9 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         .text() mustBe messages("service.availability.system.availability")
 
       document.getElementsByClass("govuk-table__cell").get(8)
+        .text() mustBe messages("service.availability.submission.channels.status.web.channel")
+
+      document.getElementsByClass("govuk-table__cell").get(10)
         .text() mustBe messages("service.availability.submission.channels.status.xml.channel")
     }
 
@@ -122,6 +126,8 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       "should show that services are available for other systems" in {
         document.getElementsByClass("govuk-table__cell").get(9)
           .text() mustBe messages("service.availability.status.available")
+        document.getElementsByClass("govuk-table__cell").get(11)
+          .text() mustBe messages("service.availability.status.available")
       }
     }
 
@@ -134,6 +140,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           gbArrivalsHealthy = false,
           xiArrivalsHealthy = false,
           apiChannelHealthy = false,
+          webChannelHealthy = false,
           LocalDateTime.of(2022, 1, 24, 0, 0, 0)
         )).body)
 
@@ -153,6 +160,8 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
       "should show that services have known issues for other systems" in {
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(9)
+          .text() mustBe messages("service.availability.status.issues")
+        allUnhealthyView.getElementsByClass("govuk-table__cell").get(11)
           .text() mustBe messages("service.availability.status.issues")
       }
     }

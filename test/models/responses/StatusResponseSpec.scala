@@ -37,6 +37,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
           |  "gbArrivalsHealthy": false,
           |  "xiArrivalsHealthy": false,
           |  "apiChannelHealthy": false,
+          |  "webChannelHealthy": false,
           |  "createdTs":"2022-01-01T10:25:55"
           |}
           """.stripMargin
@@ -47,6 +48,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
         gbArrivalsHealthy = false,
         xiArrivalsHealthy = false,
         apiChannelHealthy = false,
+        webChannelHealthy = false,
         createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
       )
 
@@ -66,6 +68,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
           |  "gbArrivalsHealthy": true,
           |  "xiArrivalsHealthy": true,
           |  "apiChannelHealthy": true,
+          |  "webChannelHealthy": true,
           |  "createdTs":"2022-01-01T10:25:55"
           |}
           """.stripMargin
@@ -76,6 +79,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
         gbArrivalsHealthy = true,
         xiArrivalsHealthy = true,
         apiChannelHealthy = true,
+        webChannelHealthy = true,
         createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
 
       )

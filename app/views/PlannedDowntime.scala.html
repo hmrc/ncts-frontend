@@ -25,7 +25,7 @@
 @(plannedDowntimes: Option[PlannedDowntimes])(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages("service.planned-downtime.title")),
+    pageTitle = title(messages("service.planned-downtime.title")),
     backUrl = Some(controllers.routes.IndexController.onPageLoad.url)
 ) {
 
