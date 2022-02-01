@@ -120,7 +120,7 @@
 
             @KnownIssuesParagraph(status.gbDeparturesHealthy, status.xiDeparturesHealthy, messages("service.availability.ncts.gb.departures"), messages("service.availability.ncts.xi.departures"))
             @SubmissionChannelsAvailability(formatDateTime(status.createdTs), status.apiChannelHealthy)
-            <!--TODO: Add the WEB Channel values to the below code once its implemented-->
+
             @if(!status.apiChannelHealthy && !status.apiChannelHealthy){
                 <p class="govuk-body">
                     @messages("service.availability.issues.p1")
@@ -128,23 +128,17 @@
                     @messages("service.availability.issues.p2")
                     <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
                     @messages("service.availability.issues.both.channels")
-
-                    <!--TODO: change the hardcoded value-->
-                    @messages("service.availability.issues.known") <b>2:10pm.</b>
                     @messages("service.availability.issues.p3")
                 </p>
             } else if (!status.apiChannelHealthy || !status.apiChannelHealthy){
                 <p class="govuk-body">
                     @messages("service.availability.issues.p1")
                     @if(!status.apiChannelHealthy) {
-                    <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
+                        <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
                     } else {
-                    <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
+                        <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
                     }
                     @messages("service.availability.issues.single.channel")
-
-                    <!--TODO: change the hardcoded value-->
-                    @messages("service.availability.issues.known") <b>2:10pm.</b>
                     @messages("service.availability.issues.p3")
                 </p>
             } else {
