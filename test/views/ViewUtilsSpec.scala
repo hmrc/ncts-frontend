@@ -21,9 +21,9 @@ import base.SpecBase
 class ViewUtilsSpec extends SpecBase {
 
   "ViewUtils" - {
-    "titleNoForm should produce a title with no form" in {
+    "title should produce a title in the format 'page name - service name - gov uk'" in {
       val application = applicationBuilder().build()
-      ViewUtils.titleNoForm("testTime", None)(messages(application)) mustBe "testTime - Service availability and Planned downtime - GOV.UK"
+      ViewUtils.title("testTime")(messages(application)) mustBe "testTime - Service availability and Planned downtime - GOV.UK"
     }
 
     "headingFromTitle should produce a heading from the title" in {

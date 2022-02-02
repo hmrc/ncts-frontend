@@ -34,7 +34,7 @@ class ServiceStatusCheckControllerISpec extends SpecCommonHelper {
       stubGet("/ncts/status-check", OK,
         Json.toJson(StatusResponse(
           gbDeparturesHealthy = true, xiDeparturesHealthy = true, gbArrivalsHealthy = true,
-          xiArrivalsHealthy = true, apiChannelHealthy = true, createdTs = LocalDateTime.now())).toString)
+          xiArrivalsHealthy = true, apiChannelHealthy = true, webChannelHealthy = true, createdTs = LocalDateTime.now())).toString)
 
       val response = Await.result(ws.url(s"$baseUrl/service-availability").get(), Duration.Inf)
 
@@ -47,7 +47,7 @@ class ServiceStatusCheckControllerISpec extends SpecCommonHelper {
     "return OK with the correct view for a successful response when service is not healthy" in {
       stubGet("/ncts/status-check", OK,
         Json.toJson(StatusResponse(gbDeparturesHealthy = false, xiDeparturesHealthy = false, gbArrivalsHealthy = false,
-          xiArrivalsHealthy = false, apiChannelHealthy = false, createdTs = LocalDateTime.now())).toString)
+          xiArrivalsHealthy = false, apiChannelHealthy = false, webChannelHealthy = false, createdTs = LocalDateTime.now())).toString)
 
       val response = Await.result(ws.url(s"$baseUrl/service-availability").get(), Duration.Inf)
 
@@ -72,7 +72,7 @@ class ServiceStatusCheckControllerISpec extends SpecCommonHelper {
     "return INTERNAL_SERVER_ERROR when there is an error" in {
       stubGet("/ncts/status-check", SERVICE_UNAVAILABLE,
         Json.toJson(StatusResponse(gbDeparturesHealthy = false, xiDeparturesHealthy = false, gbArrivalsHealthy = true,
-          xiArrivalsHealthy = true, apiChannelHealthy = true, createdTs = LocalDateTime.now())).toString)
+          xiArrivalsHealthy = true, apiChannelHealthy = true, webChannelHealthy = true, createdTs = LocalDateTime.now())).toString)
 
       val response = Await.result(ws.url(s"$baseUrl/service-availability").get(), Duration.Inf)
 

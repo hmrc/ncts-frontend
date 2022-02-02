@@ -84,6 +84,7 @@ service.availability.submission.channels.status.heading=Submission Channels Stat
 service.availability.submission.channels.status.p1=Submission channels status as of
 service.availability.submission.channels.status.core=System Core Name
 service.availability.submission.channels.status.xml.channel=XML Channel
+service.availability.submission.channels.status.web.channel=Web Channel
 
 service.planned-downtime.title=Planned downtime
 service.planned-downtime.heading=Planned downtime

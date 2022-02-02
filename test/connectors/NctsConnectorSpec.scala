@@ -43,6 +43,7 @@ class NctsConnectorSpec extends SpecBase {
         gbArrivalsHealthy = false,
         xiArrivalsHealthy = false,
         apiChannelHealthy = false,
+        webChannelHealthy = false,
         createdTs = LocalDateTime.now()
       )
 
@@ -61,6 +62,7 @@ class NctsConnectorSpec extends SpecBase {
         gbArrivalsHealthy = true,
         xiArrivalsHealthy = true,
         apiChannelHealthy = true,
+        webChannelHealthy = true,
         createdTs = LocalDateTime.now()
       )
 
