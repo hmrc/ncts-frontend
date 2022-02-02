@@ -75,6 +75,8 @@
                     </tr>
                 </tbody>
             </table>
+
+            @KnownIssuesParagraph(status.gbArrivalsHealthy, status.xiArrivalsHealthy, messages("service.availability.ncts.gb.arrivals"), messages("service.availability.ncts.xi.arrivals"))
             <table class="govuk-table">
                 <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.departures")
                     <div class="govuk-inset-text bottom_padding">
@@ -116,11 +118,39 @@
                 </tr>
                 </tbody>
             </table>
+            @KnownIssuesParagraph(status.gbDeparturesHealthy, status.xiDeparturesHealthy, messages("service.availability.ncts.gb.departures"), messages("service.availability.ncts.xi.departures"))
             @SubmissionChannelsAvailability(
                 formatDateTime(status.createdTs),
                 status.apiChannelHealthy,
                 status.webChannelHealthy
             )
+            @if(!status.apiChannelHealthy && !status.webChannelHealthy){
+                <p class="govuk-body">
+                    @messages("service.availability.issues.p1")
+                    <b>@messages("service.availability.submission.channels.status.web.channel")</b>
+                    @messages("service.availability.issues.p2")
+                    <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
+                    @messages("service.availability.issues.both.channels")
+                    @messages("service.availability.issues.p3")
+                </p>
+            } else if (!status.apiChannelHealthy || !status.webChannelHealthy){
+                <p class="govuk-body">
+                    @messages("service.availability.issues.p1")
+                    @if(!status.apiChannelHealthy) {
+                        <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
+                    } else {
+                        <b>@messages("service.availability.submission.channels.status.web.channel")</b>
+                    }
+                    @messages("service.availability.issues.single.channel")
+                    @messages("service.availability.issues.p3")
+                </p>
+            } else {
+                <p class="govuk-body">
+                    @messages("service.availability.issues.p6")
+                    <b>@messages("service.availability.issues.xml.channel")</b>
+                    @messages("service.availability.issues.p7")
+                </p>
+            }
         </div>
     </div>
 }

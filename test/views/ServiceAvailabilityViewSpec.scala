@@ -149,6 +149,18 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           .text() mustBe messages("service.availability.status.issues")
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(3)
           .text() mustBe messages("service.availability.status.issues")
+
+        val arrivalsKnownIssuesParagraph =
+          s"${messages("service.availability.issues.p1")} " +
+            s"${messages("service.availability.ncts.xi.arrivals")} " +
+            s"${messages("service.availability.issues.p2")} " +
+            s"${messages("service.availability.ncts.gb.arrivals")} " +
+            s"${messages("service.availability.issues.both.channels")}"
+
+        allUnhealthyView.getElementsByClass("govuk-body").get(0)
+          .text() must include(arrivalsKnownIssuesParagraph)
+        allUnhealthyView.getElementsByClass("govuk-body").get(1)
+          .text() must include(s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}")
       }
 
       "should show that services have known issues for departures" in {
@@ -156,6 +168,18 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           .text() mustBe messages("service.availability.status.issues")
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(7)
           .text() mustBe messages("service.availability.status.issues")
+
+        val departuresKnownIssuesParagraph =
+          s"${messages("service.availability.issues.p1")} " +
+            s"${messages("service.availability.ncts.xi.departures")} " +
+            s"${messages("service.availability.issues.p2")} " +
+            s"${messages("service.availability.ncts.gb.departures")} " +
+            s"${messages("service.availability.issues.both.channels")}"
+
+        allUnhealthyView.getElementsByClass("govuk-body").get(2)
+          .text() must include(departuresKnownIssuesParagraph)
+        allUnhealthyView.getElementsByClass("govuk-body").get(3)
+          .text() must include(s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}")
       }
 
       "should show that services have known issues for other systems" in {
@@ -163,6 +187,16 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           .text() mustBe messages("service.availability.status.issues")
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(11)
           .text() mustBe messages("service.availability.status.issues")
+
+        val otherSystemsKnownIssuesParagraph =
+          s"${messages("service.availability.issues.p1")} " +
+            s"${messages("service.availability.submission.channels.status.web.channel")} " +
+            s"${messages("service.availability.issues.p2")} " +
+            s"${messages("service.availability.submission.channels.status.xml.channel")} " +
+            s"${messages("service.availability.issues.both.channels")}"
+
+        allUnhealthyView.getElementsByClass("govuk-body").get(4)
+          .text() must include(otherSystemsKnownIssuesParagraph)
       }
     }
   }
