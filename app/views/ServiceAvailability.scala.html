@@ -16,6 +16,7 @@
 
 @import models.responses.StatusResponse
 @import utils.DateTimeFormatter._
+@import helpers.SubmissionChannelsAvailability
 
 @this(
     layout: templates.Layout
@@ -24,7 +25,7 @@
 @(status: StatusResponse)(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages("service.availability.title")),
+    pageTitle = title(messages("service.availability.title")),
     backUrl = Some(controllers.routes.IndexController.onPageLoad.url)
 ) {
 
@@ -117,26 +118,28 @@
                 </tr>
                 </tbody>
             </table>
-
             @KnownIssuesParagraph(status.gbDeparturesHealthy, status.xiDeparturesHealthy, messages("service.availability.ncts.gb.departures"), messages("service.availability.ncts.xi.departures"))
-            @SubmissionChannelsAvailability(formatDateTime(status.createdTs), status.apiChannelHealthy)
-
-            @if(!status.apiChannelHealthy && !status.apiChannelHealthy){
+            @SubmissionChannelsAvailability(
+                formatDateTime(status.createdTs),
+                status.apiChannelHealthy,
+                status.webChannelHealthy
+            )
+            @if(!status.apiChannelHealthy && !status.webChannelHealthy){
                 <p class="govuk-body">
                     @messages("service.availability.issues.p1")
-                    <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
+                    <b>@messages("service.availability.submission.channels.status.web.channel")</b>
                     @messages("service.availability.issues.p2")
                     <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
                     @messages("service.availability.issues.both.channels")
                     @messages("service.availability.issues.p3")
                 </p>
-            } else if (!status.apiChannelHealthy || !status.apiChannelHealthy){
+            } else if (!status.apiChannelHealthy || !status.webChannelHealthy){
                 <p class="govuk-body">
                     @messages("service.availability.issues.p1")
                     @if(!status.apiChannelHealthy) {
                         <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
                     } else {
-                        <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
+                        <b>@messages("service.availability.submission.channels.status.web.channel")</b>
                     }
                     @messages("service.availability.issues.single.channel")
                     @messages("service.availability.issues.p3")

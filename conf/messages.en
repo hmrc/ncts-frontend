@@ -1,6 +1,5 @@
 service.name = Service availability and Planned downtime
 
-site.back = Back
 site.remove = Remove
 site.change = Change
 site.no = No
@@ -85,6 +84,7 @@ service.availability.submission.channels.status.heading=Submission Channels Stat
 service.availability.submission.channels.status.p1=Submission channels status as of
 service.availability.submission.channels.status.core=System Core Name
 service.availability.submission.channels.status.xml.channel=XML Channel
+service.availability.submission.channels.status.web.channel=Web Channel
 
 service.availability.issues.p1=The
 service.availability.issues.p2=and

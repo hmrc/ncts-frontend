@@ -30,6 +30,7 @@ case class StatusResponse(
                            gbArrivalsHealthy: Boolean,
                            xiArrivalsHealthy: Boolean,
                            apiChannelHealthy: Boolean,
+                           webChannelHealthy: Boolean,
                            createdTs: LocalDateTime
                          )
 

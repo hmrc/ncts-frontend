@@ -18,6 +18,7 @@
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 @import views.html.helper.CSPNonce
 @import config.FrontendAppConfig
+@import views.html.helpers.Breadcrumbs
 
 @this(
     hmrcLayout: HmrcLayout,
@@ -40,5 +41,6 @@
     phaseBanner = Some(standardBetaBanner(url = appConfig.feedbackUrl)),
     nonce = CSPNonce.get,
     backLinkUrl = backUrl,
-    mainContentLayout = None
+    mainContentLayout = None,
+    beforeContentBlock = Some(Breadcrumbs(headingFromTitle(pageTitle), appConfig))
 )(contentBlock)

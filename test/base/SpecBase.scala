@@ -16,6 +16,7 @@
 
 package base
 
+import org.jsoup.nodes.{Document, Element}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -53,4 +54,17 @@ trait SpecBase
   protected def applicationBuilder(): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides()
+
+  def breadcrumb(index: Int, document: Document): Element = {
+    document.body().getElementsByClass("govuk-breadcrumbs__link").get(index)
+  }
+
+  val homeLink = "/new-computerised-transit-system-service-availability-and-issues"
+
+  val serviceAvailabilityLink = "/new-computerised-transit-system-service-availability-and-issues/service-availability"
+  val plannedDowntimeLink = "/new-computerised-transit-system-service-availability-and-issues/planned-downtime"
+
+  val govukHomeLink = "https://www.gov.uk/government/publications" +
+    "/new-computerised-transit-system-service-availability-and-issues" +
+    "/new-computerised-transit-system-service-availability-and-issues"
 }
