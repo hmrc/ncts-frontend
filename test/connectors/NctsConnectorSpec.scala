@@ -19,7 +19,7 @@ package connectors
 import base.SpecBase
 import config.FrontendAppConfig
 import models.responses.ErrorResponse.StatusResponseError
-import models.responses.{ErrorResponse, StatusResponse}
+import models.responses.{ErrorResponse, HealthDetails, StatusResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import uk.gov.hmrc.http.HttpClient
@@ -35,15 +35,20 @@ class NctsConnectorSpec extends SpecBase {
 
   private val nctsConnector = new NctsConnector(mockHttp, appConfig)
 
+  private val healthDetailsHealthy =
+    HealthDetails(healthy = true, statusChangedAt = LocalDateTime.now)
+  private val healthDetailsUnhealthy =
+    HealthDetails(healthy = false, statusChangedAt = LocalDateTime.now)
+
   "Ncts Connector" - {
     "should return a valid response with GB/XI departures true and GB/XI arrivals false" in {
       val response = StatusResponse(
-        gbDeparturesHealthy = true,
-        xiDeparturesHealthy = true,
-        gbArrivalsHealthy = false,
-        xiArrivalsHealthy = false,
-        apiChannelHealthy = false,
-        webChannelHealthy = false,
+        gbDeparturesStatus = healthDetailsHealthy,
+        xiDeparturesStatus = healthDetailsHealthy,
+        gbArrivalsStatus = healthDetailsUnhealthy,
+        xiArrivalsStatus = healthDetailsUnhealthy,
+        xmlChannelStatus = healthDetailsUnhealthy,
+        webChannelStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.now()
       )
 
@@ -57,12 +62,12 @@ class NctsConnectorSpec extends SpecBase {
 
     "should return a valid response with GB/XI departures false and GB/XI arrivals true" in {
       val response = StatusResponse(
-        gbDeparturesHealthy = false,
-        xiDeparturesHealthy = false,
-        gbArrivalsHealthy = true,
-        xiArrivalsHealthy = true,
-        apiChannelHealthy = true,
-        webChannelHealthy = true,
+        gbDeparturesStatus = healthDetailsUnhealthy,
+        xiDeparturesStatus = healthDetailsUnhealthy,
+        gbArrivalsStatus = healthDetailsHealthy,
+        xiArrivalsStatus = healthDetailsHealthy,
+        xmlChannelStatus = healthDetailsHealthy,
+        webChannelStatus = healthDetailsHealthy,
         createdTs = LocalDateTime.now()
       )
 

@@ -17,7 +17,7 @@
 package views
 
 import base.SpecBase
-import models.responses.StatusResponse
+import models.responses.{HealthDetails, StatusResponse}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.Injecting
@@ -28,15 +28,30 @@ import java.time.LocalDateTime
 class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
   val view: ServiceAvailability = inject[ServiceAvailability]
+
+  private val healthDetailsHealthy =
+    HealthDetails(healthy = true, statusChangedAt = LocalDateTime.now)
+  private val healthDetailsUnhealthy =
+    HealthDetails(healthy = false, statusChangedAt = LocalDateTime.now)
+
+  StatusResponse(
+    gbDeparturesStatus = healthDetailsHealthy,
+    xiDeparturesStatus = healthDetailsHealthy,
+    gbArrivalsStatus = healthDetailsHealthy,
+    xiArrivalsStatus = healthDetailsHealthy,
+    xmlChannelStatus = healthDetailsHealthy,
+    webChannelStatus = healthDetailsHealthy,
+    createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
+  )
   val document: Document = Jsoup.parse(view(
     StatusResponse(
-      gbDeparturesHealthy = true,
-      xiDeparturesHealthy = true,
-      gbArrivalsHealthy = true,
-      xiArrivalsHealthy = true,
-      apiChannelHealthy = true,
-      webChannelHealthy = true,
-      LocalDateTime.of(2022, 1, 24, 0, 0, 0)
+      gbDeparturesStatus = healthDetailsHealthy,
+      xiDeparturesStatus = healthDetailsHealthy,
+      gbArrivalsStatus = healthDetailsHealthy,
+      xiArrivalsStatus = healthDetailsHealthy,
+      xmlChannelStatus = healthDetailsHealthy,
+      webChannelStatus = healthDetailsHealthy,
+      createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
     )).body)
 
   "ServiceAvailability" - {
@@ -135,13 +150,13 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
       val allUnhealthyView: Document = Jsoup.parse(view(
         StatusResponse(
-          gbDeparturesHealthy = false,
-          xiDeparturesHealthy = false,
-          gbArrivalsHealthy = false,
-          xiArrivalsHealthy = false,
-          apiChannelHealthy = false,
-          webChannelHealthy = false,
-          LocalDateTime.of(2022, 1, 24, 0, 0, 0)
+          gbDeparturesStatus = healthDetailsUnhealthy,
+          xiDeparturesStatus = healthDetailsUnhealthy,
+          gbArrivalsStatus = healthDetailsUnhealthy,
+          xiArrivalsStatus = healthDetailsUnhealthy,
+          xmlChannelStatus = healthDetailsUnhealthy,
+          webChannelStatus = healthDetailsUnhealthy,
+          createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
         )).body)
 
       "should show that services have known issues for arrivals" in {

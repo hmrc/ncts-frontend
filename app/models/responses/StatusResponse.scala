@@ -25,12 +25,12 @@ import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import java.time.LocalDateTime
 
 case class StatusResponse(
-                           gbDeparturesHealthy: Boolean,
-                           xiDeparturesHealthy: Boolean,
-                           gbArrivalsHealthy: Boolean,
-                           xiArrivalsHealthy: Boolean,
-                           apiChannelHealthy: Boolean,
-                           webChannelHealthy: Boolean,
+                           gbDeparturesStatus: HealthDetails,
+                           xiDeparturesStatus: HealthDetails,
+                           gbArrivalsStatus: HealthDetails,
+                           xiArrivalsStatus: HealthDetails,
+                           xmlChannelStatus: HealthDetails,
+                           webChannelStatus: HealthDetails,
                            createdTs: LocalDateTime
                          )
 
@@ -57,4 +57,10 @@ object StatusResponse {
           Left(StatusResponseError(s"Unexpected error occurred when checking service status: ${response.body}"))
       }
   }
+}
+
+case class HealthDetails(healthy: Boolean, statusChangedAt: LocalDateTime)
+
+object HealthDetails {
+  implicit val format: OFormat[HealthDetails] = Json.format[HealthDetails]
 }

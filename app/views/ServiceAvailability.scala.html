@@ -51,7 +51,7 @@
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">@messages("service.availability.ncts.gb.arrivals")</td>
-                        @if(status.gbArrivalsHealthy){
+                        @if(status.gbArrivalsStatus.healthy){
                         <td class="govuk-table__cell">
                             <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
                         </td>
@@ -63,7 +63,7 @@
                     </tr>
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">@messages("service.availability.ncts.xi.arrivals")</td>
-                        @if(status.xiArrivalsHealthy){
+                        @if(status.xiArrivalsStatus.healthy){
                         <td class="govuk-table__cell">
                             <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
                         </td>
@@ -76,7 +76,7 @@
                 </tbody>
             </table>
 
-            @KnownIssuesParagraph(status.gbArrivalsHealthy, status.xiArrivalsHealthy, messages("service.availability.ncts.gb.arrivals"), messages("service.availability.ncts.xi.arrivals"))
+            @KnownIssuesParagraph(status.gbArrivalsStatus.healthy, status.xiArrivalsStatus.healthy, messages("service.availability.ncts.gb.arrivals"), messages("service.availability.ncts.xi.arrivals"))
             <table class="govuk-table">
                 <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.departures")
                     <div class="govuk-inset-text bottom_padding">
@@ -94,7 +94,7 @@
                 <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">@messages("service.availability.ncts.gb.departures")</td>
-                    @if(status.gbDeparturesHealthy){
+                    @if(status.gbDeparturesStatus.healthy){
                     <td class="govuk-table__cell">
                         <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
                     </td>
@@ -106,7 +106,7 @@
                 </tr>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">@messages("service.availability.ncts.xi.departures")</td>
-                    @if(status.xiDeparturesHealthy){
+                    @if(status.xiDeparturesStatus.healthy){
                     <td class="govuk-table__cell">
                         <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
                     </td>
@@ -118,13 +118,13 @@
                 </tr>
                 </tbody>
             </table>
-            @KnownIssuesParagraph(status.gbDeparturesHealthy, status.xiDeparturesHealthy, messages("service.availability.ncts.gb.departures"), messages("service.availability.ncts.xi.departures"))
+            @KnownIssuesParagraph(status.gbDeparturesStatus.healthy, status.xiDeparturesStatus.healthy, messages("service.availability.ncts.gb.departures"), messages("service.availability.ncts.xi.departures"))
             @SubmissionChannelsAvailability(
                 formatDateTime(status.createdTs),
-                status.apiChannelHealthy,
-                status.webChannelHealthy
+                status.xmlChannelStatus.healthy,
+                status.webChannelStatus.healthy
             )
-            @if(!status.apiChannelHealthy && !status.webChannelHealthy){
+            @if(!status.xmlChannelStatus.healthy && !status.webChannelStatus.healthy){
                 <p class="govuk-body">
                     @messages("service.availability.issues.p1")
                     <b>@messages("service.availability.submission.channels.status.web.channel")</b>
@@ -133,10 +133,10 @@
                     @messages("service.availability.issues.both.channels")
                     @messages("service.availability.issues.p3")
                 </p>
-            } else if (!status.apiChannelHealthy || !status.webChannelHealthy){
+            } else if (!status.xmlChannelStatus.healthy || !status.webChannelStatus.healthy){
                 <p class="govuk-body">
                     @messages("service.availability.issues.p1")
-                    @if(!status.apiChannelHealthy) {
+                    @if(!status.xmlChannelStatus.healthy) {
                         <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
                     } else {
                         <b>@messages("service.availability.submission.channels.status.web.channel")</b>

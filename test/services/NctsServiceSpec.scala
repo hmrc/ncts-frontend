@@ -19,7 +19,7 @@ package services
 import base.SpecBase
 import connectors.NctsConnector
 import models.responses.ErrorResponse.StatusResponseError
-import models.responses.StatusResponse
+import models.responses.{HealthDetails, StatusResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 
@@ -31,31 +31,37 @@ class NctsServiceSpec extends SpecBase {
   val nctsConnector = mock[NctsConnector]
   val service = new NctsService(nctsConnector)
 
+  private val healthDetailsHealthy =
+    HealthDetails(healthy = true, statusChangedAt = LocalDateTime.now)
+  private val healthDetailsUnhealthy =
+    HealthDetails(healthy = false, statusChangedAt = LocalDateTime.now)
+
   "checkStatus" - {
     "return a valid status response" in {
       when(nctsConnector.checkStatus()(any())) thenReturn
         Future.successful(Right(
           StatusResponse(
-            gbDeparturesHealthy = true,
-            xiDeparturesHealthy = false,
-            gbArrivalsHealthy = true,
-            xiArrivalsHealthy = false,
-            apiChannelHealthy = true,
-            webChannelHealthy = true,
+            gbDeparturesStatus = healthDetailsHealthy,
+            xiDeparturesStatus = healthDetailsUnhealthy,
+            gbArrivalsStatus = healthDetailsHealthy,
+            xiArrivalsStatus = healthDetailsUnhealthy,
+            xmlChannelStatus = healthDetailsHealthy,
+            webChannelStatus = healthDetailsHealthy,
             createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
           )))
 
       val result = service.checkStatus().futureValue
 
+
       result.fold(
         _ => "should not return an error response",
         response => response mustBe StatusResponse(
-          gbDeparturesHealthy = true,
-          xiDeparturesHealthy = false,
-          gbArrivalsHealthy = true,
-          xiArrivalsHealthy = false,
-          apiChannelHealthy = true,
-          webChannelHealthy = true,
+          gbDeparturesStatus = healthDetailsHealthy,
+          xiDeparturesStatus = healthDetailsUnhealthy,
+          gbArrivalsStatus = healthDetailsHealthy,
+          xiArrivalsStatus = healthDetailsUnhealthy,
+          xmlChannelStatus = healthDetailsHealthy,
+          webChannelStatus = healthDetailsHealthy,
           createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
         )
       )

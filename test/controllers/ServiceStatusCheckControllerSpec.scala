@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import models.responses.ErrorResponse.StatusResponseError
-import models.responses.StatusResponse
+import models.responses.{HealthDetails, StatusResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.inject.bind
@@ -38,20 +38,26 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
     bind[NctsService].to(nctsService)
   )
 
+  private val healthDetailsHealthy =
+    HealthDetails(healthy = true, statusChangedAt = LocalDateTime.now)
+  private val healthDetailsUnhealthy =
+    HealthDetails(healthy = false, statusChangedAt = LocalDateTime.now)
+
   "Service Status Check Controller" - {
 
     "must return OK and the correct view for a GET with GB/XI departures true and GB/XI arrivals false" in {
       when(nctsService.checkStatus()(any())) thenReturn
         Future(Right(
           StatusResponse(
-            gbDeparturesHealthy = true,
-            xiDeparturesHealthy = true,
-            gbArrivalsHealthy = false,
-            xiArrivalsHealthy = false,
-            apiChannelHealthy = false,
-            webChannelHealthy = false,
+            gbDeparturesStatus = healthDetailsHealthy,
+            xiDeparturesStatus = healthDetailsHealthy,
+            gbArrivalsStatus = healthDetailsUnhealthy,
+            xiArrivalsStatus = healthDetailsUnhealthy,
+            xmlChannelStatus = healthDetailsUnhealthy,
+            webChannelStatus = healthDetailsUnhealthy,
             createdTs = LocalDateTime.now()
-          )))
+          )
+        ))
 
       val application = applicationBuilder().overrides(mocks).build()
 
@@ -68,12 +74,12 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
     "must return OK and the correct view for a GET with GB/XI departures false and GB/XI arrivals true" in {
       when(nctsService.checkStatus()(any())) thenReturn
         Future(Right(StatusResponse(
-          gbDeparturesHealthy = false,
-          xiDeparturesHealthy = false,
-          gbArrivalsHealthy = true,
-          xiArrivalsHealthy = true,
-          apiChannelHealthy = true,
-          webChannelHealthy = true,
+          gbDeparturesStatus = healthDetailsUnhealthy,
+          xiDeparturesStatus = healthDetailsUnhealthy,
+          gbArrivalsStatus = healthDetailsHealthy,
+          xiArrivalsStatus = healthDetailsHealthy,
+          xmlChannelStatus = healthDetailsHealthy,
+          webChannelStatus = healthDetailsHealthy,
           createdTs = LocalDateTime.now()
         )))
 
