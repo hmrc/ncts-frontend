@@ -75,8 +75,14 @@
                     </tr>
                 </tbody>
             </table>
-
-            @KnownIssuesParagraph(status.gbArrivalsStatus.healthy, status.xiArrivalsStatus.healthy, status.gbArrivalsStatus.statusChangedAt, status.xiArrivalsStatus.statusChangedAt, messages("service.availability.ncts.gb.arrivals"), messages("service.availability.ncts.xi.arrivals"))
+            @KnownIssuesParagraph(
+                status.gbArrivalsStatus.healthy,
+                status.xiArrivalsStatus.healthy,
+                status.gbArrivalsStatus.statusChangedAt,
+                status.xiArrivalsStatus.statusChangedAt,
+                messages("service.availability.ncts.gb.arrivals"),
+                messages("service.availability.ncts.xi.arrivals")
+            )
             <table class="govuk-table">
                 <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.departures")
                     <div class="govuk-inset-text bottom_padding">
@@ -118,7 +124,14 @@
                 </tr>
                 </tbody>
             </table>
-            @KnownIssuesParagraph(status.gbDeparturesStatus.healthy, status.xiDeparturesStatus.healthy, status.gbDeparturesStatus.statusChangedAt, status.xiDeparturesStatus.statusChangedAt, messages("service.availability.ncts.gb.departures"), messages("service.availability.ncts.xi.departures"))
+            @KnownIssuesParagraph(
+                status.gbDeparturesStatus.healthy,
+                status.xiDeparturesStatus.healthy,
+                status.gbDeparturesStatus.statusChangedAt,
+                status.xiDeparturesStatus.statusChangedAt,
+                messages("service.availability.ncts.gb.departures"),
+                messages("service.availability.ncts.xi.departures")
+            )
             @SubmissionChannelsAvailability(
                 formatDateTime(status.createdTs),
                 status.xmlChannelStatus.healthy,

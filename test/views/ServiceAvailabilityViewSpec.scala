@@ -21,6 +21,7 @@ import models.responses.StatusResponse
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.Injecting
+import utils.DateTimeFormatter
 import utils.HealthDetailsExamples._
 import views.html.ServiceAvailability
 
@@ -143,17 +144,16 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
     }
 
     "when all services are not healthy" - {
-
-      val allUnhealthyView: Document = Jsoup.parse(view(
-        StatusResponse(
-          gbDeparturesStatus = healthDetailsUnhealthy,
-          xiDeparturesStatus = healthDetailsUnhealthy,
-          gbArrivalsStatus = healthDetailsUnhealthy,
-          xiArrivalsStatus = healthDetailsUnhealthy,
-          xmlChannelStatus = healthDetailsUnhealthy,
-          webChannelStatus = healthDetailsUnhealthy,
-          createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
-        )).body)
+      val statusResponsee = StatusResponse(
+        gbDeparturesStatus = healthDetailsUnhealthy,
+        xiDeparturesStatus = healthDetailsUnhealthy,
+        gbArrivalsStatus = healthDetailsUnhealthy,
+        xiArrivalsStatus = healthDetailsUnhealthy,
+        xmlChannelStatus = healthDetailsUnhealthy,
+        webChannelStatus = healthDetailsUnhealthy,
+        createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
+      )
+      val allUnhealthyView: Document = Jsoup.parse(view(statusResponsee).body)
 
       "should show that services have known issues for arrivals" in {
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
@@ -166,7 +166,11 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.ncts.xi.arrivals")} " +
             s"${messages("service.availability.issues.p2")} " +
             s"${messages("service.availability.ncts.gb.arrivals")} " +
-            s"${messages("service.availability.issues.both.channels")}"
+            s"${messages("service.availability.issues.both.channels")} " +
+            s"${messages("service.availability.issues.known")} " +
+            s"${DateTimeFormatter.formatDateTime(statusResponsee.gbArrivalsStatus.statusChangedAt)} " +
+            s"${messages("and")} " +
+            s"${DateTimeFormatter.formatDateTime(statusResponsee.xiArrivalsStatus.statusChangedAt)}"
 
         allUnhealthyView.getElementsByClass("govuk-body").get(0)
           .text() must include(arrivalsKnownIssuesParagraph)
@@ -185,7 +189,11 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.ncts.xi.departures")} " +
             s"${messages("service.availability.issues.p2")} " +
             s"${messages("service.availability.ncts.gb.departures")} " +
-            s"${messages("service.availability.issues.both.channels")}"
+            s"${messages("service.availability.issues.both.channels")} " +
+            s"${messages("service.availability.issues.known")} " +
+            s"${DateTimeFormatter.formatDateTime(statusResponsee.gbDeparturesStatus.statusChangedAt)} " +
+            s"${messages("and")} " +
+            s"${DateTimeFormatter.formatDateTime(statusResponsee.xiDeparturesStatus.statusChangedAt)}"
 
         allUnhealthyView.getElementsByClass("govuk-body").get(2)
           .text() must include(departuresKnownIssuesParagraph)

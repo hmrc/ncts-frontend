@@ -17,7 +17,12 @@
 @import utils.DateTimeFormatter._
 @import java.time.LocalDateTime
 
-@(gbHealthy: Boolean, xiHealthy: Boolean, gbStatusChangedAt: LocalDateTime, xiStatusChangedAt: LocalDateTime, gbHealthMessage: String, xiHealthMessage: String)(implicit request: Request[_], messages: Messages)
+@(gbHealthy: Boolean,
+  xiHealthy: Boolean,
+  gbStatusChangedAt: LocalDateTime,
+  xiStatusChangedAt: LocalDateTime,
+  gbHealthMessage: String,
+  xiHealthMessage: String)(implicit request: Request[_], messages: Messages)
 
     @if(!gbHealthy && !xiHealthy){
         <p class="govuk-body">
