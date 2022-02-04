@@ -19,9 +19,10 @@ package services
 import base.SpecBase
 import connectors.NctsConnector
 import models.responses.ErrorResponse.StatusResponseError
-import models.responses.{HealthDetails, StatusResponse}
+import models.responses.StatusResponse
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import utils.HealthDetailsExamples._
 
 import java.time.LocalDateTime
 import scala.concurrent.Future
@@ -30,11 +31,6 @@ class NctsServiceSpec extends SpecBase {
 
   val nctsConnector = mock[NctsConnector]
   val service = new NctsService(nctsConnector)
-
-  private val healthDetailsHealthy =
-    HealthDetails(healthy = true, statusChangedAt = LocalDateTime.now)
-  private val healthDetailsUnhealthy =
-    HealthDetails(healthy = false, statusChangedAt = LocalDateTime.now)
 
   "checkStatus" - {
     "return a valid status response" in {

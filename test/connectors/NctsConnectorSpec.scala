@@ -26,6 +26,8 @@ import uk.gov.hmrc.http.HttpClient
 
 import java.time.LocalDateTime
 import scala.concurrent.Future
+import utils.HealthDetailsExamples._
+
 
 class NctsConnectorSpec extends SpecBase {
 
@@ -34,11 +36,6 @@ class NctsConnectorSpec extends SpecBase {
   private val mockHttp = mock[HttpClient]
 
   private val nctsConnector = new NctsConnector(mockHttp, appConfig)
-
-  private val healthDetailsHealthy =
-    HealthDetails(healthy = true, statusChangedAt = LocalDateTime.now)
-  private val healthDetailsUnhealthy =
-    HealthDetails(healthy = false, statusChangedAt = LocalDateTime.now)
 
   "Ncts Connector" - {
     "should return a valid response with GB/XI departures true and GB/XI arrivals false" in {

@@ -18,9 +18,10 @@ package connectors
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import models.responses.{ErrorResponse, StatusResponse}
+import models.responses.{ErrorResponse, HealthDetails, StatusResponse}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
+import java.time.LocalDateTime
 import javax.inject.Singleton
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -32,6 +33,17 @@ class NctsConnector @Inject()(
                              ) {
 
   def checkStatus()(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, StatusResponse]] =
-    httpClient.GET[Either[ErrorResponse, StatusResponse]](s"${config.nctsUrl}/status-check")
+
+
+    Future.successful(Right(StatusResponse(
+      gbDeparturesStatus = HealthDetails(false, LocalDateTime.now),
+      xiDeparturesStatus = HealthDetails(false, LocalDateTime.of(2022, 1, 1, 10, 50, 50)),
+      gbArrivalsStatus = HealthDetails(false, LocalDateTime.now),
+      xiArrivalsStatus = HealthDetails(false, LocalDateTime.of(2022, 1, 1, 10, 50, 50)),
+      xmlChannelStatus = HealthDetails(true, LocalDateTime.of(2022, 1, 1, 10, 50, 50)),
+      webChannelStatus = HealthDetails(true, LocalDateTime.of(2022, 1, 1, 10, 50, 50)),
+      createdTs = LocalDateTime.now()
+    )))
+  //httpClient.GET[Either[ErrorResponse, StatusResponse]](s"${config.nctsUrl}/status-check")
 
 }

@@ -17,10 +17,11 @@
 package views
 
 import base.SpecBase
-import models.responses.{HealthDetails, StatusResponse}
+import models.responses.StatusResponse
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.Injecting
+import utils.HealthDetailsExamples._
 import views.html.ServiceAvailability
 
 import java.time.LocalDateTime
@@ -28,11 +29,6 @@ import java.time.LocalDateTime
 class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
   val view: ServiceAvailability = inject[ServiceAvailability]
-
-  private val healthDetailsHealthy =
-    HealthDetails(healthy = true, statusChangedAt = LocalDateTime.now)
-  private val healthDetailsUnhealthy =
-    HealthDetails(healthy = false, statusChangedAt = LocalDateTime.now)
 
   StatusResponse(
     gbDeparturesStatus = healthDetailsHealthy,

@@ -29,6 +29,7 @@ import services.NctsService
 import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import utils.HealthDetailsExamples._
 
 class ServiceStatusCheckControllerSpec extends SpecBase {
 
@@ -37,11 +38,6 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
   val mocks = Seq(
     bind[NctsService].to(nctsService)
   )
-
-  private val healthDetailsHealthy =
-    HealthDetails(healthy = true, statusChangedAt = LocalDateTime.now)
-  private val healthDetailsUnhealthy =
-    HealthDetails(healthy = false, statusChangedAt = LocalDateTime.now)
 
   "Service Status Check Controller" - {
 
