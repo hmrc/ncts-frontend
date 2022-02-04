@@ -169,7 +169,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.issues.both.channels")} " +
             s"${messages("service.availability.issues.known")} " +
             s"${DateTimeFormatter.formatDateTime(statusResponsee.gbArrivalsStatus.statusChangedAt)} " +
-            s"${messages("and")} " +
+            s"${messages("service.availability.issues.p2")} " +
             s"${DateTimeFormatter.formatDateTime(statusResponsee.xiArrivalsStatus.statusChangedAt)}"
 
         allUnhealthyView.getElementsByClass("govuk-body").get(0)
@@ -192,7 +192,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.issues.both.channels")} " +
             s"${messages("service.availability.issues.known")} " +
             s"${DateTimeFormatter.formatDateTime(statusResponsee.gbDeparturesStatus.statusChangedAt)} " +
-            s"${messages("and")} " +
+            s"${messages("service.availability.issues.p2")} " +
             s"${DateTimeFormatter.formatDateTime(statusResponsee.xiDeparturesStatus.statusChangedAt)}"
 
         allUnhealthyView.getElementsByClass("govuk-body").get(2)
