@@ -18,6 +18,7 @@ package utils
 
 import java.time.format.{DateTimeFormatter => DateTimeGen}
 import java.time.{LocalDate, LocalDateTime, LocalTime}
+import java.util.Locale
 
 object DateTimeFormatter {
   def formatDate(localDate: LocalDate): String = {
@@ -36,6 +37,6 @@ object DateTimeFormatter {
   }
 
   def formatDateTime(dateTime: LocalDateTime): String =
-    dateTime.format(DateTimeGen.ofPattern("h:mma"))
+    dateTime.format(DateTimeGen.ofPattern("h:mma")).toLowerCase(Locale.ENGLISH)
 
 }
