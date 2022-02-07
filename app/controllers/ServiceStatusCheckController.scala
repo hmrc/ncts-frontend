@@ -38,7 +38,11 @@ class ServiceStatusCheckController @Inject()(
 
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     nctsService.checkStatus().flatMap {
-      case Right(statusResponse: StatusResponse) => Future.successful(Ok(view(statusResponse)))
+      case Right(statusResponse: StatusResponse) => {
+
+        println("CONTROLLER : " +statusResponse)
+        Future.successful(Ok(view(statusResponse)))
+      }
       case _ => Future.successful(errorHandler.showInternalServerError)
     }
   }

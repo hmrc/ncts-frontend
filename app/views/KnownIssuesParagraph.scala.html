@@ -31,7 +31,7 @@
             @messages("service.availability.issues.p2")
             <b>@gbHealthMessage</b>
             @messages("service.availability.issues.both.channels")
-            @messages("service.availability.issues.known") <b>@formatDateTime(xiStatusChangedAt) and @formatDateTime(gbStatusChangedAt).</b>
+            @messages("service.availability.issues.known") <b>@formatDateTimeKnownIssues(xiStatusChangedAt) and @formatDateTimeKnownIssues(gbStatusChangedAt).</b>
             @messages("service.availability.issues.p3")
         </p>
         <p class="govuk-body">
@@ -46,7 +46,7 @@
                 <b>@gbHealthMessage</b>
             }
             @messages("service.availability.issues.single.channel")
-            @messages("service.availability.issues.known") <b>@{if(!xiHealthy) {formatDateTime(xiStatusChangedAt)} else {formatDateTime(gbStatusChangedAt)}}.</b>
+            @messages("service.availability.issues.known") <b>@{if(!xiHealthy) {formatDateTimeKnownIssues(xiStatusChangedAt)} else {formatDateTimeKnownIssues(gbStatusChangedAt)}}.</b>
             @messages("service.availability.issues.p3")
         </p>
         <p class="govuk-body">
