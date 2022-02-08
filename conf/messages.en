@@ -78,6 +78,8 @@ service.availability.ncts.xi.arrivals=NCTS XI Arrivals
 service.availability.status.available=Available
 service.availability.status.issues=Known issues
 service.availability.lastUpdated=Last updated:
+service.availability.lastUpdated.refresh=Refresh this page
+service.availability.lastUpdated.latest=for the latest availability status.
 
 service.availability.submission.channels.status.heading=Submission Channels Status
 service.availability.submission.channels.status.p1=Submission channels status as of

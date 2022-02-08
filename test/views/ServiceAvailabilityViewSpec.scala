@@ -21,6 +21,7 @@ import models.responses.StatusResponse
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.Injecting
+import utils.DateTimeFormatter.formatDateTime
 import views.html.ServiceAvailability
 
 import java.time.LocalDateTime
@@ -106,6 +107,34 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
       document.getElementsByClass("govuk-table__cell").get(10)
         .text() mustBe messages("service.availability.submission.channels.status.xml.channel")
+    }
+
+    "should show the last updated time with refresh link for arrivals" in {
+      val lastUpdatedText = s"${messages("service.availability.lastUpdated")} " +
+        s"${formatDateTime(LocalDateTime.of(2022, 1, 24, 0, 0, 0).minusMinutes(30))}. " +
+        s"${messages("service.availability.lastUpdated.refresh")} " +
+        s"${messages("service.availability.lastUpdated.latest")}"
+
+      document.getElementsByClass("govuk-inset-text").first()
+        .text() mustBe lastUpdatedText
+    }
+    "should show the last updated time with refresh link for departures" in {
+      val lastUpdatedText = s"${messages("service.availability.lastUpdated")} " +
+        s"${formatDateTime(LocalDateTime.of(2022, 1, 24, 0, 0, 0).minusSeconds(30))}. " +
+        s"${messages("service.availability.lastUpdated.refresh")} " +
+        s"${messages("service.availability.lastUpdated.latest")}"
+
+      document.getElementsByClass("govuk-inset-text").get(1)
+        .text() mustBe lastUpdatedText
+    }
+    "should show the last updated time with refresh link for other systems" in {
+      val lastUpdatedText = s"${messages("service.availability.lastUpdated")} " +
+        s"${formatDateTime(LocalDateTime.of(2022, 1, 24, 0, 0, 0))}. " +
+        s"${messages("service.availability.lastUpdated.refresh")} " +
+        s"${messages("service.availability.lastUpdated.latest")}"
+
+      document.getElementsByClass("govuk-inset-text").get(2)
+        .text() mustBe lastUpdatedText
     }
 
     "when all services are healthy" - {

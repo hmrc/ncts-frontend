@@ -39,9 +39,9 @@
                         <p>@messages("service.availability.lastUpdated")
                             <b>@formatDateTime(status.createdTs.minusMinutes(30)).</b>
                             <a href="@controllers.routes.ServiceStatusCheckController.onPageLoad.url">
-                                Refresh this page
+                                @messages("service.availability.lastUpdated.refresh")
                             </a>
-                            @messages("for the latest availability status.")
+                            @messages("service.availability.lastUpdated.latest")
                         </p>
                     </div>
                 </caption>
@@ -87,9 +87,9 @@
                         <p>@messages("service.availability.lastUpdated")
                             <b>@formatDateTime(status.createdTs.minusSeconds(30)).</b>
                             <a href="@controllers.routes.ServiceStatusCheckController.onPageLoad.url">
-                                 Refresh this page
+                                @messages("service.availability.lastUpdated.refresh")
                             </a>
-                            @messages("for the latest availability status.")
+                            @messages("service.availability.lastUpdated.latest")
                         </p>
                     </div>
                 </caption>
