@@ -128,7 +128,7 @@
             </table>
             @KnownIssuesParagraph(status.gbDeparturesHealthy, status.xiDeparturesHealthy, messages("service.availability.ncts.gb.departures"), messages("service.availability.ncts.xi.departures"))
             @SubmissionChannelsAvailability(
-                formatDateTime(status.createdTs),
+                status.createdTs,
                 status.apiChannelHealthy,
                 status.webChannelHealthy
             )
