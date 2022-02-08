@@ -22,6 +22,7 @@ import models.responses.ErrorResponse.StatusResponseError
 import models.responses.StatusResponse
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import utils.HealthDetailsExamples._
 
 import java.time.LocalDateTime
 import scala.concurrent.Future
@@ -36,26 +37,27 @@ class NctsServiceSpec extends SpecBase {
       when(nctsConnector.checkStatus()(any())) thenReturn
         Future.successful(Right(
           StatusResponse(
-            gbDeparturesHealthy = true,
-            xiDeparturesHealthy = false,
-            gbArrivalsHealthy = true,
-            xiArrivalsHealthy = false,
-            apiChannelHealthy = true,
-            webChannelHealthy = true,
+            gbDeparturesStatus = healthDetailsHealthy,
+            xiDeparturesStatus = healthDetailsUnhealthy,
+            gbArrivalsStatus = healthDetailsHealthy,
+            xiArrivalsStatus = healthDetailsUnhealthy,
+            xmlChannelStatus = healthDetailsHealthy,
+            webChannelStatus = healthDetailsHealthy,
             createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
           )))
 
       val result = service.checkStatus().futureValue
 
+
       result.fold(
         _ => "should not return an error response",
         response => response mustBe StatusResponse(
-          gbDeparturesHealthy = true,
-          xiDeparturesHealthy = false,
-          gbArrivalsHealthy = true,
-          xiArrivalsHealthy = false,
-          apiChannelHealthy = true,
-          webChannelHealthy = true,
+          gbDeparturesStatus = healthDetailsHealthy,
+          xiDeparturesStatus = healthDetailsUnhealthy,
+          gbArrivalsStatus = healthDetailsHealthy,
+          xiArrivalsStatus = healthDetailsUnhealthy,
+          xmlChannelStatus = healthDetailsHealthy,
+          webChannelStatus = healthDetailsHealthy,
           createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
         )
       )
