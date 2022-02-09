@@ -67,4 +67,7 @@ trait SpecBase
   val govukHomeLink = "https://www.gov.uk/government/publications" +
     "/new-computerised-transit-system-service-availability-and-issues" +
     "/new-computerised-transit-system-service-availability-and-issues"
+
+  val getHelpUrl = "http://localhost:9250/contact/report-technical-problem?newTab=true&" +
+    "service=ncts-frontend&referrerUrl=%2F"
 }

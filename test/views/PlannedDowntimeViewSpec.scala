@@ -46,6 +46,11 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
       document.select("h1").first().text() mustBe messages("service.planned-downtime.heading")
     }
 
+    "should have a get help link" in {
+      document.body().select(".hmrc-report-technical-issue").first()
+        .attr("href") mustBe getHelpUrl
+    }
+
     "when there is downtime planned for arrivals" - {
 
       "should have the arrivals subheading" in {
