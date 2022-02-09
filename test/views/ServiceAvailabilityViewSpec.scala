@@ -89,7 +89,6 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
       document.getElementsByClass("govuk-table__cell").get(2)
         .text() mustBe messages("service.availability.ncts.xi.arrivals")
-
     }
 
     "should have a table for departures" in {
@@ -118,6 +117,11 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
       document.getElementsByClass("govuk-table__cell").get(10)
         .text() mustBe messages("service.availability.submission.channels.status.xml.channel")
+    }
+
+    "should have a get help link" in {
+      document.body().select(".hmrc-report-technical-issue").first()
+        .attr("href") mustBe getHelpUrl
     }
 
     "when all services are healthy" - {

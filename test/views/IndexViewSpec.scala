@@ -75,5 +75,10 @@ class IndexViewSpec extends SpecBase with Injecting {
         .attr("href") mustBe "https://www.gov.uk/government/collections/hm-revenue-and-customs-service-availability-and-issues"
     }
 
+    "should have a get help link" in {
+      document.body().select(".hmrc-report-technical-issue").first()
+        .attr("href") mustBe getHelpUrl
+    }
   }
+
 }
