@@ -22,33 +22,57 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.http.Status
 import uk.gov.hmrc.http.HttpResponse
-
 import java.time.LocalDateTime
 
 class StatusResponseSpec extends AnyWordSpec with Matchers {
 
+  private val statusChangedAt =
+    LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+  private val healthDetailsHealthy =
+    HealthDetails(healthy = true, statusChangedAt = statusChangedAt)
+  private val healthDetailsUnhealthy =
+    HealthDetails(healthy = false, statusChangedAt = statusChangedAt)
+
   "StatusResponseReads" should {
     "return a StatusResponse when status is OK and can be parsed for GB/XI departures true and GB/XI arrivals false" in {
       val json =
-        """
-          |{
-          |  "gbDeparturesHealthy": true,
-          |  "xiDeparturesHealthy": true,
-          |  "gbArrivalsHealthy": false,
-          |  "xiArrivalsHealthy": false,
-          |  "apiChannelHealthy": false,
-          |  "webChannelHealthy": false,
-          |  "createdTs":"2022-01-01T10:25:55"
-          |}
+        s"""
+           |{
+           |  "gbDeparturesStatus": {
+           |    "healthy": true,
+           |    "statusChangedAt": "${statusChangedAt}"
+           |  },
+           |  "xiDeparturesStatus": {
+           |    "healthy": true,
+           |    "statusChangedAt": "${statusChangedAt}"
+           |  },
+           |  "gbArrivalsStatus": {
+           |    "healthy": false,
+           |    "statusChangedAt": "${statusChangedAt}"
+           |  },
+           |  "xiArrivalsStatus": {
+           |    "healthy": false,
+           |    "statusChangedAt": "${statusChangedAt}"
+           |  },
+           |  "xmlChannelStatus": {
+           |    "healthy": false,
+           |    "statusChangedAt": "${statusChangedAt}"
+           |  },
+           |  "webChannelStatus": {
+           |    "healthy": false,
+           |    "statusChangedAt": "${statusChangedAt}"
+           |  },
+           |  "createdTs": "2022-01-01T10:25:55"
+           |}
           """.stripMargin
 
       val expectedResult = StatusResponse(
-        gbDeparturesHealthy = true,
-        xiDeparturesHealthy = true,
-        gbArrivalsHealthy = false,
-        xiArrivalsHealthy = false,
-        apiChannelHealthy = false,
-        webChannelHealthy = false,
+        gbDeparturesStatus = healthDetailsHealthy,
+        xiDeparturesStatus = healthDetailsHealthy,
+        gbArrivalsStatus = healthDetailsUnhealthy,
+        xiArrivalsStatus = healthDetailsUnhealthy,
+        xmlChannelStatus = healthDetailsUnhealthy,
+        webChannelStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
       )
 
@@ -61,28 +85,46 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
 
     "return a StatusResponse when status is OK and can be parsed for GB/XI departures false and GB/XI arrivals true" in {
       val json =
-        """
-          |{
-          |  "gbDeparturesHealthy": false,
-          |  "xiDeparturesHealthy": false,
-          |  "gbArrivalsHealthy": true,
-          |  "xiArrivalsHealthy": true,
-          |  "apiChannelHealthy": true,
-          |  "webChannelHealthy": true,
-          |  "createdTs":"2022-01-01T10:25:55"
-          |}
+        s"""
+           |{
+           |  "gbDeparturesStatus": {
+           |    "healthy": false,
+           |    "statusChangedAt": "${statusChangedAt}"
+           |  },
+           |  "xiDeparturesStatus": {
+           |    "healthy": false,
+           |    "statusChangedAt": "${statusChangedAt}"
+           |  },
+           |  "gbArrivalsStatus": {
+           |    "healthy": true,
+           |    "statusChangedAt": "${statusChangedAt}"
+           |  },
+           |  "xiArrivalsStatus": {
+           |    "healthy": true,
+           |    "statusChangedAt": "${statusChangedAt}"
+           |  },
+           |  "xmlChannelStatus": {
+           |    "healthy": true,
+           |    "statusChangedAt": "${statusChangedAt}"
+           |  },
+           |  "webChannelStatus": {
+           |    "healthy": true,
+           |    "statusChangedAt": "${statusChangedAt}"
+           |  },
+           |  "createdTs": "2022-01-01T10:25:55"
+           |}
           """.stripMargin
 
       val expectedResult = StatusResponse(
-        gbDeparturesHealthy = false,
-        xiDeparturesHealthy = false,
-        gbArrivalsHealthy = true,
-        xiArrivalsHealthy = true,
-        apiChannelHealthy = true,
-        webChannelHealthy = true,
+        gbDeparturesStatus = healthDetailsUnhealthy,
+        xiDeparturesStatus = healthDetailsUnhealthy,
+        gbArrivalsStatus = healthDetailsHealthy,
+        xiArrivalsStatus = healthDetailsHealthy,
+        xmlChannelStatus = healthDetailsHealthy,
+        webChannelStatus = healthDetailsHealthy,
         createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-
       )
+
       val httpResponse = HttpResponse(Status.OK, json)
 
       val Right(result) = StatusResponseReads.read("GET", "url", httpResponse)
@@ -97,7 +139,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
             |{
             |  "bad": "json"
             |}
-          """.stripMargin
+              """.stripMargin
 
         val httpResponse = HttpResponse(Status.OK, invalidJson)
 

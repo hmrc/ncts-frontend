@@ -27,7 +27,7 @@ object DateTimeFormatter {
   }
 
   def formatTime(localTime: LocalTime): String = {
-    val formatter = if(localTime.getMinute > 0){
+    val formatter = if (localTime.getMinute > 0) {
       DateTimeGen.ofPattern("h:mma")
     } else {
       DateTimeGen.ofPattern("ha")
@@ -39,4 +39,13 @@ object DateTimeFormatter {
   def formatDateTime(dateTime: LocalDateTime): String =
     dateTime.format(DateTimeGen.ofPattern("h:mma")).toLowerCase(Locale.ENGLISH)
 
+  def formatDateTimeKnownIssues(dateTime: LocalDateTime): String = {
+    val knownIssueSince = dateTime.toLocalDate
+    val now = LocalDate.now
+    if (now.isAfter(knownIssueSince))
+      s"${dateTime.format(DateTimeGen.ofPattern("h:mma")).toLowerCase(Locale.ENGLISH)}, " +
+        s"${dateTime.format(DateTimeGen.ofPattern("d MMMM yyyy"))}"
+    else
+      dateTime.format(DateTimeGen.ofPattern("h:mma")).toLowerCase(Locale.ENGLISH)
+  }
 }
