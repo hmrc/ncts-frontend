@@ -14,13 +14,19 @@
  * limitations under the License.
  *@
 
-@(lastUpdated: String, xmlHealthy: Boolean, webHealthy: Boolean)(implicit request: Request[_], messages: Messages)
+@import java.time.LocalDateTime
+@import utils.DateTimeFormatter._
+
+@(lastUpdated: LocalDateTime, xmlHealthy: Boolean, webHealthy: Boolean)(implicit request: Request[_], messages: Messages)
 
 <table class="govuk-table">
     <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.submission.channels.status.heading")
         <div class="govuk-inset-text bottom_padding">
-            <p>@messages("service.availability.submission.channels.status.p1")
-                <b>@lastUpdated</b>
+            <p>@messages("service.availability.lastUpdated")
+                <b>@formatDateTime(lastUpdated).</b>
+                <a href="@controllers.routes.ServiceStatusCheckController.onPageLoad.url">
+                    @messages("service.availability.lastUpdated.refresh")</a>
+                @messages("service.availability.lastUpdated.latest")
             </p>
         </div>
     </caption>
