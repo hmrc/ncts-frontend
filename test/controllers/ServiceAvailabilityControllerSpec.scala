@@ -18,20 +18,20 @@ package controllers
 
 import base.SpecBase
 import models.responses.ErrorResponse.StatusResponseError
-import models.responses.{HealthDetails, StatusResponse}
+import models.responses.StatusResponse
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.NctsService
+import utils.HealthDetailsExamples._
 
 import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import utils.HealthDetailsExamples._
 
-class ServiceStatusCheckControllerSpec extends SpecBase {
+class ServiceAvailabilityControllerSpec extends SpecBase {
 
   val nctsService: NctsService = mock[NctsService]
 
@@ -59,7 +59,7 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.ServiceStatusCheckController.onPageLoad.url)
+        val request = FakeRequest(GET, routes.ServiceAvailabilityController.onPageLoad.url)
 
         val result = route(application, request).value
 
@@ -83,7 +83,7 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.ServiceStatusCheckController.onPageLoad.url)
+        val request = FakeRequest(GET, routes.ServiceAvailabilityController.onPageLoad.url)
 
         val result = route(application, request).value
 
@@ -99,7 +99,7 @@ class ServiceStatusCheckControllerSpec extends SpecBase {
 
       running(application) {
 
-        val request = FakeRequest(GET, routes.ServiceStatusCheckController.onPageLoad.url)
+        val request = FakeRequest(GET, routes.ServiceAvailabilityController.onPageLoad.url)
 
         val result = route(application, request).value
 

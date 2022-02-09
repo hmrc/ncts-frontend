@@ -28,7 +28,7 @@ import javax.inject.Inject
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ServiceStatusCheckController @Inject()(
+class ServiceAvailabilityController @Inject()(
                                               val controllerComponents: MessagesControllerComponents,
                                               nctsService: NctsService,
                                               errorHandler: ErrorHandler,

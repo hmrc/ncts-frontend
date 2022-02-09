@@ -29,7 +29,7 @@
     backUrl = Some(controllers.routes.IndexController.onPageLoad.url)
 ) {
 
-    <h1 class="govuk-heading-xl">@messages("service.availability.heading")</h1>
+    <h1 class="govuk-heading-l">@messages("service.availability.heading")</h1>
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
@@ -38,7 +38,7 @@
                     <div class="govuk-inset-text bottom_padding">
                         <p>@messages("service.availability.lastUpdated")
                             <b>@formatDateTime(status.createdTs.minusMinutes(30)).</b>
-                            <a href="@controllers.routes.ServiceStatusCheckController.onPageLoad.url">
+                            <a href="@controllers.routes.ServiceAvailabilityController.onPageLoad.url">
                                 @messages("service.availability.lastUpdated.refresh")</a>
                             @messages("service.availability.lastUpdated.latest")
                         </p>
@@ -91,7 +91,7 @@
                     <div class="govuk-inset-text bottom_padding">
                         <p>@messages("service.availability.lastUpdated")
                             <b>@formatDateTime(status.createdTs.minusSeconds(30)).</b>
-                            <a href="@controllers.routes.ServiceStatusCheckController.onPageLoad.url">
+                            <a href="@controllers.routes.ServiceAvailabilityController.onPageLoad.url">
                                 @messages("service.availability.lastUpdated.refresh")</a>
                             @messages("service.availability.lastUpdated.latest")
                         </p>
@@ -170,6 +170,20 @@
                     @messages("service.availability.issues.p7")
                 </p>
             }
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-l">@messages("service.availability.related.links")</h2>
+
+            <ul class="govuk-list govuk-list--bullet">
+                <li>
+                    <a class="govuk-link" href="@controllers.routes.PlannedDowntimeController.onPageLoad.url">
+                        @messages("service.availability.related.links.planned.downtimes")
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 }

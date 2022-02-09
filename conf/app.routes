@@ -8,6 +8,6 @@ GET         /assets/*file                                controllers.Assets.vers
 
 GET         /language/:lang                              controllers.LanguageSwitchController.switchToLanguage(lang: String)
 
-GET         /service-availability                        controllers.ServiceStatusCheckController.onPageLoad
+GET         /service-availability                        controllers.ServiceAvailabilityController.onPageLoad
 
 GET         /planned-downtime                            controllers.PlannedDowntimeController.onPageLoad

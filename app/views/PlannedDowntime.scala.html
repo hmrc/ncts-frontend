@@ -29,12 +29,12 @@
     backUrl = Some(controllers.routes.IndexController.onPageLoad.url)
 ) {
 
-    <h1 class="govuk-heading-xl">@messages("service.planned-downtime.heading")</h1>
+    <h1 class="govuk-heading-l">@messages("service.planned-downtime.heading")</h1>
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
 
-            <h2 class="govuk-heading-l">@messages("service.planned-downtime.ncts.arrivals")</h2>
+            <h2 class="govuk-heading-m">@messages("service.planned-downtime.ncts.arrivals")</h2>
 
             @if(plannedDowntimes.isEmpty){
                 <p class="govuk-body">@messages("service.planned-downtime.no.downtime.planned.arrivals")</p>
@@ -53,7 +53,7 @@
                 }
             }
 
-            <h2 class="govuk-heading-l">@messages("service.planned-downtime.ncts.departures")</h2>
+            <h2 class="govuk-heading-m">@messages("service.planned-downtime.ncts.departures")</h2>
 
             @if(plannedDowntimes.isEmpty){
                 <p class="govuk-body">@messages("service.planned-downtime.no.downtime.planned.departures")</p>
@@ -72,6 +72,20 @@
                 }
             }
 
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-l">@messages("service.availability.related.links")</h2>
+
+            <ul class="govuk-list govuk-list--bullet">
+                <li>
+                    <a class="govuk-link" href="@controllers.routes.ServiceAvailabilityController.onPageLoad.url">
+                        @messages("service.planned-downtime.related.links.service.availability")
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 }

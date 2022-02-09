@@ -24,7 +24,7 @@
         <div class="govuk-inset-text bottom_padding">
             <p>@messages("service.availability.lastUpdated")
                 <b>@formatDateTime(lastUpdated).</b>
-                <a href="@controllers.routes.ServiceStatusCheckController.onPageLoad.url">
+                <a href="@controllers.routes.ServiceAvailabilityController.onPageLoad.url">
                     @messages("service.availability.lastUpdated.refresh")</a>
                 @messages("service.availability.lastUpdated.latest")
             </p>
