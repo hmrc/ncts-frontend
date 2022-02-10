@@ -58,7 +58,7 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
       }
 
       "should have a table for arrivals with the correct heading" in {
-        document.select("table:nth-child(2) > thead > tr > th:nth-child(1)").get(0).text() mustBe messages("service.planned-downtime.system.name")
+        document.select("table:nth-child(2) > thead > tr > th:nth-child(1)").get(0).text() mustBe messages("service.planned-downtime.system.core.name")
         document.select("table:nth-child(2) > thead > tr > th:nth-child(2)").get(0).text() mustBe messages("service.planned-downtime.start")
         document.select("table:nth-child(2) > thead > tr > th:nth-child(3)").get(0).text() mustBe messages("service.planned-downtime.end")
       }
@@ -107,7 +107,7 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
 
       "should have a table for departures with the correct heading" in {
         val table = document.select("table:nth-child(6) > thead > tr")
-        table.select("th:nth-child(1)").get(0).text() mustBe messages("service.planned-downtime.system.name")
+        table.select("th:nth-child(1)").get(0).text() mustBe messages("service.planned-downtime.system.core.name")
         table.select("th:nth-child(2)").get(0).text() mustBe messages("service.planned-downtime.start")
         table.select("th:nth-child(3)").get(0).text() mustBe messages("service.planned-downtime.end")
       }

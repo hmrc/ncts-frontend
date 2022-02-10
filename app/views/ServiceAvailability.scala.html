@@ -47,7 +47,7 @@
 
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header">@messages("service.availability.system.name")</th>
+                        <th scope="col" class="govuk-table__header">@messages("service.availability.system.core.name")</th>
                         <th scope="col" class="govuk-table__header">@messages("service.availability.system.availability")</th>
                     </tr>
                 </thead>
@@ -99,7 +99,7 @@
                 </caption>
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header">@messages("service.availability.system.name")</th>
+                        <th scope="col" class="govuk-table__header">@messages("service.availability.system.core.name")</th>
                         <th scope="col" class="govuk-table__header">@messages("service.availability.system.availability")</th>
                     </tr>
                 </thead>
@@ -143,32 +143,21 @@
                 status.xmlChannelStatus.healthy,
                 status.webChannelStatus.healthy
             )
-            @if(!status.xmlChannelStatus.healthy && !status.webChannelStatus.healthy){
-                <p class="govuk-body">
-                    @messages("service.availability.issues.p1")
-                    <b>@messages("service.availability.submission.channels.status.web.channel")</b>
-                    @messages("service.availability.issues.p2")
-                    <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
-                    @messages("service.availability.issues.both.channels")
-                    @messages("service.availability.issues.p3")
-                </p>
-            } else if (!status.xmlChannelStatus.healthy || !status.webChannelStatus.healthy){
-                <p class="govuk-body">
-                    @messages("service.availability.issues.p1")
-                    @if(!status.xmlChannelStatus.healthy) {
-                        <b>@messages("service.availability.submission.channels.status.xml.channel")</b>
-                    } else {
-                        <b>@messages("service.availability.submission.channels.status.web.channel")</b>
-                    }
-                    @messages("service.availability.issues.single.channel")
-                    @messages("service.availability.issues.p3")
-                </p>
-            } else {
+            @if(status.xmlAndWebHealthy){
                 <p class="govuk-body">
                     @messages("service.availability.issues.p6")
                     <b>@messages("service.availability.issues.xml.channel")</b>
                     @messages("service.availability.issues.p7")
                 </p>
+            } else {
+                @KnownIssuesParagraph(
+                    status.webChannelStatus.healthy,
+                    status.xmlChannelStatus.healthy,
+                    status.webChannelStatus.statusChangedAt,
+                    status.xmlChannelStatus.statusChangedAt,
+                    messages("service.availability.submission.channels.status.web.channel"),
+                    messages("service.availability.submission.channels.status.xml.channel")
+                )
             }
         </div>
     </div>

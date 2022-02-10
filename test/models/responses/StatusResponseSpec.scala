@@ -159,4 +159,23 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
       }
     }
   }
+
+  "xmlAndWebHealthy" should {
+
+    lazy val resp = StatusResponse(healthDetailsHealthy, healthDetailsHealthy, healthDetailsHealthy, healthDetailsHealthy,
+      healthDetailsHealthy,healthDetailsHealthy, LocalDateTime.now)
+
+    "return true if both xml and web are healthy in the response" in {
+      resp.xmlAndWebHealthy mustBe true
+    }
+
+    "return false if xml is healthy but web is unhealthy in the response" in {
+      resp.copy(xmlChannelStatus = healthDetailsUnhealthy).xmlAndWebHealthy mustBe false
+    }
+
+    "return false if web is healthy but xml is unhealthy in the response" in {
+      resp.copy(webChannelStatus = healthDetailsUnhealthy).xmlAndWebHealthy mustBe false
+    }
+  }
+
 }
