@@ -86,6 +86,7 @@ service.availability.submission.channels.status.p1=Submission channels status as
 service.availability.submission.channels.status.core=System Core Name
 service.availability.submission.channels.status.xml.channel=XML Channel
 service.availability.submission.channels.status.web.channel=Web Channel
+service.availability.related.links=Related links
 
 service.availability.issues.p1=The
 service.availability.issues.p2=and
@@ -98,6 +99,7 @@ service.availability.issues.p5=Transit Manual Supplement.
 service.availability.issues.p6=If you are trying to use the
 service.availability.issues.p7=for submissions and are experiencing issues, check your third-party software.
 service.availability.issues.xml.channel=XML channel
+service.availability.related.links.planned.downtimes=Planned downtimes
 
 service.planned-downtime.title=Planned downtime
 service.planned-downtime.heading=Planned downtime
@@ -116,3 +118,4 @@ service.planned-downtime.p1=Data submitted using these system cores during this 
 service.planned-downtime.p2=We apologise for any inconvenience this may cause.
 service.planned-downtime.no.downtime.planned.arrivals=There is no downtime currently planned for NCTS Arrivals system cores.
 service.planned-downtime.no.downtime.planned.departures=There is no downtime currently planned for NCTS Departures system cores.
+service.planned-downtime.related.links.service.availability=Service availability

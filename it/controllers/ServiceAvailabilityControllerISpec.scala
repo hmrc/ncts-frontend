@@ -26,7 +26,7 @@ import java.time.LocalDateTime
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
-class ServiceStatusCheckControllerISpec extends SpecCommonHelper {
+class ServiceAvailabilityControllerISpec extends SpecCommonHelper {
 
   val healthDetailsHealthy =
     HealthDetails(healthy = true, statusChangedAt = LocalDateTime.now)

@@ -89,6 +89,14 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
         document.getElementsByClass("govuk-body").first().text() mustBe messages("service.planned-downtime.p1")
         document.getElementsByClass("govuk-body").get(1).text() mustBe messages("service.planned-downtime.p2")
       }
+
+      "should have a related links section with a link to service availability" in {
+        document.getElementsByTag("h2").get(2).text() mustBe messages("service.availability.related.links")
+        val link = document.select("#main-content > div:nth-child(3) > div > ul > li > a")
+        link.text() mustBe messages("service.planned-downtime.related.links.service.availability")
+        link.attr("href") mustBe "/new-computerised-transit-system-service-availability-and-issues" +
+          "/service-availability"
+      }
     }
 
     "when there is downtime planned for departures" - {
@@ -98,9 +106,10 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
       }
 
       "should have a table for departures with the correct heading" in {
-        document.select("table:nth-child(6) > thead > tr > th:nth-child(1)").get(0).text() mustBe messages("service.planned-downtime.system.name")
-        document.select("table:nth-child(6) > thead > tr > th:nth-child(2)").get(0).text() mustBe messages("service.planned-downtime.start")
-        document.select("table:nth-child(6) > thead > tr > th:nth-child(3)").get(0).text() mustBe messages("service.planned-downtime.end")
+        val table = document.select("table:nth-child(6) > thead > tr")
+        table.select("th:nth-child(1)").get(0).text() mustBe messages("service.planned-downtime.system.name")
+        table.select("th:nth-child(2)").get(0).text() mustBe messages("service.planned-downtime.start")
+        table.select("th:nth-child(3)").get(0).text() mustBe messages("service.planned-downtime.end")
       }
 
       "should have a table for departures with a row for GB" in {

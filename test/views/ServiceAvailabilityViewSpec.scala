@@ -32,26 +32,6 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
   val view: ServiceAvailability = inject[ServiceAvailability]
 
-  StatusResponse(
-    gbDeparturesStatus = healthDetailsHealthy,
-    xiDeparturesStatus = healthDetailsHealthy,
-    gbArrivalsStatus = healthDetailsHealthy,
-    xiArrivalsStatus = healthDetailsHealthy,
-    xmlChannelStatus = healthDetailsHealthy,
-    webChannelStatus = healthDetailsHealthy,
-    createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
-  )
-  val document: Document = Jsoup.parse(view(
-    StatusResponse(
-      gbDeparturesStatus = healthDetailsHealthy,
-      xiDeparturesStatus = healthDetailsHealthy,
-      gbArrivalsStatus = healthDetailsHealthy,
-      xiArrivalsStatus = healthDetailsHealthy,
-      xmlChannelStatus = healthDetailsHealthy,
-      webChannelStatus = healthDetailsHealthy,
-      createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
-    )).body)
-
   "ServiceAvailability" - {
 
     "should have the correct breadcrumbs" in {
@@ -129,6 +109,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       document.getElementsByClass("govuk-inset-text").first()
         .text() mustBe lastUpdatedText
     }
+
     "should show the last updated time with refresh link for departures" in {
       val lastUpdatedText = s"${messages("service.availability.lastUpdated")} " +
         s"${formatDateTime(LocalDateTime.of(2022, 1, 24, 0, 0, 0).minusSeconds(30))}. " +
@@ -138,6 +119,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       document.getElementsByClass("govuk-inset-text").get(1)
         .text() mustBe lastUpdatedText
     }
+
     "should show the last updated time with refresh link for other systems" in {
       val lastUpdatedText = s"${messages("service.availability.lastUpdated")} " +
         s"${formatDateTime(LocalDateTime.of(2022, 1, 24, 0, 0, 0))}. " +
@@ -151,6 +133,14 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
     "should have a get help link" in {
       document.body().select(".hmrc-report-technical-issue").first()
         .attr("href") mustBe getHelpUrl
+    }
+
+    "should have a related links section with a link to service availability" in {
+      document.getElementsByTag("h2").first().text() mustBe messages("service.availability.related.links")
+      val link = document.select("#main-content > div:nth-child(3) > div > ul > li > a")
+      link.text() mustBe messages("service.availability.related.links.planned.downtimes")
+      link.attr("href") mustBe "/new-computerised-transit-system-service-availability-and-issues" +
+        "/planned-downtime"
     }
 
     "when all services are healthy" - {
@@ -252,4 +242,26 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       }
     }
   }
+
+  StatusResponse(
+    gbDeparturesStatus = healthDetailsHealthy,
+    xiDeparturesStatus = healthDetailsHealthy,
+    gbArrivalsStatus = healthDetailsHealthy,
+    xiArrivalsStatus = healthDetailsHealthy,
+    xmlChannelStatus = healthDetailsHealthy,
+    webChannelStatus = healthDetailsHealthy,
+    createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
+  )
+
+  val document: Document = Jsoup.parse(view(
+    StatusResponse(
+      gbDeparturesStatus = healthDetailsHealthy,
+      xiDeparturesStatus = healthDetailsHealthy,
+      gbArrivalsStatus = healthDetailsHealthy,
+      xiArrivalsStatus = healthDetailsHealthy,
+      xmlChannelStatus = healthDetailsHealthy,
+      webChannelStatus = healthDetailsHealthy,
+      createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
+    )).body)
+
 }

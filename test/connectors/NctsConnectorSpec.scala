@@ -19,14 +19,14 @@ package connectors
 import base.SpecBase
 import config.FrontendAppConfig
 import models.responses.ErrorResponse.StatusResponseError
-import models.responses.{ErrorResponse, HealthDetails, StatusResponse}
+import models.responses.{ErrorResponse, StatusResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import uk.gov.hmrc.http.HttpClient
+import utils.HealthDetailsExamples._
 
 import java.time.LocalDateTime
 import scala.concurrent.Future
-import utils.HealthDetailsExamples._
 
 
 class NctsConnectorSpec extends SpecBase {
