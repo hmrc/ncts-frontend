@@ -246,7 +246,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.submission.channels.status.web.channel")} " +
             s"${messages("service.availability.issues.p2")} " +
             s"${messages("service.availability.submission.channels.status.xml.channel")} " +
-            s"${messages("service.availability.issues.both.channels")} " +
+            s"${messages("service.availability.issues.webAndXML.channel")} " +
             s"${messages("service.availability.issues.known")} " +
             s"${DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)} " +
             s"${messages("service.availability.issues.p2")} " +
@@ -332,7 +332,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         val webChannelKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
             s"${messages("service.availability.submission.channels.status.web.channel")} " +
-            s"${messages("service.availability.issues.single.channel")} " +
+            s"${messages("service.availability.issues.webXML.channel")} " +
             s"${messages("service.availability.issues.known")} " +
             s"${DateTimeFormatter.formatDateTime(statusResponse.webChannelStatus.statusChangedAt)}."
 
@@ -408,7 +408,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         val xmlChannelKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
             s"${messages("service.availability.submission.channels.status.xml.channel")} " +
-            s"${messages("service.availability.issues.single.channel")} " +
+            s"${messages("service.availability.issues.webXML.channel")} " +
             s"${messages("service.availability.issues.known")} " +
             s"${DateTimeFormatter.formatDateTime(statusResponse.xmlChannelStatus.statusChangedAt)}."
 

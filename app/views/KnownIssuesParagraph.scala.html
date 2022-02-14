@@ -30,10 +30,14 @@
             <b>@channelOneHealthMessage </b>
             @messages("service.availability.issues.p2")
             <b>@channelTwoHealthMessage </b>
-            @messages("service.availability.issues.both.channels")
-            @messages("service.availability.issues.known") <b>@formatDateTimeKnownIssues(channelOneStatusChangedAt)
+            @if(channelOneHealthMessage.contains("Web") || channelOneHealthMessage.contains("XML")){
+                @messages("service.availability.issues.webAndXML.channel")
+            } else {
+                @messages("service.availability.issues.both.channels")
+            }
+            @messages("service.availability.issues.known") <b>@formatDateTimeKnownIssues(channelOneStatusChangedAt)</b>
             @messages("service.availability.issues.p2")
-            @formatDateTimeKnownIssues(channelTwoStatusChangedAt)</b>
+            <b>@formatDateTimeKnownIssues(channelTwoStatusChangedAt)</b>
             @messages("service.availability.issues.respectively")
             @messages("service.availability.issues.p3")
         </p>
@@ -51,7 +55,12 @@
             } else {
                 <b>@channelOneHealthMessage</b>
             }
-            @messages("service.availability.issues.single.channel")
+            @if(channelOneHealthMessage.contains("Web") || channelOneHealthMessage.contains("XML")){
+                @messages("service.availability.issues.webXML.channel")
+            } else {
+                @messages("service.availability.issues.single.channel")
+            }
+
             @messages("service.availability.issues.known")
             <b>
                 @if(!channelTwoHealthy){
