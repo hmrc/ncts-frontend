@@ -23,19 +23,20 @@ import java.time.LocalDateTime
 class DateTimeFormatterSpec extends SpecBase {
 
   "formatDateTimeKnownIssue" - {
-    "should return the time with date if its prior to today" in {
+    "should return the time with date if it is prior to today" in {
       val localDateTime = LocalDateTime.of(2022, 1, 1, 10, 50, 50)
 
       val knownIssueSince = DateTimeFormatter.formatDateTimeKnownIssues(localDateTime)
 
-      knownIssueSince mustBe "10:50am, 1 January 2022"
+      knownIssueSince mustBe "10:50am GMT, 1 January 2022"
     }
-    "should return just the time if its today" in {
+
+    "should return just the time if it is today" in {
       val now = LocalDateTime.now().withHour(10).withMinute(10)
 
       val knownIssueSince = DateTimeFormatter.formatDateTimeKnownIssues(now)
 
-      knownIssueSince mustBe "10:10am"
+      knownIssueSince mustBe "10:10am GMT"
     }
   }
 }

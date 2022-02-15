@@ -17,39 +17,64 @@
 @import utils.DateTimeFormatter._
 @import java.time.LocalDateTime
 
-@(gbHealthy: Boolean,
-  xiHealthy: Boolean,
-  gbStatusChangedAt: LocalDateTime,
-  xiStatusChangedAt: LocalDateTime,
-  gbHealthMessage: String,
-  xiHealthMessage: String)(implicit request: Request[_], messages: Messages)
+@(channelOneHealthy: Boolean,
+  channelTwoHealthy: Boolean,
+  channelOneStatusChangedAt: LocalDateTime,
+  channelTwoStatusChangedAt: LocalDateTime,
+  channelOneHealthMessage: String,
+  channelTwoHealthMessage: String)(implicit request: Request[_], messages: Messages)
 
-    @if(!gbHealthy && !xiHealthy){
+    @if(!channelOneHealthy && !channelTwoHealthy){
         <p class="govuk-body">
             @messages("service.availability.issues.p1")
-            <b>@xiHealthMessage</b>
+            <b>@channelOneHealthMessage </b>
             @messages("service.availability.issues.p2")
-            <b>@gbHealthMessage</b>
-            @messages("service.availability.issues.both.channels")
-            @messages("service.availability.issues.known") <b>@formatDateTimeKnownIssues(xiStatusChangedAt) and @formatDateTimeKnownIssues(gbStatusChangedAt).</b>
+            <b>@channelTwoHealthMessage </b>
+            @if(channelOneHealthMessage.contains("Web") || channelOneHealthMessage.contains("XML")){
+                @messages("service.availability.issues.webAndXML.channel")
+            } else {
+                @messages("service.availability.issues.both.channels")
+            }
+            @messages("service.availability.issues.known") <b>@formatDateTimeKnownIssues(channelOneStatusChangedAt)</b>
+            @messages("service.availability.issues.p2")
+            <b>@formatDateTimeKnownIssues(channelTwoStatusChangedAt)</b>
+            @messages("service.availability.issues.respectively")
             @messages("service.availability.issues.p3")
         </p>
         <p class="govuk-body">
-            @messages("service.availability.issues.p4") <a href="https://www.gov.uk/government/publications/business-continuity-planning">@messages("service.availability.issues.p5")</a>
+            @messages("service.availability.issues.p4")
+            <a href="https://www.gov.uk/government/publications/business-continuity-planning">
+                @messages("service.availability.issues.p5")
+            </a>
         </p>
-    } else if (!gbHealthy || !xiHealthy){
+    } else if (!channelOneHealthy || !channelTwoHealthy){
         <p class="govuk-body">
             @messages("service.availability.issues.p1")
-            @if(!xiHealthy) {
-                <b>@xiHealthMessage</b>
+            @if(!channelTwoHealthy) {
+                <b>@channelTwoHealthMessage</b>
             } else {
-                <b>@gbHealthMessage</b>
+                <b>@channelOneHealthMessage</b>
             }
-            @messages("service.availability.issues.single.channel")
-            @messages("service.availability.issues.known") <b>@{if(!xiHealthy) {formatDateTimeKnownIssues(xiStatusChangedAt)} else {formatDateTimeKnownIssues(gbStatusChangedAt)}}.</b>
+            @if(channelOneHealthMessage.contains("Web") || channelOneHealthMessage.contains("XML")){
+                @messages("service.availability.issues.webXML.channel")
+            } else {
+                @messages("service.availability.issues.single.channel")
+            }
+
+            @messages("service.availability.issues.known")
+            <b>
+                @if(!channelTwoHealthy){
+                    @formatDateTimeKnownIssues(channelTwoStatusChangedAt).
+                }else{
+                    @formatDateTimeKnownIssues(channelOneStatusChangedAt).
+                }
+            </b>
             @messages("service.availability.issues.p3")
         </p>
         <p class="govuk-body">
-            @messages("service.availability.issues.p4") <a href="https://www.gov.uk/government/publications/business-continuity-planning">@messages("service.availability.issues.p5")</a>
+            @messages("service.availability.issues.p4")
+            <a href="https://www.gov.uk/government/publications/business-continuity-planning">
+                @messages("service.availability.issues.p5")
+            </a>
         </p>
     }

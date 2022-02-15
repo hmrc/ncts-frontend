@@ -60,7 +60,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
     "should have a table for arrivals" in {
       document.getElementsByClass("govuk-table__header").first()
-        .text() mustBe messages("service.availability.submission.channels.status.core")
+        .text() mustBe messages("service.availability.system.core.name")
 
       document.getElementsByClass("govuk-table__header").get(1)
         .text() mustBe messages("service.availability.system.availability")
@@ -74,7 +74,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
     "should have a table for departures" in {
       document.getElementsByClass("govuk-table__header").get(2)
-        .text() mustBe messages("service.availability.submission.channels.status.core")
+        .text() mustBe messages("service.availability.system.core.name")
 
       document.getElementsByClass("govuk-table__header").get(3)
         .text() mustBe messages("service.availability.system.availability")
@@ -88,7 +88,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
     "should have a table for other systems" in {
       document.getElementsByClass("govuk-table__header").get(4)
-        .text() mustBe messages("service.availability.submission.channels.status.core")
+        .text() mustBe messages("service.availability.channel.name")
 
       document.getElementsByClass("govuk-table__header").get(5)
         .text() mustBe messages("service.availability.system.availability")
@@ -164,10 +164,19 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         document.getElementsByClass("govuk-table__cell").get(11)
           .text() mustBe messages("service.availability.status.available")
       }
+
+      "should have a paragraph about checking third party software for issues" in {
+        val thirdPartyMessage = {
+          s"${messages("service.availability.issues.p6")} ${messages("service.availability.issues.xml.channel")}" +
+            s" ${messages("service.availability.issues.p7")}"
+        }
+
+        document.getElementsByClass("govuk-body").last().text() mustBe thirdPartyMessage
+      }
     }
 
-    "when all services are not healthy" - {
-      val statusResponsee = StatusResponse(
+    "when all services are unhealthy" - {
+      val statusResponse = StatusResponse(
         gbDeparturesStatus = healthDetailsUnhealthy,
         xiDeparturesStatus = healthDetailsUnhealthy,
         gbArrivalsStatus = healthDetailsUnhealthy,
@@ -176,7 +185,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         webChannelStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
-      val allUnhealthyView: Document = Jsoup.parse(view(statusResponsee).body)
+      val allUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
 
       "should show that services have known issues for arrivals" in {
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
@@ -186,14 +195,15 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val arrivalsKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
-            s"${messages("service.availability.ncts.xi.arrivals")} " +
-            s"${messages("service.availability.issues.p2")} " +
             s"${messages("service.availability.ncts.gb.arrivals")} " +
+            s"${messages("service.availability.issues.p2")} " +
+            s"${messages("service.availability.ncts.xi.arrivals")} " +
             s"${messages("service.availability.issues.both.channels")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponsee.gbArrivalsStatus.statusChangedAt)} " +
+            s"${DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)} " +
             s"${messages("service.availability.issues.p2")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponsee.xiArrivalsStatus.statusChangedAt)}"
+            s"${DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)} " +
+            s"${messages("service.availability.issues.respectively")}"
 
         allUnhealthyView.getElementsByClass("govuk-body").get(0)
           .text() must include(arrivalsKnownIssuesParagraph)
@@ -209,14 +219,15 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val departuresKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
-            s"${messages("service.availability.ncts.xi.departures")} " +
-            s"${messages("service.availability.issues.p2")} " +
             s"${messages("service.availability.ncts.gb.departures")} " +
+            s"${messages("service.availability.issues.p2")} " +
+            s"${messages("service.availability.ncts.xi.departures")} " +
             s"${messages("service.availability.issues.both.channels")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponsee.gbDeparturesStatus.statusChangedAt)} " +
+            s"${DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)} " +
             s"${messages("service.availability.issues.p2")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponsee.xiDeparturesStatus.statusChangedAt)}"
+            s"${DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)} " +
+            s"${messages("service.availability.issues.respectively")}"
 
         allUnhealthyView.getElementsByClass("govuk-body").get(2)
           .text() must include(departuresKnownIssuesParagraph)
@@ -230,15 +241,183 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(11)
           .text() mustBe messages("service.availability.status.issues")
 
-        val otherSystemsKnownIssuesParagraph =
+        val channelsKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
             s"${messages("service.availability.submission.channels.status.web.channel")} " +
             s"${messages("service.availability.issues.p2")} " +
             s"${messages("service.availability.submission.channels.status.xml.channel")} " +
-            s"${messages("service.availability.issues.both.channels")}"
+            s"${messages("service.availability.issues.webAndXML.channel")} " +
+            s"${messages("service.availability.issues.known")} " +
+            s"${DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)} " +
+            s"${messages("service.availability.issues.p2")} " +
+            s"${DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)} " +
+            s"${messages("service.availability.issues.respectively")}"
 
         allUnhealthyView.getElementsByClass("govuk-body").get(4)
-          .text() must include(otherSystemsKnownIssuesParagraph)
+          .text() must include(channelsKnownIssuesParagraph)
+        allUnhealthyView.getElementsByClass("govuk-body").get(5)
+          .text() must include(s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}")
+      }
+
+      "should not have a paragraph about checking third party software for issues" in {
+        val thirdPartyMessage = {
+          s"${messages("service.availability.issues.p6")} ${messages("service.availability.issues.xml.channel")}" +
+            s" ${messages("service.availability.issues.p7")}"
+        }
+
+        allUnhealthyView.getElementsByClass("govuk-body").last().text() mustNot be(thirdPartyMessage)
+      }
+    }
+
+    "when GB channels and the Web channel are not healthy" - {
+      val statusResponse = StatusResponse(
+        gbDeparturesStatus = healthDetailsUnhealthy,
+        xiDeparturesStatus = healthDetailsHealthy,
+        gbArrivalsStatus = healthDetailsUnhealthy,
+        xiArrivalsStatus = healthDetailsHealthy,
+        xmlChannelStatus = healthDetailsHealthy,
+        webChannelStatus = healthDetailsUnhealthy,
+        createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
+      )
+      val someUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
+
+      "should show that the GB channel has known issues for arrivals" in {
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
+          .text() mustBe messages("service.availability.status.issues")
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(3)
+          .text() mustBe messages("service.availability.status.available")
+
+        val arrivalsKnownIssuesParagraph =
+          s"${messages("service.availability.issues.p1")} " +
+            s"${messages("service.availability.ncts.gb.arrivals")} " +
+            s"${messages("service.availability.issues.single.channel")} " +
+            s"${messages("service.availability.issues.known")} " +
+            s"${DateTimeFormatter.formatDateTime(statusResponse.gbArrivalsStatus.statusChangedAt)}."
+
+        someUnhealthyView.getElementsByClass("govuk-body").get(0)
+          .text() must include(arrivalsKnownIssuesParagraph)
+        someUnhealthyView.getElementsByClass("govuk-body").get(1)
+          .text() must include(
+          s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
+        )
+      }
+
+      "should show that the GB channel has known issues for departures" in {
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(5)
+          .text() mustBe messages("service.availability.status.issues")
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(7)
+          .text() mustBe messages("service.availability.status.available")
+
+        val departuresKnownIssuesParagraph =
+          s"${messages("service.availability.issues.p1")} " +
+            s"${messages("service.availability.ncts.gb.departures")} " +
+            s"${messages("service.availability.issues.single.channel")} " +
+            s"${messages("service.availability.issues.known")} " +
+            s"${DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)}."
+
+        someUnhealthyView.getElementsByClass("govuk-body").get(2)
+          .text() must include(departuresKnownIssuesParagraph)
+        someUnhealthyView.getElementsByClass("govuk-body").get(3)
+          .text() must include(
+          s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
+        )
+      }
+
+      "should show that the Web channel has known issues" in {
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(9)
+          .text() mustBe messages("service.availability.status.issues")
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(11)
+          .text() mustBe messages("service.availability.status.available")
+
+        val webChannelKnownIssuesParagraph =
+          s"${messages("service.availability.issues.p1")} " +
+            s"${messages("service.availability.submission.channels.status.web.channel")} " +
+            s"${messages("service.availability.issues.webXML.channel")} " +
+            s"${messages("service.availability.issues.known")} " +
+            s"${DateTimeFormatter.formatDateTime(statusResponse.webChannelStatus.statusChangedAt)}."
+
+        someUnhealthyView.getElementsByClass("govuk-body").get(4)
+          .text() must include(webChannelKnownIssuesParagraph)
+        someUnhealthyView.getElementsByClass("govuk-body").get(5)
+          .text() must include(
+          s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
+        )
+      }
+    }
+
+    "when XI channels and the XML channel are not healthy" - {
+      val statusResponse = StatusResponse(
+        gbDeparturesStatus = healthDetailsHealthy,
+        xiDeparturesStatus = healthDetailsUnhealthy,
+        gbArrivalsStatus = healthDetailsHealthy,
+        xiArrivalsStatus = healthDetailsUnhealthy,
+        xmlChannelStatus = healthDetailsUnhealthy,
+        webChannelStatus = healthDetailsHealthy,
+        createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
+      )
+      val someUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
+
+      "should show that the XI channel has known issues for arrivals" in {
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
+          .text() mustBe messages("service.availability.status.available")
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(3)
+          .text() mustBe messages("service.availability.status.issues")
+
+        val arrivalsKnownIssuesParagraph =
+          s"${messages("service.availability.issues.p1")} " +
+            s"${messages("service.availability.ncts.xi.arrivals")} " +
+            s"${messages("service.availability.issues.single.channel")} " +
+            s"${messages("service.availability.issues.known")} " +
+            s"${DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)}."
+
+        someUnhealthyView.getElementsByClass("govuk-body").get(0)
+          .text() must include(arrivalsKnownIssuesParagraph)
+        someUnhealthyView.getElementsByClass("govuk-body").get(1)
+          .text() must include(
+          s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
+        )
+      }
+
+      "should show that the XI channel has known issues for departures" in {
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(5)
+          .text() mustBe messages("service.availability.status.available")
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(7)
+          .text() mustBe messages("service.availability.status.issues")
+
+        val departuresKnownIssuesParagraph =
+          s"${messages("service.availability.issues.p1")} " +
+            s"${messages("service.availability.ncts.xi.departures")} " +
+            s"${messages("service.availability.issues.single.channel")} " +
+            s"${messages("service.availability.issues.known")} " +
+            s"${DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)}."
+
+        someUnhealthyView.getElementsByClass("govuk-body").get(2)
+          .text() must include(departuresKnownIssuesParagraph)
+        someUnhealthyView.getElementsByClass("govuk-body").get(3)
+          .text() must include(
+          s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
+        )
+      }
+
+      "should show that the XML channel has known issues" in {
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(9)
+          .text() mustBe messages("service.availability.status.available")
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(11)
+          .text() mustBe messages("service.availability.status.issues")
+
+        val xmlChannelKnownIssuesParagraph =
+          s"${messages("service.availability.issues.p1")} " +
+            s"${messages("service.availability.submission.channels.status.xml.channel")} " +
+            s"${messages("service.availability.issues.webXML.channel")} " +
+            s"${messages("service.availability.issues.known")} " +
+            s"${DateTimeFormatter.formatDateTime(statusResponse.xmlChannelStatus.statusChangedAt)}."
+
+        someUnhealthyView.getElementsByClass("govuk-body").get(4)
+          .text() must include(xmlChannelKnownIssuesParagraph)
+        someUnhealthyView.getElementsByClass("govuk-body").get(5)
+          .text() must include(
+          s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
+        )
       }
     }
   }

@@ -22,9 +22,8 @@ import java.time.LocalDateTime
 
 object HealthDetailsExamples {
 
-  val healthDetailsHealthy =
-    HealthDetails(healthy = true, statusChangedAt = LocalDateTime.now)
-  val healthDetailsUnhealthy =
-    HealthDetails(healthy = false, statusChangedAt = LocalDateTime.now)
+  val healthDetailsHealthy: HealthDetails = HealthDetails(healthy = true, statusChangedAt = LocalDateTime.now)
+
+  val healthDetailsUnhealthy: HealthDetails = HealthDetails(healthy = false, statusChangedAt = LocalDateTime.now)
 
 }

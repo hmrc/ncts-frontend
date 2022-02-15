@@ -16,6 +16,8 @@
 
 package utils
 
+import play.api.i18n.Messages
+
 import java.time.format.{DateTimeFormatter => DateTimeGen}
 import java.time.{LocalDate, LocalDateTime, LocalTime}
 import java.util.Locale
@@ -36,16 +38,17 @@ object DateTimeFormatter {
     formatter.format(localTime)
   }
 
-  def formatDateTime(dateTime: LocalDateTime): String =
-    dateTime.format(DateTimeGen.ofPattern("h:mma")).toLowerCase(Locale.ENGLISH)
+  def formatDateTime(dateTime: LocalDateTime)(implicit messages: Messages): String =
+    s"${dateTime.format(DateTimeGen.ofPattern("h:mma")).toLowerCase(Locale.ENGLISH)} ${messages("service.availability.issues.GMT")}"
 
-  def formatDateTimeKnownIssues(dateTime: LocalDateTime): String = {
+  def formatDateTimeKnownIssues(dateTime: LocalDateTime)(implicit messages: Messages): String = {
     val knownIssueSince = dateTime.toLocalDate
     val now = LocalDate.now
     if (now.isAfter(knownIssueSince))
-      s"${dateTime.format(DateTimeGen.ofPattern("h:mma")).toLowerCase(Locale.ENGLISH)}, " +
+      s"${dateTime.format(DateTimeGen.ofPattern("h:mma")).toLowerCase(Locale.ENGLISH)} ${messages("service.availability.issues.GMT")}, " +
         s"${dateTime.format(DateTimeGen.ofPattern("d MMMM yyyy"))}"
-    else
-      dateTime.format(DateTimeGen.ofPattern("h:mma")).toLowerCase(Locale.ENGLISH)
+    else {
+      s"${dateTime.format(DateTimeGen.ofPattern("h:mma")).toLowerCase(Locale.ENGLISH)} ${messages("service.availability.issues.GMT")}"
+    }
   }
 }
