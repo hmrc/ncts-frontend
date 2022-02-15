@@ -22,8 +22,8 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.Injecting
 import utils.DateTimeFormatter
-import utils.HealthDetailsExamples._
 import utils.DateTimeFormatter.formatDateTime
+import utils.HealthDetailsExamples._
 import views.html.ServiceAvailability
 
 import java.time.LocalDateTime
@@ -65,42 +65,60 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       document.getElementsByClass("govuk-table__header").get(1)
         .text() mustBe messages("service.availability.system.availability")
 
+      document.getElementsByClass("govuk-table__header").get(2)
+        .text() mustBe messages("service.availability.last.message.accepted")
+
       document.getElementsByClass("govuk-table__cell").first()
         .text() mustBe messages("service.availability.ncts.gb.arrivals")
 
       document.getElementsByClass("govuk-table__cell").get(2)
+        .text() mustBe "12:00am GMT, 24 January 2022"
+
+      document.getElementsByClass("govuk-table__cell").get(3)
         .text() mustBe messages("service.availability.ncts.xi.arrivals")
+
+      document.getElementsByClass("govuk-table__cell").get(5)
+        .text() mustBe "12:00am GMT, 24 January 2022"
     }
 
     "should have a table for departures" in {
-      document.getElementsByClass("govuk-table__header").get(2)
+      document.getElementsByClass("govuk-table__header").get(3)
         .text() mustBe messages("service.availability.system.core.name")
 
-      document.getElementsByClass("govuk-table__header").get(3)
+      document.getElementsByClass("govuk-table__header").get(4)
         .text() mustBe messages("service.availability.system.availability")
 
-      document.getElementsByClass("govuk-table__cell").get(4)
-        .text() mustBe messages("service.availability.ncts.gb.departures")
+      document.getElementsByClass("govuk-table__header").get(5)
+        .text() mustBe messages("service.availability.last.message.accepted")
 
       document.getElementsByClass("govuk-table__cell").get(6)
+        .text() mustBe messages("service.availability.ncts.gb.departures")
+
+      document.getElementsByClass("govuk-table__cell").get(8)
+        .text() mustBe "12:00am GMT, 24 January 2022"
+
+      document.getElementsByClass("govuk-table__cell").get(9)
         .text() mustBe messages("service.availability.ncts.xi.departures")
+
+      document.getElementsByClass("govuk-table__cell").get(11)
+        .text() mustBe "12:00am GMT, 24 January 2022"
     }
 
     "should have a table for other systems" in {
-      document.getElementsByClass("govuk-table__header").get(4)
+      document.getElementsByClass("govuk-table__header").get(6)
         .text() mustBe messages("service.availability.channel.name")
 
-      document.getElementsByClass("govuk-table__header").get(5)
+      document.getElementsByClass("govuk-table__header").get(7)
         .text() mustBe messages("service.availability.system.availability")
 
-      document.getElementsByClass("govuk-table__cell").get(8)
+      document.getElementsByClass("govuk-table__cell").get(12)
         .text() mustBe messages("service.availability.submission.channels.status.web.channel")
 
-      document.getElementsByClass("govuk-table__cell").get(10)
+      document.getElementsByClass("govuk-table__cell").get(14)
         .text() mustBe messages("service.availability.submission.channels.status.xml.channel")
     }
 
-    "should show the last updated time with refresh link for arrivals" in {
+    "should have a last updated time with refresh link for arrivals" in {
       val lastUpdatedText = s"${messages("service.availability.lastUpdated")} " +
         s"${formatDateTime(LocalDateTime.of(2022, 1, 24, 0, 0, 0).minusMinutes(30))}. " +
         s"${messages("service.availability.lastUpdated.refresh")} " +
@@ -110,7 +128,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         .text() mustBe lastUpdatedText
     }
 
-    "should show the last updated time with refresh link for departures" in {
+    "should have a last updated time with refresh link for departures" in {
       val lastUpdatedText = s"${messages("service.availability.lastUpdated")} " +
         s"${formatDateTime(LocalDateTime.of(2022, 1, 24, 0, 0, 0).minusSeconds(30))}. " +
         s"${messages("service.availability.lastUpdated.refresh")} " +
@@ -120,7 +138,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         .text() mustBe lastUpdatedText
     }
 
-    "should show the last updated time with refresh link for other systems" in {
+    "should have a last updated time with refresh link for other systems" in {
       val lastUpdatedText = s"${messages("service.availability.lastUpdated")} " +
         s"${formatDateTime(LocalDateTime.of(2022, 1, 24, 0, 0, 0))}. " +
         s"${messages("service.availability.lastUpdated.refresh")} " +
@@ -135,7 +153,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         .attr("href") mustBe getHelpUrl
     }
 
-    "should have a related links section with a link to service availability" in {
+    "should have a related links section with a link to planned downtime" in {
       document.getElementsByTag("h2").first().text() mustBe messages("service.availability.related.links")
       val link = document.select("#main-content > div:nth-child(3) > div > ul > li > a")
       link.text() mustBe messages("service.availability.related.links.planned.downtimes")
@@ -147,21 +165,21 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       "should show that services are available for arrivals" in {
         document.getElementsByClass("govuk-table__cell").get(1)
           .text() mustBe messages("service.availability.status.available")
-        document.getElementsByClass("govuk-table__cell").get(3)
+        document.getElementsByClass("govuk-table__cell").get(4)
           .text() mustBe messages("service.availability.status.available")
       }
 
       "should show that services are available for departures" in {
-        document.getElementsByClass("govuk-table__cell").get(5)
-          .text() mustBe messages("service.availability.status.available")
         document.getElementsByClass("govuk-table__cell").get(7)
+          .text() mustBe messages("service.availability.status.available")
+        document.getElementsByClass("govuk-table__cell").get(10)
           .text() mustBe messages("service.availability.status.available")
       }
 
       "should show that services are available for other systems" in {
-        document.getElementsByClass("govuk-table__cell").get(9)
+        document.getElementsByClass("govuk-table__cell").get(13)
           .text() mustBe messages("service.availability.status.available")
-        document.getElementsByClass("govuk-table__cell").get(11)
+        document.getElementsByClass("govuk-table__cell").get(15)
           .text() mustBe messages("service.availability.status.available")
       }
 
@@ -190,7 +208,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       "should show that services have known issues for arrivals" in {
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
           .text() mustBe messages("service.availability.status.issues")
-        allUnhealthyView.getElementsByClass("govuk-table__cell").get(3)
+        allUnhealthyView.getElementsByClass("govuk-table__cell").get(4)
           .text() mustBe messages("service.availability.status.issues")
 
         val arrivalsKnownIssuesParagraph =
@@ -212,9 +230,9 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       }
 
       "should show that services have known issues for departures" in {
-        allUnhealthyView.getElementsByClass("govuk-table__cell").get(5)
-          .text() mustBe messages("service.availability.status.issues")
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(7)
+          .text() mustBe messages("service.availability.status.issues")
+        allUnhealthyView.getElementsByClass("govuk-table__cell").get(10)
           .text() mustBe messages("service.availability.status.issues")
 
         val departuresKnownIssuesParagraph =
@@ -236,9 +254,9 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       }
 
       "should show that services have known issues for other systems" in {
-        allUnhealthyView.getElementsByClass("govuk-table__cell").get(9)
+        allUnhealthyView.getElementsByClass("govuk-table__cell").get(13)
           .text() mustBe messages("service.availability.status.issues")
-        allUnhealthyView.getElementsByClass("govuk-table__cell").get(11)
+        allUnhealthyView.getElementsByClass("govuk-table__cell").get(15)
           .text() mustBe messages("service.availability.status.issues")
 
         val channelsKnownIssuesParagraph =
@@ -284,8 +302,10 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       "should show that the GB channel has known issues for arrivals" in {
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
           .text() mustBe messages("service.availability.status.issues")
-        someUnhealthyView.getElementsByClass("govuk-table__cell").get(3)
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(4)
           .text() mustBe messages("service.availability.status.available")
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(13)
+          .text() mustBe messages("service.availability.status.issues")
 
         val arrivalsKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
@@ -303,10 +323,12 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       }
 
       "should show that the GB channel has known issues for departures" in {
-        someUnhealthyView.getElementsByClass("govuk-table__cell").get(5)
-          .text() mustBe messages("service.availability.status.issues")
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(7)
+          .text() mustBe messages("service.availability.status.issues")
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(10)
           .text() mustBe messages("service.availability.status.available")
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(13)
+          .text() mustBe messages("service.availability.status.issues")
 
         val departuresKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
@@ -324,9 +346,9 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       }
 
       "should show that the Web channel has known issues" in {
-        someUnhealthyView.getElementsByClass("govuk-table__cell").get(9)
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(13)
           .text() mustBe messages("service.availability.status.issues")
-        someUnhealthyView.getElementsByClass("govuk-table__cell").get(11)
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(15)
           .text() mustBe messages("service.availability.status.available")
 
         val webChannelKnownIssuesParagraph =
@@ -360,7 +382,9 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       "should show that the XI channel has known issues for arrivals" in {
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
           .text() mustBe messages("service.availability.status.available")
-        someUnhealthyView.getElementsByClass("govuk-table__cell").get(3)
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(4)
+          .text() mustBe messages("service.availability.status.issues")
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(15)
           .text() mustBe messages("service.availability.status.issues")
 
         val arrivalsKnownIssuesParagraph =
@@ -379,9 +403,11 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       }
 
       "should show that the XI channel has known issues for departures" in {
-        someUnhealthyView.getElementsByClass("govuk-table__cell").get(5)
-          .text() mustBe messages("service.availability.status.available")
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(7)
+          .text() mustBe messages("service.availability.status.available")
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(10)
+          .text() mustBe messages("service.availability.status.issues")
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(15)
           .text() mustBe messages("service.availability.status.issues")
 
         val departuresKnownIssuesParagraph =
@@ -400,9 +426,9 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       }
 
       "should show that the XML channel has known issues" in {
-        someUnhealthyView.getElementsByClass("govuk-table__cell").get(9)
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(13)
           .text() mustBe messages("service.availability.status.available")
-        someUnhealthyView.getElementsByClass("govuk-table__cell").get(11)
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(15)
           .text() mustBe messages("service.availability.status.issues")
 
         val xmlChannelKnownIssuesParagraph =
@@ -432,15 +458,22 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
     createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
   )
 
-  val document: Document = Jsoup.parse(view(
-    StatusResponse(
-      gbDeparturesStatus = healthDetailsHealthy,
-      xiDeparturesStatus = healthDetailsHealthy,
-      gbArrivalsStatus = healthDetailsHealthy,
-      xiArrivalsStatus = healthDetailsHealthy,
-      xmlChannelStatus = healthDetailsHealthy,
-      webChannelStatus = healthDetailsHealthy,
-      createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
-    )).body)
+  val document: Document = {
+
+    val lastMessageAccepted = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
+
+    val healthDetails = healthDetailsHealthy.copy(lastMessageAccepted = Some(lastMessageAccepted))
+
+    Jsoup.parse(view(
+      StatusResponse(
+        gbDeparturesStatus = healthDetails,
+        xiDeparturesStatus = healthDetails,
+        gbArrivalsStatus = healthDetails,
+        xiArrivalsStatus = healthDetails,
+        xmlChannelStatus = healthDetails,
+        webChannelStatus = healthDetails,
+        createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
+      )).body)
+  }
 
 }

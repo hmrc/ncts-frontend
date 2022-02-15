@@ -28,43 +28,19 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
 
   private val statusChangedAt =
     LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+
+  private val lastMessageAccepted =
+    LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+
   private val healthDetailsHealthy =
-    HealthDetails(healthy = true, statusChangedAt = statusChangedAt)
+    HealthDetails(healthy = true, statusChangedAt = statusChangedAt, lastMessageAccepted = Some(lastMessageAccepted))
   private val healthDetailsUnhealthy =
-    HealthDetails(healthy = false, statusChangedAt = statusChangedAt)
+    HealthDetails(healthy = false, statusChangedAt = statusChangedAt, lastMessageAccepted = Some(lastMessageAccepted))
 
   "StatusResponseReads" should {
     "return a StatusResponse when status is OK and can be parsed for GB/XI departures true and GB/XI arrivals false" in {
-      val json =
-        s"""
-           |{
-           |  "gbDeparturesStatus": {
-           |    "healthy": true,
-           |    "statusChangedAt": "${statusChangedAt}"
-           |  },
-           |  "xiDeparturesStatus": {
-           |    "healthy": true,
-           |    "statusChangedAt": "${statusChangedAt}"
-           |  },
-           |  "gbArrivalsStatus": {
-           |    "healthy": false,
-           |    "statusChangedAt": "${statusChangedAt}"
-           |  },
-           |  "xiArrivalsStatus": {
-           |    "healthy": false,
-           |    "statusChangedAt": "${statusChangedAt}"
-           |  },
-           |  "xmlChannelStatus": {
-           |    "healthy": false,
-           |    "statusChangedAt": "${statusChangedAt}"
-           |  },
-           |  "webChannelStatus": {
-           |    "healthy": false,
-           |    "statusChangedAt": "${statusChangedAt}"
-           |  },
-           |  "createdTs": "2022-01-01T10:25:55"
-           |}
-          """.stripMargin
+
+      val depHealthyArrUnhealthyJson = json(true, false, false)
 
       val expectedResult = StatusResponse(
         gbDeparturesStatus = healthDetailsHealthy,
@@ -76,7 +52,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
         createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
       )
 
-      val httpResponse = HttpResponse(Status.OK, json)
+      val httpResponse = HttpResponse(Status.OK, depHealthyArrUnhealthyJson)
 
       val Right(result) = StatusResponseReads.read("GET", "url", httpResponse)
 
@@ -84,36 +60,8 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
     }
 
     "return a StatusResponse when status is OK and can be parsed for GB/XI departures false and GB/XI arrivals true" in {
-      val json =
-        s"""
-           |{
-           |  "gbDeparturesStatus": {
-           |    "healthy": false,
-           |    "statusChangedAt": "${statusChangedAt}"
-           |  },
-           |  "xiDeparturesStatus": {
-           |    "healthy": false,
-           |    "statusChangedAt": "${statusChangedAt}"
-           |  },
-           |  "gbArrivalsStatus": {
-           |    "healthy": true,
-           |    "statusChangedAt": "${statusChangedAt}"
-           |  },
-           |  "xiArrivalsStatus": {
-           |    "healthy": true,
-           |    "statusChangedAt": "${statusChangedAt}"
-           |  },
-           |  "xmlChannelStatus": {
-           |    "healthy": true,
-           |    "statusChangedAt": "${statusChangedAt}"
-           |  },
-           |  "webChannelStatus": {
-           |    "healthy": true,
-           |    "statusChangedAt": "${statusChangedAt}"
-           |  },
-           |  "createdTs": "2022-01-01T10:25:55"
-           |}
-          """.stripMargin
+
+      val depUnhealthyArrHealthy = json(false, true, true)
 
       val expectedResult = StatusResponse(
         gbDeparturesStatus = healthDetailsUnhealthy,
@@ -125,7 +73,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
         createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
       )
 
-      val httpResponse = HttpResponse(Status.OK, json)
+      val httpResponse = HttpResponse(Status.OK, depUnhealthyArrHealthy)
 
       val Right(result) = StatusResponseReads.read("GET", "url", httpResponse)
 
@@ -176,6 +124,43 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
     "return false if web is healthy but xml is unhealthy in the response" in {
       resp.copy(webChannelStatus = healthDetailsUnhealthy).xmlAndWebHealthy mustBe false
     }
+  }
+
+  def json(departuresHealthy: Boolean, arrivalsHealthy: Boolean, otherChannelsHealthy: Boolean): String = {
+    s"""
+       |{
+       |  "gbDeparturesStatus": {
+       |    "healthy": $departuresHealthy,
+       |    "statusChangedAt": "$statusChangedAt",
+       |    "lastMessageAccepted": "$lastMessageAccepted"
+       |  },
+       |  "xiDeparturesStatus": {
+       |    "healthy": $departuresHealthy,
+       |    "statusChangedAt": "$statusChangedAt",
+       |    "lastMessageAccepted": "$lastMessageAccepted"
+       |  },
+       |  "gbArrivalsStatus": {
+       |    "healthy": $arrivalsHealthy,
+       |    "statusChangedAt": "$statusChangedAt",
+       |    "lastMessageAccepted": "$lastMessageAccepted"
+       |  },
+       |  "xiArrivalsStatus": {
+       |    "healthy": $arrivalsHealthy,
+       |    "statusChangedAt": "$statusChangedAt",
+       |    "lastMessageAccepted": "$lastMessageAccepted"
+       |  },
+       |  "xmlChannelStatus": {
+       |    "healthy": $otherChannelsHealthy,
+       |    "statusChangedAt": "$statusChangedAt",
+       |    "lastMessageAccepted": "$lastMessageAccepted"
+       |  },
+       |  "webChannelStatus": {
+       |    "healthy": $otherChannelsHealthy,
+       |    "statusChangedAt": "$statusChangedAt",
+       |    "lastMessageAccepted": "$lastMessageAccepted"
+       |  },
+       |  "createdTs": "2022-01-01T10:25:55"
+       |}""".stripMargin
   }
 
 }

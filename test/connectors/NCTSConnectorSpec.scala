@@ -29,15 +29,15 @@ import java.time.LocalDateTime
 import scala.concurrent.Future
 
 
-class NctsConnectorSpec extends SpecBase {
+class NCTSConnectorSpec extends SpecBase {
 
   private implicit val appConfig = app.injector.instanceOf[FrontendAppConfig]
 
   private val mockHttp = mock[HttpClient]
 
-  private val nctsConnector = new NctsConnector(mockHttp, appConfig)
+  private val nctsConnector = new NCTSConnector(mockHttp, appConfig)
 
-  "Ncts Connector" - {
+  "NCTS Connector" - {
     "should return a valid response with GB/XI departures true and GB/XI arrivals false" in {
       val response = StatusResponse(
         gbDeparturesStatus = healthDetailsHealthy,

@@ -30,7 +30,6 @@
 ) {
 
     <h1 class="govuk-heading-l">@messages("service.availability.heading")</h1>
-
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <table class="govuk-table">
@@ -44,11 +43,11 @@
                         </p>
                     </div>
                 </caption>
-
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header">@messages("service.availability.system.core.name")</th>
                         <th scope="col" class="govuk-table__header">@messages("service.availability.system.availability")</th>
+                        <th scope="col" class="govuk-table__header">@messages("service.availability.last.message.accepted")</th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -63,6 +62,11 @@
                               <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
                         </td>
                         }
+                        <td class="govuk-table__cell">
+                            @{status.gbArrivalsStatus.lastMessageAccepted map {
+                                formatDateTimeKnownIssues(_)
+                            }}
+                        </td>
                     </tr>
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">@messages("service.availability.ncts.xi.arrivals")</td>
@@ -75,6 +79,11 @@
                             <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
                         </td>
                         }
+                        <td class="govuk-table__cell">
+                            @{status.xiArrivalsStatus.lastMessageAccepted map {
+                                formatDateTimeKnownIssues(_)
+                            }}
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -101,6 +110,7 @@
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header">@messages("service.availability.system.core.name")</th>
                         <th scope="col" class="govuk-table__header">@messages("service.availability.system.availability")</th>
+                        <th scope="col" class="govuk-table__header">@messages("service.availability.last.message.accepted")</th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -115,6 +125,11 @@
                         <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
                     </td>
                     }
+                    <td class="govuk-table__cell">
+                        @{status.gbDeparturesStatus.lastMessageAccepted map {
+                            formatDateTimeKnownIssues(_)
+                        }}
+                    </td>
                 </tr>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">@messages("service.availability.ncts.xi.departures")</td>
@@ -127,6 +142,11 @@
                         <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
                     </td>
                     }
+                    <td class="govuk-table__cell">
+                        @{status.xiDeparturesStatus.lastMessageAccepted map {
+                            formatDateTimeKnownIssues(_)
+                        }}
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -161,7 +181,6 @@
             }
         </div>
     </div>
-
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <h2 class="govuk-heading-l">@messages("service.availability.related.links")</h2>

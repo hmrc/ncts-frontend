@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package connectors
+package services
 
 import com.google.inject.Inject
-import config.FrontendAppConfig
+import connectors.NCTSConnector
 import models.responses.{ErrorResponse, StatusResponse}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Singleton
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class NctsConnector @Inject()(
-                               httpClient: HttpClient,
-                               config: FrontendAppConfig
-                             ) {
+class HealthCheckService @Inject()(nctsConnector: NCTSConnector) {
 
   def checkStatus()(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, StatusResponse]] =
-    httpClient.GET[Either[ErrorResponse, StatusResponse]](s"${config.nctsUrl}/status-check")
-
+    nctsConnector.checkStatus
 }

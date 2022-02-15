@@ -17,7 +17,7 @@
 package services
 
 import base.SpecBase
-import connectors.NctsConnector
+import connectors.NCTSConnector
 import models.responses.ErrorResponse.StatusResponseError
 import models.responses.StatusResponse
 import org.mockito.ArgumentMatchers.any
@@ -29,8 +29,8 @@ import scala.concurrent.Future
 
 class NctsServiceSpec extends SpecBase {
 
-  val nctsConnector = mock[NctsConnector]
-  val service = new NctsService(nctsConnector)
+  val nctsConnector = mock[NCTSConnector]
+  val service = new HealthCheckService(nctsConnector)
 
   "checkStatus" - {
     "return a valid status response" in {
