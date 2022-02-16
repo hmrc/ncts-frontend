@@ -29,9 +29,9 @@ import scala.concurrent.duration.Duration
 class ServiceAvailabilityControllerISpec extends SpecCommonHelper {
 
   val healthDetailsHealthy =
-    HealthDetails(healthy = true, statusChangedAt = LocalDateTime.now)
+    HealthDetails(healthy = true, statusChangedAt = LocalDateTime.now, lastMessageAccepted = Some(LocalDateTime.now))
   val healthDetailsUnhealthy =
-    HealthDetails(healthy = false, statusChangedAt = LocalDateTime.now)
+    HealthDetails(healthy = false, statusChangedAt = LocalDateTime.now, lastMessageAccepted = Some(LocalDateTime.now))
 
   "check status" should {
 

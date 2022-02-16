@@ -20,7 +20,7 @@ import handlers.ErrorHandler
 import models.responses.StatusResponse
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.NctsService
+import services.HealthCheckService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ServiceAvailability
 
@@ -29,15 +29,15 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ServiceAvailabilityController @Inject()(
-                                              val controllerComponents: MessagesControllerComponents,
-                                              nctsService: NctsService,
-                                              errorHandler: ErrorHandler,
-                                              view: ServiceAvailability
+                                               val controllerComponents: MessagesControllerComponents,
+                                               healthCheckService: HealthCheckService,
+                                               errorHandler: ErrorHandler,
+                                               view: ServiceAvailability
                                             ) extends FrontendBaseController with I18nSupport {
 
 
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
-    nctsService.checkStatus().flatMap {
+    healthCheckService.checkStatus().flatMap {
       case Right(statusResponse: StatusResponse) => Future.successful(Ok(view(statusResponse)))
       case _ => Future.successful(errorHandler.showInternalServerError)
     }

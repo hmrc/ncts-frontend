@@ -24,7 +24,7 @@ import org.mockito.Mockito.when
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.NctsService
+import services.HealthCheckService
 import utils.HealthDetailsExamples._
 
 import java.time.LocalDateTime
@@ -33,16 +33,16 @@ import scala.concurrent.Future
 
 class ServiceAvailabilityControllerSpec extends SpecBase {
 
-  val nctsService: NctsService = mock[NctsService]
+  val healthCheckService: HealthCheckService = mock[HealthCheckService]
 
   val mocks = Seq(
-    bind[NctsService].to(nctsService)
+    bind[HealthCheckService].to(healthCheckService)
   )
 
   "Service Status Check Controller" - {
 
     "must return OK and the correct view for a GET with GB/XI departures true and GB/XI arrivals false" in {
-      when(nctsService.checkStatus()(any())) thenReturn
+      when(healthCheckService.checkStatus()(any())) thenReturn
         Future(Right(
           StatusResponse(
             gbDeparturesStatus = healthDetailsHealthy,
@@ -68,7 +68,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
     }
 
     "must return OK and the correct view for a GET with GB/XI departures false and GB/XI arrivals true" in {
-      when(nctsService.checkStatus()(any())) thenReturn
+      when(healthCheckService.checkStatus()(any())) thenReturn
         Future(Right(StatusResponse(
           gbDeparturesStatus = healthDetailsUnhealthy,
           xiDeparturesStatus = healthDetailsUnhealthy,
@@ -93,7 +93,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
 
 
     "must return INTERNAL_SERVER_ERROR when backend returns an error response" in {
-      when(nctsService.checkStatus()(any())) thenReturn Future(Left(StatusResponseError("something went wrong")))
+      when(healthCheckService.checkStatus()(any())) thenReturn Future(Left(StatusResponseError("something went wrong")))
 
       val application = applicationBuilder().overrides(mocks).build()
 
