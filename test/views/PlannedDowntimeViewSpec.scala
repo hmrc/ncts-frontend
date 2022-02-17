@@ -68,10 +68,10 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
           .get(0).text() mustBe messages("planned-downtime.ncts.gb.arrivals")
 
         document.select("table:nth-child(2) > tbody > tr:nth-child(1) > td:nth-child(2)")
-          .get(0).text() mustBe "Date: Saturday 1 January 2022 Time: 8AM"
+          .get(0).text() mustBe "Saturday 1 January 2022 8AM"
 
         document.select("table:nth-child(2) > tbody > tr:nth-child(1) > td:nth-child(3)")
-          .get(0).text() mustBe "Date: Wednesday 1 June 2022 Time: 8PM"
+          .get(0).text() mustBe "Wednesday 1 June 2022 8PM"
       }
 
       "should have a table for arrivals with a row for XI" in {
@@ -79,10 +79,10 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
           .get(0).text() mustBe messages("planned-downtime.ncts.xi.arrivals")
 
         document.select("table:nth-child(2) > tbody > tr:nth-child(2) > td:nth-child(2)")
-          .get(0).text() mustBe "Date: Saturday 1 January 2022 Time: 8AM"
+          .get(0).text() mustBe "Saturday 1 January 2022 8AM"
 
         document.select("table:nth-child(2) > tbody > tr:nth-child(2) > td:nth-child(3)")
-          .get(0).text() mustBe "Date: Wednesday 1 June 2022 Time: 8PM"
+          .get(0).text() mustBe "Wednesday 1 June 2022 8PM"
       }
 
       "should have some content about submissions when the service is down and an apology for arrivals" in {
@@ -117,37 +117,43 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
       }
 
       "should have a table for departures with the correct heading" in {
-        val table = document.select("table:nth-child(6) > thead > tr")
+        val table = document.select("table:nth-child(5) > thead > tr")
         table.select("th:nth-child(1)").get(0).text() mustBe messages("planned-downtime.system.core.name")
         table.select("th:nth-child(2)").get(0).text() mustBe messages("planned-downtime.start")
         table.select("th:nth-child(3)").get(0).text() mustBe messages("planned-downtime.end")
       }
 
       "should have a table for departures with a row for GB" in {
-        document.select("table:nth-child(6) > tbody > tr:nth-child(1) > td:nth-child(1)")
+
+        val tableRow = document.select("table:nth-child(5) > tbody > tr:nth-child(1)")
+
+        tableRow.select("td:nth-child(1)")
           .get(0).text() mustBe messages("planned-downtime.ncts.gb.departures")
 
-        document.select("table:nth-child(6) > tbody > tr:nth-child(1) > td:nth-child(2)")
-          .get(0).text() mustBe "Date: Saturday 1 January 2022 Time: 8AM"
+        tableRow.select("td:nth-child(2)")
+          .get(0).text() mustBe "Saturday 1 January 2022 8AM"
 
-        document.select("table:nth-child(6) > tbody > tr:nth-child(1) > td:nth-child(3)")
-          .get(0).text() mustBe "Date: Wednesday 1 June 2022 Time: 8PM"
+        tableRow.select("td:nth-child(3)")
+          .get(0).text() mustBe "Wednesday 1 June 2022 8PM"
       }
 
       "should have a table for departures with a row for XI" in {
-        document.select("table:nth-child(6) > tbody > tr:nth-child(2) > td:nth-child(1)")
+
+        val tableRow = document.select("table:nth-child(5) > tbody > tr:nth-child(2)")
+
+        tableRow.select("td:nth-child(1)")
           .get(0).text() mustBe messages("planned-downtime.ncts.xi.departures")
 
-        document.select("table:nth-child(6) > tbody > tr:nth-child(2) > td:nth-child(2)")
-          .get(0).text() mustBe "Date: Saturday 1 January 2022 Time: 8AM"
+        tableRow.select("td:nth-child(2)")
+          .get(0).text() mustBe "Saturday 1 January 2022 8AM"
 
-        document.select("table:nth-child(6) > tbody > tr:nth-child(2) > td:nth-child(3)")
-          .get(0).text() mustBe "Date: Wednesday 1 June 2022 Time: 8PM"
+        tableRow.select("td:nth-child(3)")
+          .get(0).text() mustBe "Wednesday 1 June 2022 8PM"
       }
 
       "should have some content about submissions when the service is down and an apology for departures" in {
-        document.getElementsByClass("govuk-body").get(2).text() mustBe messages("planned-downtime.p1")
-        document.getElementsByClass("govuk-body").get(3).text() mustBe messages("planned-downtime.p2")
+        document.getElementsByClass("govuk-body").get(0).text() mustBe messages("planned-downtime.p1")
+        document.getElementsByClass("govuk-body").get(1).text() mustBe messages("planned-downtime.p2")
       }
     }
 
