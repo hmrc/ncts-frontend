@@ -21,4 +21,5 @@ trait ErrorResponse
 object ErrorResponse {
   final case class StatusResponseError(message: String) extends ErrorResponse
   final case class DowntimeConfigParseError(message: String) extends ErrorResponse
+  final case class DowntimeResponseError(message: String) extends ErrorResponse
 }
