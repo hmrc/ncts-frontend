@@ -11,3 +11,5 @@ GET         /language/:lang                              controllers.LanguageSwi
 GET         /service-availability                        controllers.ServiceAvailabilityController.onPageLoad
 
 GET         /planned-downtime                            controllers.PlannedDowntimeController.onPageLoad
+
+GET         /history-outages                             controllers.OutageHistoryController.onPageLoad

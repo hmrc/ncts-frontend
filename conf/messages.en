@@ -103,7 +103,7 @@ service.availability.issues.p5=Transit Manual Supplement.
 service.availability.issues.p6=If you are trying to use the
 service.availability.issues.p7=for submissions and are experiencing issues, check your third-party software.
 service.availability.issues.xml.channel=XML channel
-service.availability.related.links.planned.downtimes=Planned downtimes
+service.availability.related.links.planned.downtimes=Planned downtime
 
 service.planned-downtime.title=Planned downtime
 service.planned-downtime.heading=Planned downtime
