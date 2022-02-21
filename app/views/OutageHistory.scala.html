@@ -37,14 +37,14 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
 
-            <h2 class="govuk-heading-m">@messages("History of NCTS downtime")</h2>
+            <h2 class="govuk-heading-m">@messages("service.downtime.history.h2")</h2>
 
             <div class="govuk-inset-text">
-                Within the last <b> 30 days</b>
+                @messages("service.downtime.inset-text") <b> @messages("service.downtime.inset-text.days")</b>
             </div>
 
             @if(downtimes.isEmpty){
-            <p class="govuk-body">@messages("service.planned-downtime.no.downtime.planned.arrivals")</p>
+            <p class="govuk-body">@messages("service.planned-downtime.no.downtime.history")</p>
             } else {
                 @DowntimeHistoryTable(downtimes)
             }

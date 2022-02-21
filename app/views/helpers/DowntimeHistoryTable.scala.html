@@ -26,34 +26,34 @@
 <table class="govuk-table">
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">@messages("NCTS component")</th>
-            <th scope="col" class="govuk-table__header">@messages("service.planned-downtime.start")</th>
-            <th scope="col" class="govuk-table__header">@messages("service.planned-downtime.end")</th>
+            <th scope="col" class="govuk-table__header">@messages("service.downtime.history.component.name")</th>
+            <th scope="col" class="govuk-table__header">@messages("service.downtime.history.start")</th>
+            <th scope="col" class="govuk-table__header">@messages("service.downtime.history.end")</th>
         </tr>
     </thead>
     <tbody class="govuk-table__body">
     @for(downtime <- downtimes) {
     <tr class="govuk-table__row">
         @if(downtime.affectedChannel.equals(gbArrivals)){
-        <td class="govuk-table__cell">@messages("service.planned-downtime.ncts.gb.arrivals")</td>
+        <td class="govuk-table__cell">@messages("service.downtime.history.ncts.gb.arrivals")</td>
         }else if(downtime.affectedChannel.equals(xiArrivals)){
-        <td class="govuk-table__cell">@messages("service.planned-downtime.ncts.xi.arrivals")</td>
+        <td class="govuk-table__cell">@messages("service.downtime.history.ncts.xi.arrivals")</td>
         }else if(downtime.affectedChannel.equals(gbDepartures)){
-        <td class="govuk-table__cell">@messages("service.planned-downtime.ncts.gb.departures")</td>
+        <td class="govuk-table__cell">@messages("service.downtime.history.ncts.gb.departures")</td>
         }else if(downtime.affectedChannel.equals(xiDepartures)){
-        <td class="govuk-table__cell">@messages("service.planned-downtime.ncts.xi.departures")</td>
+        <td class="govuk-table__cell">@messages("service.downtime.history.ncts.xi.departures")</td>
         }else if(downtime.affectedChannel.equals(webChannel)){
-        <td class="govuk-table__cell">@messages("Web channel")</td>
+        <td class="govuk-table__cell">@messages("service.downtime.history.ncts.web.channel")</td>
         }else if(downtime.affectedChannel.equals(xmlChannel)){
-        <td class="govuk-table__cell">@messages("XML Channel")</td>
+        <td class="govuk-table__cell">@messages("service.downtime.history.ncts.xml.channel")</td>
         }
         <td class="govuk-table__cell">
-            <b>@messages("service.planned-downtime.date")</b> @formatDateTimeDowntimeHistory1(downtime.start)<br />
-            <b>@messages("service.planned-downtime.time")</b> @formatDateTimeDowntimeHistory2(downtime.start)
+            <b>@messages("service.downtime.history.date")</b> @formatDateTimeDowntimeHistory1(downtime.start)<br />
+            <b>@messages("service.downtime.history.time")</b> @formatDateTimeDowntimeHistory2(downtime.start)
         </td>
         <td class="govuk-table__cell">
-            <b>@messages("service.planned-downtime.date")</b> @formatDateTimeDowntimeHistory1(downtime.end)<br />
-            <b>@messages("service.planned-downtime.time")</b> @formatDateTimeDowntimeHistory2(downtime.end)
+            <b>@messages("service.downtime.history.date")</b> @formatDateTimeDowntimeHistory1(downtime.end)<br />
+            <b>@messages("service.downtime.history.time")</b> @formatDateTimeDowntimeHistory2(downtime.end)
         </td>
     </tr>
     }
