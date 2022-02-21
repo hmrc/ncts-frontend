@@ -91,7 +91,6 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
       }
     }
 
-
     "must return INTERNAL_SERVER_ERROR when backend returns an error response" in {
       when(healthCheckService.checkStatus()(any())) thenReturn Future(Left(StatusResponseError("something went wrong")))
 

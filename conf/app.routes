@@ -12,4 +12,4 @@ GET         /service-availability                        controllers.ServiceAvai
 
 GET         /planned-downtime                            controllers.PlannedDowntimeController.onPageLoad
 
-GET         /history-outages                             controllers.OutageHistoryController.onPageLoad
+GET         /downtime-history                            controllers.DowntimeHistoryController.onPageLoad

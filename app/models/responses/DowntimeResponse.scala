@@ -31,7 +31,7 @@ object Downtime {
   implicit val format = Json.format[Downtime]
 }
 
-case class DowntimeResponse(downtimes: Seq[Downtime])
+case class DowntimeResponse(downtimes: Seq[Downtime], createdTs: LocalDateTime)
 
 object DowntimeResponse {
   private val logger = LoggerFactory.getLogger(classOf[DowntimeResponse])

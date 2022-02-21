@@ -19,7 +19,6 @@ package connectors
 import com.google.inject.Inject
 import config.FrontendAppConfig
 import models.Channel
-import models.responses.ErrorResponse.DowntimeResponseError
 import models.responses.{Downtime, DowntimeResponse, ErrorResponse, StatusResponse}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
@@ -40,7 +39,7 @@ class NCTSConnector @Inject()(
   def checkOutageHistory()(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, DowntimeResponse]] = {
     val url = ""
 
-   // httpClient.GET[Either[ErrorResponse, DowntimeResponse]](url)
+    // httpClient.GET[Either[ErrorResponse, DowntimeResponse]](url)
     Future(Right(DowntimeResponse(
       Seq(
         Downtime(Channel.gbDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
@@ -49,9 +48,9 @@ class NCTSConnector @Inject()(
         Downtime(Channel.xiArrivals, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
         Downtime(Channel.webChannel, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
         Downtime(Channel.xmlChannel, LocalDateTime.now().minusHours(1), LocalDateTime.now())
-          )
-        )
-      )
+      ), LocalDateTime.now()
+    )
+    )
     )
   }
 }
