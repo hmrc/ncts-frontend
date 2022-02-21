@@ -18,6 +18,7 @@
 @import models.responses.DowntimeResponse
 @import models.responses.Downtime
 @import helpers.PlannedDowntimeTable
+@import helpers.DowntimeHistoryTable
 
 @this(
     layout: templates.Layout
@@ -26,10 +27,41 @@
 @(downtimes: Seq[Downtime])(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle = title(messages("service.planned-downtime.title")),
+    pageTitle = title(messages("service.downtime.history.title")),
     backUrl = Some(controllers.routes.IndexController.onPageLoad.url)
 ) {
 
-    <h1 class="govuk-heading-l">@messages("service.planned-downtime.heading")</h1>
+    <h1 class="govuk-heading-l">@messages("service.downtime.history.heading")</h1>
 
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+
+            <h2 class="govuk-heading-m">@messages("History of NCTS downtime")</h2>
+
+            <div class="govuk-inset-text">
+                Within the last <b> 30 days</b>
+            </div>
+
+            @if(downtimes.isEmpty){
+            <p class="govuk-body">@messages("service.planned-downtime.no.downtime.planned.arrivals")</p>
+            } else {
+                @DowntimeHistoryTable(downtimes)
+            }
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-l">@messages("service.availability.related.links")</h2>
+
+            <ul class="govuk-list govuk-list--bullet">
+                <li>
+                    <a class="govuk-link" href="@controllers.routes.ServiceAvailabilityController.onPageLoad.url">
+                        @messages("service.planned-downtime.related.links.service.availability")
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
 }

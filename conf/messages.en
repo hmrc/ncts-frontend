@@ -123,3 +123,6 @@ service.planned-downtime.p2=We apologise for any inconvenience this may cause.
 service.planned-downtime.no.downtime.planned.arrivals=There is no downtime currently planned for NCTS Arrivals system cores.
 service.planned-downtime.no.downtime.planned.departures=There is no downtime currently planned for NCTS Departures system cores.
 service.planned-downtime.related.links.service.availability=Service availability
+
+service.downtime.history.title=Downtime History
+service.downtime.history.heading=Downtime History

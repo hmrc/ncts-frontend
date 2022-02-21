@@ -41,6 +41,17 @@ class NCTSConnector @Inject()(
     val url = ""
 
    // httpClient.GET[Either[ErrorResponse, DowntimeResponse]](url)
-    Future(Right(DowntimeResponse(Seq(Downtime(Channel.gbDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now())))))
+    Future(Right(DowntimeResponse(
+      Seq(
+        Downtime(Channel.gbDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+        Downtime(Channel.xiDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+        Downtime(Channel.gbArrivals, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+        Downtime(Channel.xiArrivals, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+        Downtime(Channel.webChannel, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+        Downtime(Channel.xmlChannel, LocalDateTime.now().minusHours(1), LocalDateTime.now())
+          )
+        )
+      )
+    )
   }
 }
