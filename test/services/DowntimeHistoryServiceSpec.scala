@@ -18,7 +18,7 @@ package services
 
 import base.SpecBase
 import connectors.NCTSConnector
-import models.Channel
+import models.{Channel, GBDepartures}
 import models.responses.ErrorResponse.DowntimeResponseError
 import models.responses.{Downtime, DowntimeResponse}
 import org.mockito.ArgumentMatchers.any
@@ -43,10 +43,10 @@ class DowntimeHistoryServiceSpec extends SpecBase {
           DowntimeResponse(
             Seq(
               Downtime(
-                Channel.gbDepartures,
+                GBDepartures,
                 LocalDateTime.of(2022, 1, 1, 10, 25, 55),
                 LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-              )))))
+              )), LocalDateTime.of(2022, 1, 1, 10, 25, 55))))
 
       val result = service.checkOutageHistory().futureValue
 
@@ -56,10 +56,10 @@ class DowntimeHistoryServiceSpec extends SpecBase {
         response => response mustBe DowntimeResponse(
           Seq(
             Downtime(
-              Channel.gbDepartures,
+              GBDepartures,
               LocalDateTime.of(2022, 1, 1, 10, 25, 55),
               LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-            ))
+            )), LocalDateTime.of(2022, 1, 1, 10, 25, 55)
         )
       )
     }

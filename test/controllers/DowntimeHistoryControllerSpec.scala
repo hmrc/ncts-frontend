@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import models.Channel
+import models.{Channel, GBDepartures}
 import models.responses.ErrorResponse.DowntimeResponseError
 import models.responses.{Downtime, DowntimeResponse}
 import org.mockito.ArgumentMatchers.any
@@ -46,8 +46,8 @@ class DowntimeHistoryControllerSpec extends SpecBase {
         Future(Right(
           DowntimeResponse(
             Seq(
-              Downtime(Channel.gbDepartures, LocalDateTime.now(), LocalDateTime.now())
-            ))))
+              Downtime(GBDepartures, LocalDateTime.now(), LocalDateTime.now())
+            ), LocalDateTime.of(2022, 1, 1, 10, 25, 55))))
 
       val application = applicationBuilder().overrides(mocks).build()
 

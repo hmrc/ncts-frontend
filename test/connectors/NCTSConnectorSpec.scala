@@ -18,7 +18,7 @@ package connectors
 
 import base.SpecBase
 import config.FrontendAppConfig
-import models.Channel
+import models.GBDepartures
 import models.responses.ErrorResponse.{DowntimeResponseError, StatusResponseError}
 import models.responses.{Downtime, DowntimeResponse, ErrorResponse, StatusResponse}
 import org.mockito.ArgumentMatchers.any
@@ -93,10 +93,10 @@ class NCTSConnectorSpec extends SpecBase {
         val response = DowntimeResponse(
           Seq(
             Downtime(
-              Channel.gbDepartures,
+              GBDepartures,
               LocalDateTime.of(2022, 1, 1, 10, 25, 55),
               LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-            )))
+            )), LocalDateTime.of(2022, 1, 1, 10, 25, 55))
 
         when(mockHttp.GET[Either[ErrorResponse, DowntimeResponse]](any(), any(), any())(any(), any(), any()))
           .thenReturn(Future.successful(Right(response)))
@@ -110,10 +110,10 @@ class NCTSConnectorSpec extends SpecBase {
         val response = DowntimeResponse(
           Seq(
             Downtime(
-              Channel.gbDepartures,
+              GBDepartures,
               LocalDateTime.of(2022, 1, 1, 10, 25, 55),
               LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-            )))
+            )), LocalDateTime.of(2022, 1, 1, 10, 25, 55))
 
         when(mockHttp.GET[Either[ErrorResponse, DowntimeResponse]](any(), any(), any())(any(), any(), any()))
           .thenReturn(Future.successful(Right(response)))

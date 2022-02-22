@@ -15,6 +15,7 @@
  *@
 
 @import models.Channel._
+@import models._
 @import models.PlannedDowntimes
 @import utils.DateTimeFormatter._
 @import models.Channel._
@@ -34,17 +35,17 @@
     <tbody class="govuk-table__body">
     @for(downtime <- downtimes) {
     <tr class="govuk-table__row">
-        @if(downtime.affectedChannel.equals(gbArrivals)){
+        @if(downtime.affectedChannel == GBArrivals){
         <td class="govuk-table__cell">@messages("service.downtime.history.ncts.gb.arrivals")</td>
-        }else if(downtime.affectedChannel.equals(xiArrivals)){
+        }else if(downtime.affectedChannel == XIArrivals){
         <td class="govuk-table__cell">@messages("service.downtime.history.ncts.xi.arrivals")</td>
-        }else if(downtime.affectedChannel.equals(gbDepartures)){
+        }else if(downtime.affectedChannel == GBDepartures){
         <td class="govuk-table__cell">@messages("service.downtime.history.ncts.gb.departures")</td>
-        }else if(downtime.affectedChannel.equals(xiDepartures)){
+        }else if(downtime.affectedChannel == XIDepartures){
         <td class="govuk-table__cell">@messages("service.downtime.history.ncts.xi.departures")</td>
-        }else if(downtime.affectedChannel.equals(webChannel)){
+        }else if(downtime.affectedChannel == Web){
         <td class="govuk-table__cell">@messages("service.downtime.history.ncts.web.channel")</td>
-        }else if(downtime.affectedChannel.equals(xmlChannel)){
+        }else if(downtime.affectedChannel == XML){
         <td class="govuk-table__cell">@messages("service.downtime.history.ncts.xml.channel")</td>
         }
         <td class="govuk-table__cell">

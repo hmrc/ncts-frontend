@@ -16,51 +16,42 @@
 
 package models.responses
 
-import models.Channel
 import models.responses.DowntimeResponse.DowntimeResponseReads
+import models.responses.ErrorResponse.DowntimeResponseError
+import models._
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.http.Status
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, JsString, Json}
 import uk.gov.hmrc.http.HttpResponse
 
 import java.time.LocalDateTime
 
 class DowntimeResponseSpec extends AnyWordSpec with Matchers {
 
-  private val start =
-    LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+  val dateStart = LocalDateTime.of(2018, 2, 1, 0, 0)
+  val dateEnd = LocalDateTime.of(2018, 2, 1, 5, 33, 20)
 
-  private val end =
-    LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+  val jsonStartFromMongo: JsObject = Json.obj("$date" -> Json.obj("$numberLong" -> "1517443200000"))
+  val jsonEndFromMongo: JsObject = Json.obj("$date" -> Json.obj("$numberLong" -> "1517463200000"))
 
+  val channels = Seq(GBDepartures, XIDepartures, GBArrivals, XIArrivals, Web, XML)
+  val channelsJson = Seq(JsString("GB Departures"), JsString("XI Departures"), JsString("GB Arrivals"),
+    JsString("XI Arrivals"), JsString("Web channel"), JsString("XML channel"))
 
   "DowntimeResponseReads" should {
     "return a DowntimeResponse when status is OK and can be parsed" in {
 
-      //val depHealthyArrUnhealthyJson = json(true, false, false)
+      for ((channel, index) <- channelsJson.zipWithIndex) {
+        val expectedResult = DowntimeResponse(
+          Seq(Downtime(channels(index), dateStart, dateEnd)),
+          LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+        )
+        val httpResponse = HttpResponse(Status.OK, json(channel))
+        val Right(result) = DowntimeResponseReads.read("GET", "url", httpResponse)
 
-      val expectedResult = DowntimeResponse(Seq(Downtime(Channel.gbDepartures, start, end)))
-
-      println(Json.toJson(expectedResult))
-      val httpResponse = HttpResponse(Status.OK, "depHealthyArrUnhealthyJson")
-
-      val Right(result) = DowntimeResponseReads.read("GET", "url", httpResponse)
-
-      result mustBe expectedResult
-    }
-
-/*    "return a DowntimeResponse when status is OK and can be parsed for GB/XI departures false and GB/XI arrivals true" in {
-
-      val depUnhealthyArrHealthy = json(false, true, true)
-
-      val expectedResult = DowntimeResponse(Seq(Downtime(Channel.gbDepartures, start, end)))
-
-      val httpResponse = HttpResponse(Status.OK, depUnhealthyArrHealthy)
-
-      val Right(result) = DowntimeResponseReads.read("GET", "url", httpResponse)
-
-      result mustBe expectedResult
+        result mustBe expectedResult
+      }
     }
 
     "return DowntimeResponseError" when {
@@ -70,7 +61,7 @@ class DowntimeResponseSpec extends AnyWordSpec with Matchers {
             |{
             |  "bad": "json"
             |}
-              """.stripMargin
+                  """.stripMargin
 
         val httpResponse = HttpResponse(Status.OK, invalidJson)
 
@@ -88,45 +79,18 @@ class DowntimeResponseSpec extends AnyWordSpec with Matchers {
 
         result mustBe expectedResult
       }
-    }*/
+    }
   }
 
-/*
-  def json(departuresHealthy: Boolean, arrivalsHealthy: Boolean, otherChannelsHealthy: Boolean): String = {
+  def json(channel: JsString): String = {
     s"""
-       |{
-       |  "gbDeparturesStatus": {
-       |    "healthy": $departuresHealthy,
-       |    "statusChangedAt": "$statusChangedAt",
-       |    "lastMessageAccepted": "$lastMessageAccepted"
-       |  },
-       |  "xiDeparturesStatus": {
-       |    "healthy": $departuresHealthy,
-       |    "statusChangedAt": "$statusChangedAt",
-       |    "lastMessageAccepted": "$lastMessageAccepted"
-       |  },
-       |  "gbArrivalsStatus": {
-       |    "healthy": $arrivalsHealthy,
-       |    "statusChangedAt": "$statusChangedAt",
-       |    "lastMessageAccepted": "$lastMessageAccepted"
-       |  },
-       |  "xiArrivalsStatus": {
-       |    "healthy": $arrivalsHealthy,
-       |    "statusChangedAt": "$statusChangedAt",
-       |    "lastMessageAccepted": "$lastMessageAccepted"
-       |  },
-       |  "xmlChannelStatus": {
-       |    "healthy": $otherChannelsHealthy,
-       |    "statusChangedAt": "$statusChangedAt",
-       |    "lastMessageAccepted": "$lastMessageAccepted"
-       |  },
-       |  "webChannelStatus": {
-       |    "healthy": $otherChannelsHealthy,
-       |    "statusChangedAt": "$statusChangedAt",
-       |    "lastMessageAccepted": "$lastMessageAccepted"
-       |  },
-       |  "createdTs": "2022-01-01T10:25:55"
+       |{"downtimes":[
+       |  { "affectedChannel":$channel,
+       |    "start":$jsonStartFromMongo,
+       |    "end":$jsonEndFromMongo
+       |  }
+       |],
+       |"createdTs":"2022-01-01T10:25:55"
        |}""".stripMargin
   }
-*/
 }

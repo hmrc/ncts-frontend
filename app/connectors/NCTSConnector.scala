@@ -18,8 +18,8 @@ package connectors
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import models.Channel
 import models.responses.{Downtime, DowntimeResponse, ErrorResponse, StatusResponse}
+import models._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import java.time.LocalDateTime
@@ -42,12 +42,12 @@ class NCTSConnector @Inject()(
     // httpClient.GET[Either[ErrorResponse, DowntimeResponse]](url)
     Future(Right(DowntimeResponse(
       Seq(
-        Downtime(Channel.gbDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
-        Downtime(Channel.xiDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
-        Downtime(Channel.gbArrivals, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
-        Downtime(Channel.xiArrivals, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
-        Downtime(Channel.webChannel, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
-        Downtime(Channel.xmlChannel, LocalDateTime.now().minusHours(1), LocalDateTime.now())
+        Downtime(GBDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+        Downtime(XIDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+        Downtime(GBArrivals, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+        Downtime(XIArrivals, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+        Downtime(Web, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+        Downtime(XML, LocalDateTime.now().minusHours(1), LocalDateTime.now())
       ), LocalDateTime.now()
     )
     )

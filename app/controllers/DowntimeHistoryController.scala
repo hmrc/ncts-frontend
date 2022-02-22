@@ -52,7 +52,7 @@ class DowntimeHistoryController @Inject()(
         println("LEFT ::::::::::::")
         println("LEFT ::::::::::::")
         println("LEFT ::::::::::::")
-        ???
+        Future.successful(errorHandler.showInternalServerError)
       }
     }
   }
