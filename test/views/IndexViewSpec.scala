@@ -52,12 +52,12 @@ class IndexViewSpec extends SpecBase with Injecting {
 
     "should have a link to the service availability page" in {
       document.body().select(".govuk-grid-column-one-third > a ").first()
-        .attr("href") mustBe "/new-computerised-transit-system-service-availability-and-issues/service-availability"
+        .attr("href") mustBe "/new-computerised-transit-system-service-availability/service-availability"
     }
 
     "should have a link to the planned downtime page" in {
       document.body().select(".govuk-grid-column-one-third > a ").get(1)
-        .attr("href") mustBe "/new-computerised-transit-system-service-availability-and-issues/planned-downtime"
+        .attr("href") mustBe "/new-computerised-transit-system-service-availability/planned-downtime"
     }
 
     "should have other services content" in {

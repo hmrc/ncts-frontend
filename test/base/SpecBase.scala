@@ -59,10 +59,10 @@ trait SpecBase
     document.body().getElementsByClass("govuk-breadcrumbs__link").get(index)
   }
 
-  val homeLink = "/new-computerised-transit-system-service-availability-and-issues"
+  val homeLink = "/new-computerised-transit-system-service-availability"
 
-  val serviceAvailabilityLink = "/new-computerised-transit-system-service-availability-and-issues/service-availability"
-  val plannedDowntimeLink = "/new-computerised-transit-system-service-availability-and-issues/planned-downtime"
+  val serviceAvailabilityLink = s"$homeLink/service-availability"
+  val plannedDowntimeLink = s"$homeLink/planned-downtime"
 
   val govukHomeLink = "https://www.gov.uk/government/publications" +
     "/new-computerised-transit-system-service-availability-and-issues" +

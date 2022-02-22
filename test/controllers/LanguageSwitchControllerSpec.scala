@@ -43,7 +43,7 @@ class LanguageSwitchControllerSpec extends SpecBase with Injecting {
 
     "fallbackUrl" - {
       "must return the url for the status check page " in {
-        langSwitchController.fallbackURL mustBe "/new-computerised-transit-system-service-availability-and-issues/service-availability"
+        langSwitchController.fallbackURL mustBe "/new-computerised-transit-system-service-availability/service-availability"
       }
     }
   }
