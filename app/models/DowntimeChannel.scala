@@ -44,8 +44,8 @@ object DowntimeChannel {
     case XIDepartures => JsString("XI Departures")
     case GBArrivals => JsString("GB Arrivals")
     case XIArrivals => JsString("XI Arrivals")
-    case Web => JsString("Web Channel")
-    case XML => JsString("XML Channel")
+    case Web => JsString("Web channel")
+    case XML => JsString("XML channel")
   }
 
   implicit val format: Format[DowntimeChannel] = new Format[DowntimeChannel] {

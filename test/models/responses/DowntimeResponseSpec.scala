@@ -50,6 +50,8 @@ class DowntimeResponseSpec extends AnyWordSpec with Matchers {
         val httpResponse = HttpResponse(Status.OK, json(channel))
         val Right(result) = DowntimeResponseReads.read("GET", "url", httpResponse)
 
+        println("")
+        println(result)
         result mustBe expectedResult
       }
     }
