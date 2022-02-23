@@ -23,30 +23,30 @@
 <table class="govuk-table">
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">@messages("service.planned-downtime.system.core.name")</th>
-            <th scope="col" class="govuk-table__header">@messages("service.planned-downtime.start")</th>
-            <th scope="col" class="govuk-table__header">@messages("service.planned-downtime.end")</th>
+            <th scope="col" class="govuk-table__header">@messages("planned-downtime.system.core.name")</th>
+            <th scope="col" class="govuk-table__header">@messages("planned-downtime.start")</th>
+            <th scope="col" class="govuk-table__header">@messages("planned-downtime.end")</th>
         </tr>
     </thead>
     <tbody class="govuk-table__body">
         @for(downtime <- plannedDowntimes.plannedDowntimes) {
             <tr class="govuk-table__row">
                 @if(downtime.affectedChannel.equals(gbArrivals)){
-                    <td class="govuk-table__cell">@messages("service.planned-downtime.ncts.gb.arrivals")</td>
+                    <td class="govuk-table__cell">@messages("planned-downtime.ncts.gb.arrivals")</td>
                 }else if(downtime.affectedChannel.equals(xiArrivals)){
-                    <td class="govuk-table__cell">@messages("service.planned-downtime.ncts.xi.arrivals")</td>
+                    <td class="govuk-table__cell">@messages("planned-downtime.ncts.xi.arrivals")</td>
                 }else if(downtime.affectedChannel.equals(gbDepartures)){
-                    <td class="govuk-table__cell">@messages("service.planned-downtime.ncts.gb.departures")</td>
+                    <td class="govuk-table__cell">@messages("planned-downtime.ncts.gb.departures")</td>
                 }else if(downtime.affectedChannel.equals(xiDepartures)){
-                    <td class="govuk-table__cell">@messages("service.planned-downtime.ncts.xi.departures")</td>
+                    <td class="govuk-table__cell">@messages("planned-downtime.ncts.xi.departures")</td>
                 }
                 <td class="govuk-table__cell">
-                    <b>@messages("service.planned-downtime.date")</b> @formatDate(downtime.startDate)<br />
-                    <b>@messages("service.planned-downtime.time")</b> @formatTime(downtime.startTime)
+                    <b>@messages("planned-downtime.date")</b> @formatDate(downtime.startDate)<br />
+                    <b>@messages("planned-downtime.time")</b> @formatTime(downtime.startTime)
                 </td>
                 <td class="govuk-table__cell">
-                    <b>@messages("service.planned-downtime.date")</b> @formatDate(downtime.endDate)<br />
-                    <b>@messages("service.planned-downtime.time")</b> @formatTime(downtime.endTime)
+                    <b>@messages("planned-downtime.date")</b> @formatDate(downtime.endDate)<br />
+                    <b>@messages("planned-downtime.time")</b> @formatTime(downtime.endTime)
                 </td>
             </tr>
         }

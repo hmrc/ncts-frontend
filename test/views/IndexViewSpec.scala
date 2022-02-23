@@ -32,12 +32,12 @@ class IndexViewSpec extends SpecBase with Injecting {
     "should have the correct breadcrumbs" in {
       breadcrumb(0, document).text() mustBe "Home"
       breadcrumb(0, document).attr("href") mustBe govukHomeLink
-      breadcrumb(1, document).text() mustBe "Service availability and Planned downtime"
+      breadcrumb(1, document).text() mustBe "NCTS service availability"
       breadcrumb(1, document).attr("href") mustBe homeLink
     }
 
     "should have the correct title" in {
-      document.title() mustBe "Home - Service availability and Planned downtime - GOV.UK"
+      document.title() mustBe "NCTS - Service availability - GOV.UK"
     }
 
     "should have a heading caption" in {
@@ -47,7 +47,7 @@ class IndexViewSpec extends SpecBase with Injecting {
 
     "should have the correct heading" in {
       document.body().getElementsByTag("h1").first()
-        .text() mustBe "New Computerised Transit System (NCTS): Service availability and Planned downtime"
+        .text() mustBe "New Computerised Transit System (NCTS): NCTS service availability"
     }
 
     "should have a link to the service availability page" in {

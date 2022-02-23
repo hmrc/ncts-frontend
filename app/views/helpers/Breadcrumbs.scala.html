@@ -20,12 +20,14 @@
 <div class="govuk-breadcrumbs">
     <ol class="govuk-breadcrumbs__list">
         <li class="govuk-breadcrumbs__list-item">
-            <a class="govuk-breadcrumbs__link" href="@appConfig.govUKHomeLink">@messages("index.title")</a>
+            <a class="govuk-breadcrumbs__link" href="@appConfig.govUKHomeLink">@messages("home.title")</a>
         </li>
         <li class="govuk-breadcrumbs__list-item">
-            <a class="govuk-breadcrumbs__link" href="@controllers.routes.IndexController.onPageLoad.url">@messages("service.name")</a>
+            <a class="govuk-breadcrumbs__link" href="@controllers.routes.IndexController.onPageLoad.url">
+                @messages("service.name")
+            </a>
         </li>
-        @if(pageTitle.contains(messages("service.planned-downtime.title"))){
+        @if(pageTitle.contains(messages("planned-downtime.title"))){
             <li class="govuk-breadcrumbs__list-item">
                 <a class="govuk-breadcrumbs__link" href="@controllers.routes.PlannedDowntimeController.onPageLoad.url">
                     @pageTitle

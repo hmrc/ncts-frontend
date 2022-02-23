@@ -23,7 +23,8 @@ class ViewUtilsSpec extends SpecBase {
   "ViewUtils" - {
     "title should produce a title in the format 'page name - service name - gov uk'" in {
       val application = applicationBuilder().build()
-      ViewUtils.title("testTime")(messages(application)) mustBe "testTime - Service availability and Planned downtime - GOV.UK"
+      ViewUtils.title("NCTS")(messages(application)) mustBe "NCTS - Service availability - GOV.UK"
+      ViewUtils.title("test")(messages(application)) mustBe "test - NCTS service availability - GOV.UK"
     }
 
     "headingFromTitle should produce a heading from the title" in {
