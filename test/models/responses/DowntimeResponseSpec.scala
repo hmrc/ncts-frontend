@@ -32,8 +32,8 @@ class DowntimeResponseSpec extends AnyWordSpec with Matchers {
   val dateStart = LocalDateTime.of(2018, 2, 1, 0, 0)
   val dateEnd = LocalDateTime.of(2018, 2, 1, 5, 33, 20)
 
-  val jsonStartFromMongo: JsObject = Json.obj("$date" -> Json.obj("$numberLong" -> "1517443200000"))
-  val jsonEndFromMongo: JsObject = Json.obj("$date" -> Json.obj("$numberLong" -> "1517463200000"))
+  val jsonStartFromMongo: JsObject = Json.obj("$date" -> 1517443200000L)
+  val jsonEndFromMongo: JsObject = Json.obj("$date" -> 1517463200000L)
 
   val channels = Seq(GBDepartures, XIDepartures, GBArrivals, XIArrivals, Web, XML)
   val channelsJson = Seq(JsString("GB Departures"), JsString("XI Departures"), JsString("GB Arrivals"),
@@ -47,11 +47,10 @@ class DowntimeResponseSpec extends AnyWordSpec with Matchers {
           Seq(Downtime(channels(index), dateStart, dateEnd)),
           LocalDateTime.of(2022, 1, 1, 10, 25, 55)
         )
+
         val httpResponse = HttpResponse(Status.OK, json(channel))
         val Right(result) = DowntimeResponseReads.read("GET", "url", httpResponse)
 
-        println("")
-        println(result)
         result mustBe expectedResult
       }
     }

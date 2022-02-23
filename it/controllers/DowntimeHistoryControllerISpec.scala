@@ -54,7 +54,7 @@ class DowntimeHistoryControllerISpec extends SpecCommonHelper {
       document.getElementsByTag("h1").first().text() mustBe messages("service.downtime.history.heading")
     }
 
-/*    "return INTERNAL_SERVER_ERROR when failing to parse the json response" in {
+    "return INTERNAL_SERVER_ERROR when failing to parse the json response" in {
       stubGet("/ncts/downtime-history", OK, "")
 
       val response = Await.result(ws.url(s"$baseUrl/downtime-history").get(), Duration.Inf)
@@ -84,6 +84,6 @@ class DowntimeHistoryControllerISpec extends SpecCommonHelper {
 
       response.status.mustBe(INTERNAL_SERVER_ERROR)
       document.getElementsByTag("h1").first().text() mustBe messages("error.title")
-    }*/
+    }
   }
 }

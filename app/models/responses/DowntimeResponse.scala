@@ -52,29 +52,16 @@ case class DowntimeResponse(downtimes: Seq[Downtime], createdTs: LocalDateTime)
 object DowntimeResponse {
   private val logger = LoggerFactory.getLogger(classOf[DowntimeResponse])
 
-  implicit lazy val reads: Reads[DowntimeResponse] = {
-    (
-      (__ \ "downtimes").read[Seq[Downtime]] and
-        (__ \ "createdTs").read[LocalDateTime]
+  implicit val format: OFormat[DowntimeResponse] = Json.format[DowntimeResponse]
 
-      ) (DowntimeResponse.apply _)
-  }
   implicit object DowntimeResponseReads extends HttpReads[Either[ErrorResponse, DowntimeResponse]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, DowntimeResponse] =
       response.status match {
         case OK =>
           response.json.validate[DowntimeResponse] match {
             case JsSuccess(model, _) =>
-              println("RIGHT ::::::::")
-              println("RIGHT ::::::::")
-              println("RIGHT ::::::::")
               Right(model)
             case JsError(error) =>
-              println("LEFT ::::::::")
-              println("LEFT ::::::::")
-              println("LEFT ::::::::" +  response.json)
-
-              println("LEFT ::::::::")
               val errorMessage = error.flatMap(_._2.map(_.message)).mkString("\n")
               logger.error(s"Error parsing DowntimeResponse: $errorMessage")
               Left(DowntimeResponseError(s"Response in an unexpected format: $errorMessage"))

@@ -23,7 +23,7 @@ import java.time.{Instant, LocalDateTime, ZoneId}
 trait MongoDateTimeFormats {
 
   implicit val localDateTimeRead: Reads[LocalDateTime] =
-    (__ \ "$date" \ "$numberLong").read[String].map {
+    (__ \ "$date" ).read[Long].map {
       millis =>
         LocalDateTime.ofInstant(Instant.ofEpochMilli(millis.toLong), ZoneId.of("Europe/London"))
     }
