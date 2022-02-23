@@ -17,8 +17,10 @@
 @import models.responses.StatusResponse
 @import utils.DateTimeFormatter._
 @import helpers.SubmissionChannelsAvailability
+@import config.FrontendAppConfig
 
 @this(
+    appConfig: FrontendAppConfig,
     layout: templates.Layout
 )
 
@@ -93,7 +95,8 @@
                 status.gbArrivalsStatus.statusChangedAt,
                 status.xiArrivalsStatus.statusChangedAt,
                 messages("service.availability.ncts.gb.arrivals"),
-                messages("service.availability.ncts.xi.arrivals")
+                messages("service.availability.ncts.xi.arrivals"),
+                appConfig
             )
             <table class="govuk-table">
                 <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.departures")
@@ -156,7 +159,8 @@
                 status.gbDeparturesStatus.statusChangedAt,
                 status.xiDeparturesStatus.statusChangedAt,
                 messages("service.availability.ncts.gb.departures"),
-                messages("service.availability.ncts.xi.departures")
+                messages("service.availability.ncts.xi.departures"),
+                appConfig
             )
             @SubmissionChannelsAvailability(
                 status.createdTs,
@@ -176,7 +180,8 @@
                     status.webChannelStatus.statusChangedAt,
                     status.xmlChannelStatus.statusChangedAt,
                     messages("service.availability.submission.channels.status.web.channel"),
-                    messages("service.availability.submission.channels.status.xml.channel")
+                    messages("service.availability.submission.channels.status.xml.channel"),
+                    appConfig
                 )
             }
         </div>
