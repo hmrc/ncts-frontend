@@ -14,10 +14,8 @@
  * limitations under the License.
  *@
 
-@import models.Channel._
 @import models.responses.DowntimeResponse
 @import models.responses.Downtime
-@import helpers.PlannedDowntimeTable
 @import helpers.DowntimeHistoryTable
 
 @this(
@@ -44,7 +42,7 @@
             </div>
 
             @if(downtimes.isEmpty){
-            <p class="govuk-body">@messages("service.planned-downtime.no.downtime.history")</p>
+            <p class="govuk-body">@messages("service.downtime.history.no.downtime.history")</p>
             } else {
                 @DowntimeHistoryTable(downtimes)
             }

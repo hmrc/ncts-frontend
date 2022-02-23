@@ -16,9 +16,9 @@
 
 package models.responses
 
+import models._
 import models.responses.DowntimeResponse.DowntimeResponseReads
 import models.responses.ErrorResponse.DowntimeResponseError
-import models._
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.http.Status

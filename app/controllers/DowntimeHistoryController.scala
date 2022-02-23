@@ -18,15 +18,13 @@ package controllers
 
 import com.google.inject.Inject
 import handlers.ErrorHandler
-import models.Channel
-import models.responses.{Downtime, DowntimeResponse}
+import models.responses.DowntimeResponse
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.DowntimeHistoryService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.{OutageHistory, ServiceAvailability}
+import views.html.OutageHistory
 
-import java.time.LocalDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -36,24 +34,14 @@ class DowntimeHistoryController @Inject()(
                                            outageHistoryService: DowntimeHistoryService,
                                            errorHandler: ErrorHandler,
                                            view: OutageHistory
-                                       ) extends FrontendBaseController with I18nSupport {
+                                         ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     outageHistoryService.checkOutageHistory.flatMap {
-      case Right(downtimeResponse: DowntimeResponse) => {
-        println("RIGHT ::::::::")
-        println("RIGHT ::::::::")
-        println("RIGHT ::::::::")
-        println("RIGHT ::::::::")
+      case Right(downtimeResponse: DowntimeResponse) =>
         Future.successful(Ok(view(downtimeResponse.downtimes)))
-      }
-      case _ => {
-        println("LEFT ::::::::::::")
-        println("LEFT ::::::::::::")
-        println("LEFT ::::::::::::")
-        println("LEFT ::::::::::::")
+      case _ =>
         Future.successful(errorHandler.showInternalServerError)
-      }
     }
   }
 }

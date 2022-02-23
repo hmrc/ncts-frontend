@@ -18,7 +18,7 @@ package services
 
 import base.SpecBase
 import connectors.NCTSConnector
-import models.{Channel, GBDepartures}
+import models.GBDepartures
 import models.responses.ErrorResponse.DowntimeResponseError
 import models.responses.{Downtime, DowntimeResponse}
 import org.mockito.ArgumentMatchers.any
@@ -33,9 +33,6 @@ class DowntimeHistoryServiceSpec extends SpecBase {
   val nctsConnector = mock[NCTSConnector]
   val service = new DowntimeHistoryService(nctsConnector)
 
-
-  //LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-
   "checkOutageHistory" - {
     "return a valid status response" in {
       when(nctsConnector.checkOutageHistory()(any())) thenReturn
@@ -46,7 +43,8 @@ class DowntimeHistoryServiceSpec extends SpecBase {
                 GBDepartures,
                 LocalDateTime.of(2022, 1, 1, 10, 25, 55),
                 LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-              )), LocalDateTime.of(2022, 1, 1, 10, 25, 55))))
+              )),
+            LocalDateTime.of(2022, 1, 1, 10, 25, 55))))
 
       val result = service.checkOutageHistory().futureValue
 
@@ -59,7 +57,8 @@ class DowntimeHistoryServiceSpec extends SpecBase {
               GBDepartures,
               LocalDateTime.of(2022, 1, 1, 10, 25, 55),
               LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-            )), LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+            )),
+          LocalDateTime.of(2022, 1, 1, 10, 25, 55)
         )
       )
     }
