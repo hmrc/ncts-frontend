@@ -17,43 +17,43 @@
 package views
 
 import base.SpecBase
-import models.responses.Downtime
 import models._
+import models.responses.Downtime
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.Injecting
-import views.html.OutageHistory
+import views.html.DowntimeHistoryView
 
 import java.time.LocalDateTime
 
 class DowntimeHistoryViewSpec extends SpecBase with Injecting {
 
-  "PlannedDowntimeView" - {
+  "DowntimeHistoryView" - {
 
-    def view: OutageHistory = inject[OutageHistory]
+    def view: DowntimeHistoryView = inject[DowntimeHistoryView]
 
     lazy val document: Document = Jsoup.parse(view(downtimeHistory).body)
     lazy val documentNoDowntime: Document = Jsoup.parse(view(Seq.empty).body)
 
-/*
-    "should have the correct breadcrumbs" in {
-      breadcrumb(0, document).text() mustBe "Home"
-      breadcrumb(0, document).attr("href") mustBe govukHomeLink
-      breadcrumb(1, document).text() mustBe "Service availability and Planned downtime"
-      breadcrumb(1, document).attr("href") mustBe homeLink
-      breadcrumb(2, document).text() mustBe "Planned downtime"
-      breadcrumb(2, document).attr("href") mustBe plannedDowntimeLink
-    }
-*/
+    /*
+        "should have the correct breadcrumbs" in {
+          breadcrumb(0, document).text() mustBe "Home"
+          breadcrumb(0, document).attr("href") mustBe govukHomeLink
+          breadcrumb(1, document).text() mustBe "Service availability and Planned downtime"
+          breadcrumb(1, document).attr("href") mustBe homeLink
+          breadcrumb(2, document).text() mustBe "Planned downtime"
+          breadcrumb(2, document).attr("href") mustBe plannedDowntimeLink
+        }
+    */
 
-/*    "should have the correct heading" in {
-      document.select("h1").first().text() mustBe messages("service.planned-downtime.heading")
-    }*/
+    /*    "should have the correct heading" in {
+          document.select("h1").first().text() mustBe messages("service.planned-downtime.heading")
+        }*/
 
-/*    "should have a get help link" in {
-      document.body().select(".hmrc-report-technical-issue").first()
-        .attr("href") mustBe getHelpUrl
-    }*/
+    /*    "should have a get help link" in {
+          document.body().select(".hmrc-report-technical-issue").first()
+            .attr("href") mustBe getHelpUrl
+        }*/
 
     "when there are downtime history" - {
 

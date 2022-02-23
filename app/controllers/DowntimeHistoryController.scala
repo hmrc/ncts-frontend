@@ -23,7 +23,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.DowntimeHistoryService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.OutageHistory
+import views.html.DowntimeHistoryView
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -33,7 +33,7 @@ class DowntimeHistoryController @Inject()(
                                            val controllerComponents: MessagesControllerComponents,
                                            outageHistoryService: DowntimeHistoryService,
                                            errorHandler: ErrorHandler,
-                                           view: OutageHistory
+                                           view: DowntimeHistoryView
                                          ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>

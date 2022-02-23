@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import models.{Channel, GBDepartures}
+import models.GBDepartures
 import models.responses.ErrorResponse.DowntimeResponseError
 import models.responses.{Downtime, DowntimeResponse}
 import org.mockito.ArgumentMatchers.any
