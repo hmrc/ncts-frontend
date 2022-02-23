@@ -63,6 +63,7 @@ trait SpecBase
 
   val serviceAvailabilityLink = "/new-computerised-transit-system-service-availability-and-issues/service-availability"
   val plannedDowntimeLink = "/new-computerised-transit-system-service-availability-and-issues/planned-downtime"
+  val downtimeHistoryLink = "/new-computerised-transit-system-service-availability-and-issues/downtime-history"
 
   val govukHomeLink = "https://www.gov.uk/government/publications" +
     "/new-computerised-transit-system-service-availability-and-issues" +

@@ -124,8 +124,8 @@ service.planned-downtime.no.downtime.planned.arrivals=There is no downtime curre
 service.planned-downtime.no.downtime.planned.departures=There is no downtime currently planned for NCTS Departures system cores.
 service.planned-downtime.related.links.service.availability=Service availability
 
-service.downtime.history.title=Downtime History
-service.downtime.history.heading=Downtime History
+service.downtime.history.title=Downtime history
+service.downtime.history.heading=Downtime history
 service.downtime.history.h2=History of NCTS downtime
 service.downtime.inset-text=Within the last
 service.downtime.inset-text.days=30 days
@@ -141,3 +141,5 @@ service.downtime.history.ncts.gb.arrivals=NCTS GB Arrivals
 service.downtime.history.ncts.xi.arrivals=NCTS XI Arrivals
 service.downtime.history.ncts.web.channel=Web channel
 service.downtime.history.ncts.xml.channel=XML channel
+service.downtime.history.p1=During downtime, we held any submitted data and processed it when the service became available again.
+service.downtime.history.p2=We apologise for any inconvenience this may have caused.

@@ -22,7 +22,7 @@ object Channel extends Enumeration {
 
   type Channel
 
-  val gbDepartures, xiDepartures, gbArrivals, xiArrivals, webChannel, xmlChannel = Value
+  val gbDepartures, xiDepartures, gbArrivals, xiArrivals = Value
 
   implicit val reads: Reads[Channel.Value] = json => json.validate[String].map(Channel.withName)
 

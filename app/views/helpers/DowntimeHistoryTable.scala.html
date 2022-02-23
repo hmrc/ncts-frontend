@@ -16,7 +16,6 @@
 
 @import models._
 @import utils.DateTimeFormatter._
-@import models.responses.DowntimeResponse
 @import models.responses.Downtime
 
 @(downtimes: Seq[Downtime])(implicit request: Request[_], messages: Messages)
@@ -46,12 +45,12 @@
         <td class="govuk-table__cell">@messages("service.downtime.history.ncts.xml.channel")</td>
         }
         <td class="govuk-table__cell">
-            <b>@messages("service.downtime.history.date")</b> @formatDateTimeDowntimeHistory1(downtime.start)<br />
-            <b>@messages("service.downtime.history.time")</b> @formatDateTimeDowntimeHistory2(downtime.start)
+            <b>@messages("service.downtime.history.date")</b> @formatDateTimeDowntimeHistory(downtime.start)<br />
+            <b>@messages("service.downtime.history.time")</b> @formatDateTime(downtime.start)
         </td>
         <td class="govuk-table__cell">
-            <b>@messages("service.downtime.history.date")</b> @formatDateTimeDowntimeHistory1(downtime.end)<br />
-            <b>@messages("service.downtime.history.time")</b> @formatDateTimeDowntimeHistory2(downtime.end)
+            <b>@messages("service.downtime.history.date")</b> @formatDateTimeDowntimeHistory(downtime.end)<br />
+            <b>@messages("service.downtime.history.time")</b> @formatDateTime(downtime.end)
         </td>
     </tr>
     }
