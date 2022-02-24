@@ -65,8 +65,25 @@ class IndexViewSpec extends SpecBase with Injecting {
         .text() mustBe "Other services"
     }
 
+    "should have details about XML channel decommissioning" in {
+      val gridRow = document.body().select("#main-content > div:nth-child(4) > div")
+      gridRow.select("h2").text() mustBe "Planned decommissioning of NCTS legacy XML channel"
+      gridRow.select("p").get(0).text() mustBe "Work to close the legacy XML channel for NCTS will start on" +
+        " 28 February 2022. This will run until 11:59pm GMT on 13 March 2022 after which it will no longer be possible" +
+        " to make a new declaration using this channel."
+      gridRow.select("details > summary > span").text() mustBe "View more details"
+      gridRow.select("details > div:nth-child(2)").text() mustBe "For users of the NCTS email channel the final" +
+        " date to make declarations will be 31 May 2022, when we will also close this channel to new declarations."
+      gridRow.select("details > div:nth-child(3)").text() mustBe "Users must move to the new" +
+        " XML Application Programming Interface (API) channel to help manage post-Brexit volumes." +
+        " Users should speak to their own software provider to ensure they are ready for this transition."
+      gridRow.select("details > div:nth-child(4)").text() mustBe "If unable to move to the new XML API," +
+        " users should submit by using either the free to use web portal or non-transit customs processes after" +
+        " these channels are closed."
+    }
+
     "should have text about tracking issues in other services" in {
-      document.body().getElementsByClass("govuk-body").first()
+      document.body().getElementsByClass("govuk-body").get(1)
         .text() mustBe "Track availability and issues for other services."
     }
 

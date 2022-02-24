@@ -1,13 +1,5 @@
 service.name = NCTS service availability
 
-site.remove = Remove
-site.change = Change
-site.no = No
-site.yes = Yes
-site.continue = Continue
-site.start = Start now
-site.startAgain = Start again
-site.signIn = Sign in
 site.govuk = GOV.UK
 
 date.day = Day
@@ -18,25 +10,9 @@ error.title = Sorry, there is a problem with the service
 error.heading = Sorry, there is a problem with the service
 error.message = Try again later.
 
-timeout.title = You’re about to be signed out
-timeout.message = For security reasons, you will be signed out of this service in
-timeout.keepAlive = Stay signed in
-timeout.signOut = Sign out
-
-error.browser.title.prefix = Error:
-error.boolean = Please give an answer
-error.invalid_date = Give a correct date
-error.date.day_blank = Enter a day
-error.date.day_invalid = Give a correct day using numbers 1 to 31
-error.date.month_blank = Enter a month
-error.date.month_invalid = Give a correct month using numbers 1 to 12
-error.date.year_blank = Enter a year
-error.date.year_invalid = Give a correct year
-error.integer = Give an answer in whole numbers
-error.non_numeric = Give a value using only numbers
-error.number = Please enter a valid number
-error.required = Please enter a value
-error.summary.title = There is a problem
+index.title=Home
+index.guidance=Guidance
+index.heading=New Computerised Transit System (NCTS): Service availability and Planned downtime
 
 checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
@@ -61,6 +37,13 @@ index.title=NCTS
 index.heading=NCTS service availability
 index.service.availability=Service availability
 index.service.planned.downtime=Planned downtime
+index.service.decom.heading=Planned decommissioning of NCTS legacy XML channel
+index.service.decom.para=Work to close the legacy XML channel for NCTS will start on 28 February 2022. This will run until 11:59pm GMT on 13 March 2022 after which it will no longer be possible to make a new declaration using this channel.
+index.service.more.details=View more details
+index.service.more.details.p1=For users of the NCTS email channel the final date to make declarations will be 31 May 2022, when we will also close this channel to new declarations.
+index.service.more.details.p2=Users must move to the new XML Application Programming Interface (API) channel to help manage post-Brexit volumes. Users should speak to their own software provider to ensure they are ready for this transition.
+index.service.more.details.p3=If unable to move to the new XML API, users should submit by using either the free to use web portal or non-transit customs processes after these channels are closed.
+
 index.service.downtime.history=Downtime history
 index.service.other.services=Other services
 index.service.track.other.services.1=Track
