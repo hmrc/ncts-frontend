@@ -58,8 +58,7 @@ unauthorised.heading = You can’t access this service with this account
 home.title=Home
 
 index.title=NCTS
-index.guidance=Guidance
-index.heading=New Computerised Transit System (NCTS): NCTS service availability
+index.heading=NCTS service availability
 index.service.availability=Service availability
 index.service.planned.downtime=Planned downtime
 index.service.other.services=Other services

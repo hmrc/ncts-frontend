@@ -40,14 +40,9 @@ class IndexViewSpec extends SpecBase with Injecting {
       document.title() mustBe "NCTS - Service availability - GOV.UK"
     }
 
-    "should have a heading caption" in {
-      document.body().getElementsByClass("govuk-caption-xl").first()
-        .text() mustBe "Guidance"
-    }
-
     "should have the correct heading" in {
       document.body().getElementsByTag("h1").first()
-        .text() mustBe "New Computerised Transit System (NCTS): NCTS service availability"
+        .text() mustBe "NCTS service availability"
     }
 
     "should have a link to the service availability page" in {
