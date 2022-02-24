@@ -57,16 +57,16 @@ class IndexViewSpec extends SpecBase with Injecting {
 
     "should have a link to the downtime history page" in {
       document.body().select(".govuk-grid-column-one-third > a ").get(2)
-        .attr("href") mustBe "/new-computerised-transit-system-service-availability-and-issues/downtime-history"
+        .attr("href") mustBe "/new-computerised-transit-system-service-availability/downtime-history"
     }
 
     "should have other services content" in {
-      document.body().getElementsByTag("h2").get(3)
+      document.body().getElementsByTag("h2").get(4)
         .text() mustBe "Other services"
     }
 
     "should have details about XML channel decommissioning" in {
-      val gridRow = document.body().select("#main-content > div:nth-child(4) > div")
+      val gridRow = document.body().select("#main-content > div:nth-child(3) > div")
       gridRow.select("h2").text() mustBe "Planned decommissioning of NCTS legacy XML channel"
       gridRow.select("p").get(0).text() mustBe "Work to close the legacy XML channel for NCTS will start on" +
         " 28 February 2022. This will run until 11:59pm GMT on 13 March 2022 after which it will no longer be possible" +

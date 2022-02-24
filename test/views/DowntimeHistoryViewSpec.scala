@@ -38,7 +38,7 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
     "should have the correct breadcrumbs" in {
       breadcrumb(0, document).text() mustBe "Home"
       breadcrumb(0, document).attr("href") mustBe govukHomeLink
-      breadcrumb(1, document).text() mustBe "Service availability and Planned downtime"
+      breadcrumb(1, document).text() mustBe "NCTS service availability"
       breadcrumb(1, document).attr("href") mustBe homeLink
       breadcrumb(2, document).text() mustBe "Downtime history"
       breadcrumb(2, document).attr("href") mustBe downtimeHistoryLink
@@ -58,7 +58,7 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
       val link = document.select("#main-content > div:nth-child(3) > div > ul > li > a")
 
       link.first().text() mustBe messages("service.downtime.history.related.links.service.availability")
-      link.first().attr("href") mustBe "/new-computerised-transit-system-service-availability-and-issues" +
+      link.first().attr("href") mustBe "/new-computerised-transit-system-service-availability" +
         "/service-availability"
     }
 
@@ -67,7 +67,7 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
       val link = document.select("#main-content > div:nth-child(3) > div > ul > li > a")
       
       link.get(1).text() mustBe messages("service.downtime.history.related.links.planned.downtime")
-      link.get(1).attr("href") mustBe "/new-computerised-transit-system-service-availability-and-issues" +
+      link.get(1).attr("href") mustBe "/new-computerised-transit-system-service-availability" +
         "/planned-downtime"
     }
 
