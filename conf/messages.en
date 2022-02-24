@@ -60,6 +60,7 @@ index.guidance=Guidance
 index.heading=New Computerised Transit System (NCTS): Service availability and Planned downtime
 index.service.availability=Service availability
 index.service.planned.downtime=Planned downtime
+index.service.downtime.history=Downtime history
 index.service.other.services=Other services
 index.service.track.other.services.1=Track
 index.service.track.other.services.2=availability and issues
