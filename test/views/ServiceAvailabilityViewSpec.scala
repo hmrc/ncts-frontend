@@ -157,7 +157,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       document.getElementsByTag("h2").first().text() mustBe messages("service.availability.related.links")
       val link = document.select("#main-content > div:nth-child(3) > div > ul > li > a")
       link.text() mustBe messages("service.availability.related.links.planned.downtimes")
-      link.attr("href") mustBe "/new-computerised-transit-system-service-availability-and-issues" +
+      link.attr("href") mustBe "/new-computerised-transit-system-service-availability" +
         "/planned-downtime"
     }
 

@@ -94,7 +94,7 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
         document.getElementsByTag("h2").get(2).text() mustBe messages("service.availability.related.links")
         val link = document.select("#main-content > div:nth-child(3) > div > ul > li > a")
         link.text() mustBe messages("service.planned-downtime.related.links.service.availability")
-        link.attr("href") mustBe "/new-computerised-transit-system-service-availability-and-issues" +
+        link.attr("href") mustBe "/new-computerised-transit-system-service-availability" +
           "/service-availability"
       }
     }

@@ -1,5 +1,5 @@
 # Add all the application routes to the app.routes file
-->         /new-computerised-transit-system-service-availability-and-issues                    app.Routes
-->         /                          health.Routes
+->         /new-computerised-transit-system-service-availability     app.Routes
+->         /                                                         health.Routes
 
-GET        /admin/metrics             @com.kenshoo.play.metrics.MetricsController.metrics
+GET        /admin/metrics                                            @com.kenshoo.play.metrics.MetricsController.metrics
