@@ -40,7 +40,7 @@ class DowntimeHistoryControllerSpec extends SpecBase {
   )
   "DowntimeHistoryController" - {
 
-    "must return OK and the correct view for a GET with downtime history" in {
+    "must return OK for a GET with downtime history" in {
 
       when(downtimeHistoryService.checkOutageHistory()(any())) thenReturn
         Future(Right(

@@ -66,53 +66,63 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
       }
 
       "should have rows for GB Departures and Arrivals" in {
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(1) > td:nth-child(1)")
+        val gbDepartureRow = document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(1)")
+
+        gbDepartureRow.select("td:nth-child(1)")
           .get(0).text() mustBe messages("service.downtime.history.ncts.gb.departures")
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(1) > td:nth-child(2)")
+        gbDepartureRow.select("td:nth-child(2)")
           .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(1) > td:nth-child(3)")
+        gbDepartureRow.select("td:nth-child(3)")
           .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
 
 
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(2) > td:nth-child(1)")
+        val gbArrivalRow = document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(2)")
+
+        gbArrivalRow.select("td:nth-child(1)")
           .get(0).text() mustBe messages("service.downtime.history.ncts.gb.arrivals")
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(2) > td:nth-child(2)")
+        gbArrivalRow.select("td:nth-child(2)")
           .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(2) > td:nth-child(3)")
+        gbArrivalRow.select("td:nth-child(3)")
           .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
       }
 
       "should have rows for XI Departures and Arrivals" in {
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(3) > td:nth-child(1)")
+        val xiDepartureRow = document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(3)")
+
+        xiDepartureRow.select("td:nth-child(1)")
           .get(0).text() mustBe messages("service.downtime.history.ncts.xi.departures")
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(3) > td:nth-child(2)")
+        xiDepartureRow.select("td:nth-child(2)")
           .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(3) > td:nth-child(3)")
+        xiDepartureRow.select("td:nth-child(3)")
           .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
 
+        val xiArrivalRow = document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(4)")
 
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(4) > td:nth-child(1)")
+        xiArrivalRow.select("td:nth-child(1)")
           .get(0).text() mustBe messages("service.downtime.history.ncts.xi.arrivals")
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(4) > td:nth-child(2)")
+        xiArrivalRow.select("td:nth-child(2)")
           .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(4) > td:nth-child(3)")
+        xiArrivalRow.select("td:nth-child(3)")
           .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
       }
 
       "should have rows for Web and XML channels" in {
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(5) > td:nth-child(1)")
+        val webChannelRow = document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(5)")
+
+        webChannelRow.select("td:nth-child(1)")
           .get(0).text() mustBe messages("service.downtime.history.ncts.web.channel")
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(5) > td:nth-child(2)")
+        webChannelRow.select("td:nth-child(2)")
           .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(5) > td:nth-child(3)")
+        webChannelRow.select(" td:nth-child(3)")
           .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
 
+        val xmlChannelRow = document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(6)")
 
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(6) > td:nth-child(1)")
+        xmlChannelRow.select("td:nth-child(1)")
           .get(0).text() mustBe messages("service.downtime.history.ncts.xml.channel")
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(6) > td:nth-child(2)")
+        xmlChannelRow.select("td:nth-child(2)")
           .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
-        document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(6) > td:nth-child(3)")
+        xmlChannelRow.select("td:nth-child(3)")
           .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
       }
     }
