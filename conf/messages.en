@@ -1,4 +1,4 @@
-service.name = Service availability and Planned downtime
+service.name = NCTS service availability
 
 site.remove = Remove
 site.change = Change
@@ -55,9 +55,10 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-index.title=Home
-index.guidance=Guidance
-index.heading=New Computerised Transit System (NCTS): Service availability and Planned downtime
+home.title=Home
+
+index.title=NCTS
+index.heading=NCTS service availability
 index.service.availability=Service availability
 index.service.planned.downtime=Planned downtime
 index.service.downtime.history=Downtime history
@@ -106,24 +107,24 @@ service.availability.issues.p7=for submissions and are experiencing issues, chec
 service.availability.issues.xml.channel=XML channel
 service.availability.related.links.planned.downtimes=Planned downtime
 
-service.planned-downtime.title=Planned downtime
-service.planned-downtime.heading=Planned downtime
-service.planned-downtime.ncts.arrivals=NCTS Arrivals
-service.planned-downtime.ncts.departures=NCTS Departures
-service.planned-downtime.system.core.name=System core name
-service.planned-downtime.start=Downtime start
-service.planned-downtime.end=Downtime end
-service.planned-downtime.date=Date:
-service.planned-downtime.time=Time:
-service.planned-downtime.ncts.gb.departures=NCTS GB Departures
-service.planned-downtime.ncts.xi.departures=NCTS XI Departures
-service.planned-downtime.ncts.gb.arrivals=NCTS GB Arrivals
-service.planned-downtime.ncts.xi.arrivals=NCTS XI Arrivals
-service.planned-downtime.p1=Data submitted using these system cores during this time will be held and processed when the service is available again.
-service.planned-downtime.p2=We apologise for any inconvenience this may cause.
-service.planned-downtime.no.downtime.planned.arrivals=There is no downtime currently planned for NCTS Arrivals system cores.
-service.planned-downtime.no.downtime.planned.departures=There is no downtime currently planned for NCTS Departures system cores.
-service.planned-downtime.related.links.service.availability=Service availability
+planned-downtime.title=Planned downtime
+planned-downtime.heading=Planned downtime
+planned-downtime.ncts.arrivals=NCTS Arrivals
+planned-downtime.ncts.departures=NCTS Departures
+planned-downtime.system.core.name=System core name
+planned-downtime.start=Downtime start
+planned-downtime.end=Downtime end
+planned-downtime.date=Date:
+planned-downtime.time=Time:
+planned-downtime.ncts.gb.departures=NCTS GB Departures
+planned-downtime.ncts.xi.departures=NCTS XI Departures
+planned-downtime.ncts.gb.arrivals=NCTS GB Arrivals
+planned-downtime.ncts.xi.arrivals=NCTS XI Arrivals
+planned-downtime.p1=Data submitted using these system cores during this time will be held and processed when the service is available again.
+planned-downtime.p2=We apologise for any inconvenience this may cause.
+planned-downtime.no.downtime.planned.arrivals=There is no downtime currently planned for NCTS Arrivals system cores.
+planned-downtime.no.downtime.planned.departures=There is no downtime currently planned for NCTS Departures system cores.
+planned-downtime.related.links.service.availability=Service availability
 
 service.downtime.history.title=Downtime history
 service.downtime.history.heading=Downtime history

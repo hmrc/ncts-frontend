@@ -37,14 +37,14 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
     "should have the correct breadcrumbs" in {
       breadcrumb(0, document).text() mustBe "Home"
       breadcrumb(0, document).attr("href") mustBe govukHomeLink
-      breadcrumb(1, document).text() mustBe "Service availability and Planned downtime"
+      breadcrumb(1, document).text() mustBe "NCTS service availability"
       breadcrumb(1, document).attr("href") mustBe homeLink
       breadcrumb(2, document).text() mustBe "Service availability"
       breadcrumb(2, document).attr("href") mustBe serviceAvailabilityLink
     }
 
     "should have the correct title" in {
-      document.title() mustBe "Service availability - Service availability and Planned downtime - GOV.UK"
+      document.title() mustBe "Service availability - NCTS service availability - GOV.UK"
     }
 
     "should have the correct headings" in {
