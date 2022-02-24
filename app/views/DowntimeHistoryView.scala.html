@@ -38,18 +38,17 @@
             <h2 class="govuk-heading-m">@messages("service.downtime.history.h2")</h2>
 
             <div class="govuk-inset-text">
-                @messages("service.downtime.inset-text") <b> @messages("service.downtime.inset-text.days")</b>
+                @messages("service.downtime.inset-text")
             </div>
 
             @if(downtimes.isEmpty){
             <p class="govuk-body">@messages("service.downtime.history.no.downtime.history")</p>
             } else {
                 @DowntimeHistoryTable(downtimes)
+
+                <p>@messages("service.downtime.history.p1")</p>
+                <p>@messages("service.downtime.history.p2")</p>
             }
-        </div>
-        <div class="govuk-grid-column-full">
-            <p>@messages("service.downtime.history.p1")</p>
-            <p>@messages("service.downtime.history.p2")</p>
         </div>
     </div>
 
@@ -60,7 +59,12 @@
             <ul class="govuk-list govuk-list--bullet">
                 <li>
                     <a class="govuk-link" href="@controllers.routes.ServiceAvailabilityController.onPageLoad.url">
-                        @messages("service.planned-downtime.related.links.service.availability")
+                        @messages("service.downtime.history.related.links.service.availability")
+                    </a>
+                </li>
+                <li>
+                    <a class="govuk-link" href="@controllers.routes.PlannedDowntimeController.onPageLoad.url">
+                        @messages("service.downtime.history.related.links.planned.downtime")
                     </a>
                 </li>
             </ul>

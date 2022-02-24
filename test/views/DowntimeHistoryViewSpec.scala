@@ -53,6 +53,24 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
         .attr("href") mustBe getHelpUrl
     }
 
+    "should have a related links section with a link to service availability" in {
+      document.getElementsByTag("h2").get(1).text() mustBe messages("service.availability.related.links")
+      val link = document.select("#main-content > div:nth-child(3) > div > ul > li > a")
+
+      link.first().text() mustBe messages("service.downtime.history.related.links.service.availability")
+      link.first().attr("href") mustBe "/new-computerised-transit-system-service-availability-and-issues" +
+        "/service-availability"
+    }
+
+    "should have a related links section with a link to planned downtime" in {
+      document.getElementsByTag("h2").get(1).text() mustBe messages("service.availability.related.links")
+      val link = document.select("#main-content > div:nth-child(3) > div > ul > li > a")
+      
+      link.get(1).text() mustBe messages("service.downtime.history.related.links.planned.downtime")
+      link.get(1).attr("href") mustBe "/new-computerised-transit-system-service-availability-and-issues" +
+        "/planned-downtime"
+    }
+
     "when there are downtime history" - {
 
       "should have the subheading" in {
@@ -137,7 +155,7 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
         document.select("h2").first().text() mustBe messages("service.downtime.history.h2")
       }
 
-      "should have text about there being no downtime for arrivals" in {
+      "should have text about there being no downtime" in {
         documentNoDowntime.getElementsByClass("govuk-body").first().text() mustBe messages("service.downtime.history.no.downtime.history")
       }
     }
