@@ -273,8 +273,6 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         allUnhealthyView.getElementsByClass("govuk-body").get(4)
           .text() must include(channelsKnownIssuesParagraph)
-        allUnhealthyView.getElementsByClass("govuk-body").get(5)
-          .text() must include(s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}")
       }
 
       "should not have a paragraph about checking third party software for issues" in {
@@ -360,10 +358,6 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         someUnhealthyView.getElementsByClass("govuk-body").get(4)
           .text() must include(webChannelKnownIssuesParagraph)
-        someUnhealthyView.getElementsByClass("govuk-body").get(5)
-          .text() must include(
-          s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
-        )
       }
     }
 
@@ -440,10 +434,6 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         someUnhealthyView.getElementsByClass("govuk-body").get(4)
           .text() must include(xmlChannelKnownIssuesParagraph)
-        someUnhealthyView.getElementsByClass("govuk-body").get(5)
-          .text() must include(
-          s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
-        )
       }
     }
   }
