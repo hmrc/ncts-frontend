@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-package models.responses
+package models
 
-trait ErrorResponse
+import play.api.libs.json._
 
-object ErrorResponse {
-  final case class StatusResponseError(message: String) extends ErrorResponse
-  final case class DowntimeConfigParseError(message: String) extends ErrorResponse
-  final case class DowntimeResponseError(message: String) extends ErrorResponse
+import java.time.{Instant, LocalDateTime, ZoneId}
+
+trait MongoDateTimeFormats {
+
+  implicit val localDateTimeRead: Reads[LocalDateTime] =
+    (__ \ "$date" ).read[Long].map {
+      millis =>
+        LocalDateTime.ofInstant(Instant.ofEpochMilli(millis.toLong), ZoneId.of("Europe/London"))
+    }
+
+  implicit val localDateTimeWrite: Writes[LocalDateTime] = (dateTime: LocalDateTime) => Json.obj(
+    "$date" -> dateTime.atZone(ZoneId.of("Europe/London")).toInstant.toEpochMilli
+  )
 }
+
+object MongoDateTimeFormats extends MongoDateTimeFormats

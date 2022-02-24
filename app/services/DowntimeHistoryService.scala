@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-package models.responses
+package services
 
-trait ErrorResponse
+import com.google.inject.Inject
+import connectors.NCTSConnector
+import models.responses.{DowntimeResponse, ErrorResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 
-object ErrorResponse {
-  final case class StatusResponseError(message: String) extends ErrorResponse
-  final case class DowntimeConfigParseError(message: String) extends ErrorResponse
-  final case class DowntimeResponseError(message: String) extends ErrorResponse
+import javax.inject.Singleton
+import scala.concurrent.Future
+
+@Singleton
+class DowntimeHistoryService @Inject()(nctsConnector: NCTSConnector) {
+
+  def checkOutageHistory()(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, DowntimeResponse]] =
+    nctsConnector.checkOutageHistory
 }

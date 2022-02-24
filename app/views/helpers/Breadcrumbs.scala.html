@@ -31,9 +31,15 @@
                     @pageTitle
                 </a>
             </li>
-        } else if(pageTitle.contains(messages("service.availability.title"))){
+        } else if (pageTitle.contains(messages("service.availability.title"))){
         <li class="govuk-breadcrumbs__list-item">
             <a class="govuk-breadcrumbs__link" href="@controllers.routes.ServiceAvailabilityController.onPageLoad.url">
+                @pageTitle
+            </a>
+        </li>
+        } else if (pageTitle.contains(messages("service.downtime.history.title"))){
+        <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" href="@controllers.routes.DowntimeHistoryController.onPageLoad.url">
                 @pageTitle
             </a>
         </li>
