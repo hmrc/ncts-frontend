@@ -1,0 +1,73 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.responses.DowntimeResponse
+@import models.responses.Downtime
+@import helpers.DowntimeHistoryTable
+
+@this(
+    layout: templates.Layout
+)
+
+@(downtimes: Seq[Downtime])(implicit request: Request[_], messages: Messages)
+
+@layout(
+    pageTitle = title(messages("service.downtime.history.title")),
+    backUrl = Some(controllers.routes.IndexController.onPageLoad.url)
+) {
+
+    <h1 class="govuk-heading-l">@messages("service.downtime.history.heading")</h1>
+
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+
+            <h2 class="govuk-heading-m">@messages("service.downtime.history.h2")</h2>
+
+            <div class="govuk-inset-text">
+                @messages("service.downtime.inset-text")
+            </div>
+
+            @if(downtimes.isEmpty){
+            <p class="govuk-body">@messages("service.downtime.history.no.downtime.history")</p>
+            } else {
+                @DowntimeHistoryTable(downtimes)
+
+                <p>@messages("service.downtime.history.p1")</p>
+                <p>@messages("service.downtime.history.p2")</p>
+            }
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-l">@messages("service.availability.related.links")</h2>
+
+            <ul class="govuk-list govuk-list--bullet">
+                <li>
+                    <a class="govuk-link" href="@controllers.routes.ServiceAvailabilityController.onPageLoad.url">
+                        @messages("service.downtime.history.related.links.service.availability")
+                    </a>
+                </li>
+                <li>
+                    <a class="govuk-link" href="@controllers.routes.PlannedDowntimeController.onPageLoad.url">
+                        @messages("service.downtime.history.related.links.planned.downtime")
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+}

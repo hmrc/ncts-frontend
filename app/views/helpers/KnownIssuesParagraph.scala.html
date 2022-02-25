@@ -16,13 +16,15 @@
 
 @import utils.DateTimeFormatter._
 @import java.time.LocalDateTime
+@import config.FrontendAppConfig
 
 @(channelOneHealthy: Boolean,
   channelTwoHealthy: Boolean,
   channelOneStatusChangedAt: LocalDateTime,
   channelTwoStatusChangedAt: LocalDateTime,
   channelOneHealthMessage: String,
-  channelTwoHealthMessage: String)(implicit request: Request[_], messages: Messages)
+  channelTwoHealthMessage: String,
+  appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
 
     @if(!channelOneHealthy && !channelTwoHealthy){
         <p class="govuk-body">
@@ -44,7 +46,7 @@
         @if(!channelOneHealthMessage.contains("Web") && !channelOneHealthMessage.contains("XML")){
             <p class="govuk-body">
                 @messages("service.availability.issues.p4")
-                <a href="https://www.gov.uk/government/publications/business-continuity-planning">
+                <a href="@appConfig.govUKTransitManualLink">
                     @messages("service.availability.issues.p5")
                 </a>
             </p>
@@ -76,7 +78,7 @@
         @if(!channelOneHealthMessage.contains("Web") && !channelOneHealthMessage.contains("XML")){
             <p class="govuk-body">
                 @messages("service.availability.issues.p4")
-                <a href="https://www.gov.uk/government/publications/business-continuity-planning">
+                <a href="@appConfig.govUKTransitManualLink">
                     @messages("service.availability.issues.p5")
                 </a>
             </p>

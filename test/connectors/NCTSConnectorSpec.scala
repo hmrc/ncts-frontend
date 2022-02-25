@@ -18,8 +18,9 @@ package connectors
 
 import base.SpecBase
 import config.FrontendAppConfig
-import models.responses.ErrorResponse.StatusResponseError
-import models.responses.{ErrorResponse, StatusResponse}
+import models.GBDepartures
+import models.responses.ErrorResponse.{DowntimeResponseError, StatusResponseError}
+import models.responses.{Downtime, DowntimeResponse, ErrorResponse, StatusResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import uk.gov.hmrc.http.HttpClient
@@ -38,51 +39,98 @@ class NCTSConnectorSpec extends SpecBase {
   private val nctsConnector = new NCTSConnector(mockHttp, appConfig)
 
   "NCTS Connector" - {
-    "should return a valid response with GB/XI departures true and GB/XI arrivals false" in {
-      val response = StatusResponse(
-        gbDeparturesStatus = healthDetailsHealthy,
-        xiDeparturesStatus = healthDetailsHealthy,
-        gbArrivalsStatus = healthDetailsUnhealthy,
-        xiArrivalsStatus = healthDetailsUnhealthy,
-        xmlChannelStatus = healthDetailsUnhealthy,
-        webChannelStatus = healthDetailsUnhealthy,
-        createdTs = LocalDateTime.now()
-      )
+    "checkStatus" - {
+      "should return a valid response with GB/XI departures true and GB/XI arrivals false" in {
+        val response = StatusResponse(
+          gbDeparturesStatus = healthDetailsHealthy,
+          xiDeparturesStatus = healthDetailsHealthy,
+          gbArrivalsStatus = healthDetailsUnhealthy,
+          xiArrivalsStatus = healthDetailsUnhealthy,
+          xmlChannelStatus = healthDetailsUnhealthy,
+          webChannelStatus = healthDetailsUnhealthy,
+          createdTs = LocalDateTime.now()
+        )
 
-      when(mockHttp.GET[Either[ErrorResponse, StatusResponse]](any(), any(), any())(any(), any(), any()))
-        .thenReturn(Future.successful(Right(response)))
+        when(mockHttp.GET[Either[ErrorResponse, StatusResponse]](any(), any(), any())(any(), any(), any()))
+          .thenReturn(Future.successful(Right(response)))
 
-      val result = nctsConnector.checkStatus().futureValue
+        val result = nctsConnector.checkStatus().futureValue
 
-      result mustBe Right(response)
+        result mustBe Right(response)
+      }
+
+      "should return a valid response with GB/XI departures false and GB/XI arrivals true" in {
+        val response = StatusResponse(
+          gbDeparturesStatus = healthDetailsUnhealthy,
+          xiDeparturesStatus = healthDetailsUnhealthy,
+          gbArrivalsStatus = healthDetailsHealthy,
+          xiArrivalsStatus = healthDetailsHealthy,
+          xmlChannelStatus = healthDetailsHealthy,
+          webChannelStatus = healthDetailsHealthy,
+          createdTs = LocalDateTime.now()
+        )
+
+        when(mockHttp.GET[Either[ErrorResponse, StatusResponse]](any(), any(), any())(any(), any(), any()))
+          .thenReturn(Future.successful(Right(response)))
+
+        val result = nctsConnector.checkStatus().futureValue
+
+        result mustBe Right(response)
+      }
+
+      "should return an error response when an error occurs" in {
+        when(mockHttp.GET[Either[ErrorResponse, StatusResponse]](any(), any(), any())(any(), any(), any()))
+          .thenReturn(Future.successful(Left(StatusResponseError("something went wrong"))))
+
+        val result = nctsConnector.checkStatus().futureValue
+
+        result mustBe Left(StatusResponseError("something went wrong"))
+      }
     }
 
-    "should return a valid response with GB/XI departures false and GB/XI arrivals true" in {
-      val response = StatusResponse(
-        gbDeparturesStatus = healthDetailsUnhealthy,
-        xiDeparturesStatus = healthDetailsUnhealthy,
-        gbArrivalsStatus = healthDetailsHealthy,
-        xiArrivalsStatus = healthDetailsHealthy,
-        xmlChannelStatus = healthDetailsHealthy,
-        webChannelStatus = healthDetailsHealthy,
-        createdTs = LocalDateTime.now()
-      )
+    "checkOutageHistory" - {
+      "should return a valid response with GB/XI departures true and GB/XI arrivals false" in {
+        val response = DowntimeResponse(
+          Seq(
+            Downtime(
+              GBDepartures,
+              LocalDateTime.of(2022, 1, 1, 10, 25, 55),
+              LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+            )), LocalDateTime.of(2022, 1, 1, 10, 25, 55))
 
-      when(mockHttp.GET[Either[ErrorResponse, StatusResponse]](any(), any(), any())(any(), any(), any()))
-        .thenReturn(Future.successful(Right(response)))
+        when(mockHttp.GET[Either[ErrorResponse, DowntimeResponse]](any(), any(), any())(any(), any(), any()))
+          .thenReturn(Future.successful(Right(response)))
 
-      val result = nctsConnector.checkStatus().futureValue
+        val result = nctsConnector.checkOutageHistory().futureValue
 
-      result mustBe Right(response)
-    }
+        result mustBe Right(response)
+      }
 
-    "should return an error response when an error occurs" in {
-      when(mockHttp.GET[Either[ErrorResponse, StatusResponse]](any(), any(), any())(any(), any(), any()))
-        .thenReturn(Future.successful(Left(StatusResponseError("something went wrong"))))
+      "should return a valid response with GB/XI departures false and GB/XI arrivals true" in {
+        val response = DowntimeResponse(
+          Seq(
+            Downtime(
+              GBDepartures,
+              LocalDateTime.of(2022, 1, 1, 10, 25, 55),
+              LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+            )), LocalDateTime.of(2022, 1, 1, 10, 25, 55))
 
-      val result = nctsConnector.checkStatus().futureValue
+        when(mockHttp.GET[Either[ErrorResponse, DowntimeResponse]](any(), any(), any())(any(), any(), any()))
+          .thenReturn(Future.successful(Right(response)))
 
-      result mustBe Left(StatusResponseError("something went wrong"))
+        val result = nctsConnector.checkOutageHistory().futureValue
+
+        result mustBe Right(response)
+      }
+
+      "should return an error response when an error occurs" in {
+        when(mockHttp.GET[Either[ErrorResponse, DowntimeResponse]](any(), any(), any())(any(), any(), any()))
+          .thenReturn(Future.successful(Left(DowntimeResponseError("something went wrong"))))
+
+        val result = nctsConnector.checkOutageHistory().futureValue
+
+        result mustBe Left(DowntimeResponseError("something went wrong"))
+      }
     }
   }
 }

@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package views
+package services
 
-import play.api.i18n.Messages
+import com.google.inject.Inject
+import connectors.NCTSConnector
+import models.responses.{DowntimeResponse, ErrorResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 
-object ViewUtils {
+import javax.inject.Singleton
+import scala.concurrent.Future
 
-  def title(title: String)(implicit messages: Messages): String = {
-    if(title == "NCTS") {
-      s"$title - ${messages("index.service.availability")} - ${messages("site.govuk")}"
-    } else {
-      s"$title - ${messages("service.name")} - ${messages("site.govuk")}"
-    }
-  }
+@Singleton
+class DowntimeHistoryService @Inject()(nctsConnector: NCTSConnector) {
 
-  def headingFromTitle(title: String)(implicit messages: Messages): String =
-    messages(title).split(" - ")(0)
+  def checkOutageHistory()(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, DowntimeResponse]] =
+    nctsConnector.checkOutageHistory
 }

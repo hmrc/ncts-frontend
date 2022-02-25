@@ -59,7 +59,7 @@ trait SpecCommonHelper extends PlaySpec
 
   protected val ws: WSClient = app.injector.instanceOf[WSClient]
 
-  protected val baseUrl = s"http://localhost:${port}/new-computerised-transit-system-service-availability-and-issues"
+  protected val baseUrl = s"http://localhost:${port}/new-computerised-transit-system-service-availability"
 
   override def beforeEach(): Unit = {
     resetWiremock()

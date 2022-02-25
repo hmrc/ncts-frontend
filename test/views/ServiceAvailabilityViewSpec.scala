@@ -31,20 +31,21 @@ import java.time.LocalDateTime
 class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
   val view: ServiceAvailability = inject[ServiceAvailability]
+  val transitManualLink = "https://www.gov.uk/government/publications/transit-manual-supplement"
 
   "ServiceAvailability" - {
 
     "should have the correct breadcrumbs" in {
       breadcrumb(0, document).text() mustBe "Home"
       breadcrumb(0, document).attr("href") mustBe govukHomeLink
-      breadcrumb(1, document).text() mustBe "Service availability and Planned downtime"
+      breadcrumb(1, document).text() mustBe "NCTS service availability"
       breadcrumb(1, document).attr("href") mustBe homeLink
       breadcrumb(2, document).text() mustBe "Service availability"
       breadcrumb(2, document).attr("href") mustBe serviceAvailabilityLink
     }
 
     "should have the correct title" in {
-      document.title() mustBe "Service availability - Service availability and Planned downtime - GOV.UK"
+      document.title() mustBe "Service availability - NCTS service availability - GOV.UK"
     }
 
     "should have the correct headings" in {
@@ -157,7 +158,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       document.getElementsByTag("h2").first().text() mustBe messages("service.availability.related.links")
       val link = document.select("#main-content > div:nth-child(3) > div > ul > li > a")
       link.text() mustBe messages("service.availability.related.links.planned.downtimes")
-      link.attr("href") mustBe "/new-computerised-transit-system-service-availability-and-issues" +
+      link.attr("href") mustBe "/new-computerised-transit-system-service-availability" +
         "/planned-downtime"
     }
 
@@ -221,12 +222,14 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)} " +
             s"${messages("service.availability.issues.p2")} " +
             s"${DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)} " +
-            s"${messages("service.availability.issues.respectively")}"
+            s"${messages("service.availability.issues.respectively")} " +
+            s"${messages("service.availability.issues.p3")}"
 
         allUnhealthyView.getElementsByClass("govuk-body").get(0)
-          .text() must include(arrivalsKnownIssuesParagraph)
-        allUnhealthyView.getElementsByClass("govuk-body").get(1)
-          .text() must include(s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}")
+          .text() mustBe arrivalsKnownIssuesParagraph
+        val bcpPara = allUnhealthyView.getElementsByClass("govuk-body").get(1)
+        bcpPara.text() mustBe s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
+        bcpPara.select("a").attr("href") mustBe transitManualLink
       }
 
       "should show that services have known issues for departures" in {
@@ -245,12 +248,14 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)} " +
             s"${messages("service.availability.issues.p2")} " +
             s"${DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)} " +
-            s"${messages("service.availability.issues.respectively")}"
+            s"${messages("service.availability.issues.respectively")} " +
+            s"${messages("service.availability.issues.p3")}"
 
         allUnhealthyView.getElementsByClass("govuk-body").get(2)
-          .text() must include(departuresKnownIssuesParagraph)
-        allUnhealthyView.getElementsByClass("govuk-body").get(3)
-          .text() must include(s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}")
+          .text() mustBe departuresKnownIssuesParagraph
+        val bcpPara = allUnhealthyView.getElementsByClass("govuk-body").get(3)
+        bcpPara.text() mustBe s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
+        bcpPara.select("a").attr("href") mustBe transitManualLink
       }
 
       "should show that services have known issues for other systems" in {
@@ -269,7 +274,8 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)} " +
             s"${messages("service.availability.issues.p2")} " +
             s"${DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)} " +
-            s"${messages("service.availability.issues.respectively")}"
+            s"${messages("service.availability.issues.respectively")} " +
+            s"${messages("service.availability.issues.p3")}"
 
         allUnhealthyView.getElementsByClass("govuk-body").get(4)
           .text() must include(channelsKnownIssuesParagraph)
@@ -310,14 +316,14 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.ncts.gb.arrivals")} " +
             s"${messages("service.availability.issues.single.channel")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.gbArrivalsStatus.statusChangedAt)}."
+            s"${DateTimeFormatter.formatDateTime(statusResponse.gbArrivalsStatus.statusChangedAt)}. " +
+            s"${messages("service.availability.issues.p3")}"
 
         someUnhealthyView.getElementsByClass("govuk-body").get(0)
-          .text() must include(arrivalsKnownIssuesParagraph)
+          .text() mustBe arrivalsKnownIssuesParagraph
         someUnhealthyView.getElementsByClass("govuk-body").get(1)
-          .text() must include(
+          .text() mustBe
           s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
-        )
       }
 
       "should show that the GB channel has known issues for departures" in {
@@ -333,14 +339,14 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.ncts.gb.departures")} " +
             s"${messages("service.availability.issues.single.channel")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)}."
+            s"${DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)}. " +
+            s"${messages("service.availability.issues.p3")}"
 
         someUnhealthyView.getElementsByClass("govuk-body").get(2)
-          .text() must include(departuresKnownIssuesParagraph)
+          .text() mustBe departuresKnownIssuesParagraph
         someUnhealthyView.getElementsByClass("govuk-body").get(3)
-          .text() must include(
+          .text() mustBe
           s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
-        )
       }
 
       "should show that the Web channel has known issues" in {
@@ -354,7 +360,8 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.submission.channels.status.web.channel")} " +
             s"${messages("service.availability.issues.webXML.channel")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.webChannelStatus.statusChangedAt)}."
+            s"${DateTimeFormatter.formatDateTime(statusResponse.webChannelStatus.statusChangedAt)}. " +
+            s"${messages("service.availability.issues.p3")}"
 
         someUnhealthyView.getElementsByClass("govuk-body").get(4)
           .text() must include(webChannelKnownIssuesParagraph)
@@ -386,14 +393,14 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.ncts.xi.arrivals")} " +
             s"${messages("service.availability.issues.single.channel")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)}."
+            s"${DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)}. " +
+            s"${messages("service.availability.issues.p3")}"
 
         someUnhealthyView.getElementsByClass("govuk-body").get(0)
-          .text() must include(arrivalsKnownIssuesParagraph)
+          .text() mustBe arrivalsKnownIssuesParagraph
         someUnhealthyView.getElementsByClass("govuk-body").get(1)
-          .text() must include(
+          .text() mustBe
           s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
-        )
       }
 
       "should show that the XI channel has known issues for departures" in {
@@ -409,14 +416,14 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.ncts.xi.departures")} " +
             s"${messages("service.availability.issues.single.channel")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)}."
+            s"${DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)}. " +
+            s"${messages("service.availability.issues.p3")}"
 
         someUnhealthyView.getElementsByClass("govuk-body").get(2)
-          .text() must include(departuresKnownIssuesParagraph)
+          .text() mustBe departuresKnownIssuesParagraph
         someUnhealthyView.getElementsByClass("govuk-body").get(3)
-          .text() must include(
+          .text() mustBe
           s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
-        )
       }
 
       "should show that the XML channel has known issues" in {
@@ -430,7 +437,8 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.submission.channels.status.xml.channel")} " +
             s"${messages("service.availability.issues.webXML.channel")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.xmlChannelStatus.statusChangedAt)}."
+            s"${DateTimeFormatter.formatDateTime(statusResponse.xmlChannelStatus.statusChangedAt)}. " +
+            s"${messages("service.availability.issues.p3")}"
 
         someUnhealthyView.getElementsByClass("govuk-body").get(4)
           .text() must include(xmlChannelKnownIssuesParagraph)

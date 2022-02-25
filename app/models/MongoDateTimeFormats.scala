@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package views
+package models
 
-import play.api.i18n.Messages
+import play.api.libs.json._
 
-object ViewUtils {
+import java.time.{Instant, LocalDateTime, ZoneId}
 
-  def title(title: String)(implicit messages: Messages): String = {
-    if(title == "NCTS") {
-      s"$title - ${messages("index.service.availability")} - ${messages("site.govuk")}"
-    } else {
-      s"$title - ${messages("service.name")} - ${messages("site.govuk")}"
+trait MongoDateTimeFormats {
+
+  implicit val localDateTimeRead: Reads[LocalDateTime] =
+    (__ \ "$date" ).read[Long].map {
+      millis =>
+        LocalDateTime.ofInstant(Instant.ofEpochMilli(millis.toLong), ZoneId.of("Europe/London"))
     }
-  }
 
-  def headingFromTitle(title: String)(implicit messages: Messages): String =
-    messages(title).split(" - ")(0)
+  implicit val localDateTimeWrite: Writes[LocalDateTime] = (dateTime: LocalDateTime) => Json.obj(
+    "$date" -> dateTime.atZone(ZoneId.of("Europe/London")).toInstant.toEpochMilli
+  )
 }
+
+object MongoDateTimeFormats extends MongoDateTimeFormats
