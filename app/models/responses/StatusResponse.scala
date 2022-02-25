@@ -34,6 +34,8 @@ case class StatusResponse(
                            createdTs: LocalDateTime
                          ) {
   def xmlAndWebHealthy: Boolean = xmlChannelStatus.healthy && webChannelStatus.healthy
+
+  def xmlHealthy: Boolean = xmlChannelStatus.healthy
 }
 
 object StatusResponse {

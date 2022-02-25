@@ -363,8 +363,14 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${DateTimeFormatter.formatDateTime(statusResponse.webChannelStatus.statusChangedAt)}. " +
             s"${messages("service.availability.issues.p3")}"
 
+        val thirdPartyMessage = {
+          s"${messages("service.availability.issues.p6")} ${messages("service.availability.issues.xml.channel")}" +
+            s" ${messages("service.availability.issues.p7")}"
+        }
         someUnhealthyView.getElementsByClass("govuk-body").get(4)
           .text() must include(webChannelKnownIssuesParagraph)
+        someUnhealthyView.getElementsByClass("govuk-body").get(5)
+          .text() must include(thirdPartyMessage)
       }
     }
 
