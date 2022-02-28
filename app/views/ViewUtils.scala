@@ -24,7 +24,7 @@ object ViewUtils {
     if(title == "NCTS") {
       s"$title - ${messages("index.service.availability")} - ${messages("site.govuk")}"
     } else {
-      s"$title - ${messages("service.name")} - ${messages("site.govuk")}"
+      s"${messages(title)} - ${messages("service.name")} - ${messages("site.govuk")}"
     }
   }
 
