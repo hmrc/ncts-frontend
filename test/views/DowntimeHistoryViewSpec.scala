@@ -79,8 +79,9 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
 
       "should have a table for downtime history with the correct heading" in {
         document.select("div:nth-child(2) > div > table > thead > tr > th:nth-child(1)").get(0).text() mustBe messages("service.downtime.history.component.name")
-        document.select("div:nth-child(2) > div > table > thead > tr > th:nth-child(2)").get(0).text() mustBe messages("service.downtime.history.start")
-        document.select("div:nth-child(2) > div > table > thead > tr > th:nth-child(3)").get(0).text() mustBe messages("service.downtime.history.end")
+        document.select("div:nth-child(2) > div > table > thead > tr > th:nth-child(2)").get(0).text() mustBe messages("service.downtime.history.event.type")
+        document.select("div:nth-child(2) > div > table > thead > tr > th:nth-child(3)").get(0).text() mustBe messages("service.downtime.history.start")
+        document.select("div:nth-child(2) > div > table > thead > tr > th:nth-child(4)").get(0).text() mustBe messages("service.downtime.history.end")
       }
 
       "should have rows for GB Departures and Arrivals" in {
@@ -89,8 +90,10 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
         gbDepartureRow.select("td:nth-child(1)")
           .get(0).text() mustBe messages("service.downtime.history.ncts.gb.departures")
         gbDepartureRow.select("td:nth-child(2)")
-          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+          .get(0).text() mustBe messages("service.downtime.history.unplanned.event")
         gbDepartureRow.select("td:nth-child(3)")
+          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+        gbDepartureRow.select("td:nth-child(4)")
           .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
 
 
@@ -98,9 +101,11 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
 
         gbArrivalRow.select("td:nth-child(1)")
           .get(0).text() mustBe messages("service.downtime.history.ncts.gb.arrivals")
-        gbArrivalRow.select("td:nth-child(2)")
-          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+        gbDepartureRow.select("td:nth-child(2)")
+          .get(0).text() mustBe messages("service.downtime.history.unplanned.event")
         gbArrivalRow.select("td:nth-child(3)")
+          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+        gbArrivalRow.select("td:nth-child(4)")
           .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
       }
 
@@ -110,8 +115,10 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
         xiDepartureRow.select("td:nth-child(1)")
           .get(0).text() mustBe messages("service.downtime.history.ncts.xi.departures")
         xiDepartureRow.select("td:nth-child(2)")
-          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+          .get(0).text() mustBe messages("service.downtime.history.unplanned.event")
         xiDepartureRow.select("td:nth-child(3)")
+          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+        xiDepartureRow.select("td:nth-child(4)")
           .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
 
         val xiArrivalRow = document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(4)")
@@ -119,8 +126,10 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
         xiArrivalRow.select("td:nth-child(1)")
           .get(0).text() mustBe messages("service.downtime.history.ncts.xi.arrivals")
         xiArrivalRow.select("td:nth-child(2)")
-          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+          .get(0).text() mustBe messages("service.downtime.history.unplanned.event")
         xiArrivalRow.select("td:nth-child(3)")
+          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+        xiArrivalRow.select("td:nth-child(4)")
           .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
       }
 
@@ -130,8 +139,10 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
         webChannelRow.select("td:nth-child(1)")
           .get(0).text() mustBe messages("service.downtime.history.ncts.web.channel")
         webChannelRow.select("td:nth-child(2)")
+          .get(0).text() mustBe messages("service.downtime.history.unplanned.event")
+        webChannelRow.select("td:nth-child(3)")
           .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
-        webChannelRow.select(" td:nth-child(3)")
+        webChannelRow.select(" td:nth-child(4)")
           .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
 
         val xmlChannelRow = document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(6)")
@@ -139,13 +150,15 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
         xmlChannelRow.select("td:nth-child(1)")
           .get(0).text() mustBe messages("service.downtime.history.ncts.xml.channel")
         xmlChannelRow.select("td:nth-child(2)")
-          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+          .get(0).text() mustBe messages("service.downtime.history.unplanned.event")
         xmlChannelRow.select("td:nth-child(3)")
+          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+        xmlChannelRow.select("td:nth-child(4)")
           .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
       }
     }
 
-    "when there is not downtime history" - {
+    "when there is no downtime history" - {
 
       "should not have any tables of downtime information" in {
         documentNoDowntime.getElementsByTag("table").size() mustBe 0
