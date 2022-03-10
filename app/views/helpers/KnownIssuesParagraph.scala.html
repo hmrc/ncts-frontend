@@ -43,12 +43,14 @@
             @messages("service.availability.issues.respectively")
             @messages("service.availability.issues.p3")
         </p>
-        <p class="govuk-body">
-            @messages("service.availability.issues.p4")
-            <a href="@appConfig.govUKTransitManualLink">
-                @messages("service.availability.issues.p5")
-            </a>
-        </p>
+        @if(!channelOneHealthMessage.contains("Web") && !channelOneHealthMessage.contains("XML")){
+            <p class="govuk-body">
+                @messages("service.availability.issues.p4")
+                <a href="@appConfig.govUKTransitManualLink">
+                    @messages("service.availability.issues.p5")
+                </a>
+            </p>
+        }
     } else if (!channelOneHealthy || !channelTwoHealthy){
         <p class="govuk-body">
             @messages("service.availability.issues.p1")
@@ -73,10 +75,12 @@
             </b>
             @messages("service.availability.issues.p3")
         </p>
-        <p class="govuk-body">
-            @messages("service.availability.issues.p4")
-            <a href="@appConfig.govUKTransitManualLink">
-                @messages("service.availability.issues.p5")
-            </a>
-        </p>
+        @if(!channelOneHealthMessage.contains("Web") && !channelOneHealthMessage.contains("XML")){
+            <p class="govuk-body">
+                @messages("service.availability.issues.p4")
+                <a href="@appConfig.govUKTransitManualLink">
+                    @messages("service.availability.issues.p5")
+                </a>
+            </p>
+        }
     }

@@ -278,10 +278,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.issues.p3")}"
 
         allUnhealthyView.getElementsByClass("govuk-body").get(4)
-          .text() mustBe channelsKnownIssuesParagraph
-        val bcpPara = allUnhealthyView.getElementsByClass("govuk-body").get(5)
-        bcpPara.text() mustBe s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
-        bcpPara.select("a").attr("href") mustBe transitManualLink
+          .text() must include(channelsKnownIssuesParagraph)
       }
 
       "should not have a paragraph about checking third party software for issues" in {
@@ -366,11 +363,14 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${DateTimeFormatter.formatDateTime(statusResponse.webChannelStatus.statusChangedAt)}. " +
             s"${messages("service.availability.issues.p3")}"
 
+        val thirdPartyMessage = {
+          s"${messages("service.availability.issues.p6")} ${messages("service.availability.issues.xml.channel")}" +
+            s" ${messages("service.availability.issues.p7")}"
+        }
         someUnhealthyView.getElementsByClass("govuk-body").get(4)
-          .text() mustBe webChannelKnownIssuesParagraph
+          .text() must include(webChannelKnownIssuesParagraph)
         someUnhealthyView.getElementsByClass("govuk-body").get(5)
-          .text() mustBe
-          s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
+          .text() must include(thirdPartyMessage)
       }
     }
 
@@ -447,10 +447,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.issues.p3")}"
 
         someUnhealthyView.getElementsByClass("govuk-body").get(4)
-          .text() mustBe xmlChannelKnownIssuesParagraph
-        someUnhealthyView.getElementsByClass("govuk-body").get(5)
-          .text() mustBe
-          s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
+          .text() must include(xmlChannelKnownIssuesParagraph)
       }
     }
   }
