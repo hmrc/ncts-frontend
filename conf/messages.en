@@ -37,12 +37,10 @@ index.title=NCTS
 index.heading=NCTS service availability
 index.service.availability=Service availability
 index.service.planned.downtime=Planned downtime
-index.service.decom.heading=Planned decommissioning of NCTS legacy XML channel
-index.service.decom.para=Work to close the legacy XML channel for NCTS will start on 28 February 2022. This will run until 11:59pm GMT on 13 March 2022 after which it will no longer be possible to make a new declaration using this channel.
-index.service.more.details=View more details
-index.service.more.details.p1=For users of the NCTS email channel the final date to make declarations will be 31 May 2022, when we will also close this channel to new declarations.
-index.service.more.details.p2=Users must move to the new XML Application Programming Interface (API) channel to help manage post-Brexit volumes. Users should speak to their own software provider to ensure they are ready for this transition.
-index.service.more.details.p3=If unable to move to the new XML API, users should submit by using either the free to use web portal or non-transit customs processes after these channels are closed.
+index.service.decom.heading=Decommissioning of NCTS EMAIL and legacy XML channels
+index.service.decom.p1=Work has started on the closure of the NCTS Legacy XML channel for NCTS 2, this will run until 11:59pm on 13 March after which it will no longer be possible to make a new declaration using this channel.
+index.service.decom.p2=The ability to do status checks on in- flight movements on the NCTS Legacy XML channel will be available for a further 30 days, except for a brief maintenance period on the NCTS Legacy XML channel from 11:59pm 13 March to 7am 14 March.
+index.service.decom.p3=For users of the NCTS Legacy EMAIL channel the final date to make declarations will be 31 May 2022, when we will also close this channel to new declarations.
 
 index.service.downtime.history=Downtime history
 index.service.other.services=Other services
