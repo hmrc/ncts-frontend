@@ -90,9 +90,20 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
         document.getElementsByClass("govuk-body").get(1).text() mustBe messages("planned-downtime.p2")
       }
 
+      "should have Decommissioning of NCTS EMAIL and legacy XML channels section with correct paragraphs" in {
+        document.getElementsByTag("h2").get(2).text() mustBe messages("index.service.decom.heading")
+
+        document.select("#main-content > div:nth-child(3) > div > p:nth-child(2)").text() mustBe
+          messages("index.service.decom.p1")
+        document.select("#main-content > div:nth-child(3) > div > p:nth-child(3)").text() mustBe
+          messages("index.service.decom.p2")
+        document.select("#main-content > div:nth-child(3) > div > p:nth-child(4)").text() mustBe
+          messages("index.service.decom.p3")
+      }
+
       "should have a related links section with a link to service availability" in {
-        document.getElementsByTag("h2").get(2).text() mustBe messages("service.availability.related.links")
-        val link = document.select("#main-content > div:nth-child(3) > div > ul > li > a")
+        document.getElementsByTag("h2").get(3).text() mustBe messages("service.availability.related.links")
+        val link = document.select("#main-content > div:nth-child(4) > div > ul > li > a")
         link.text() mustBe messages("planned-downtime.related.links.service.availability")
         link.attr("href") mustBe "/new-computerised-transit-system-service-availability" +
           "/service-availability"
@@ -136,7 +147,7 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
 
       "should have some content about submissions when the service is down and an apology for departures" in {
         document.getElementsByClass("govuk-body").get(2).text() mustBe messages("planned-downtime.p1")
-        document.getElementsByClass("govuk-body").last().text() mustBe messages("planned-downtime.p2")
+        document.getElementsByClass("govuk-body").get(3).text() mustBe messages("planned-downtime.p2")
       }
     }
 
@@ -159,7 +170,7 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
       }
 
       "should have text about there being no downtime for departures" in {
-        documentNoDowntime.getElementsByClass("govuk-body").last().text() mustBe messages("planned-downtime.no.downtime.planned.departures")
+        documentNoDowntime.getElementsByClass("govuk-body").get(1).text() mustBe messages("planned-downtime.no.downtime.planned.departures")
       }
     }
   }
