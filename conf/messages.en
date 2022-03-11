@@ -50,12 +50,12 @@ index.service.track.other.services.3= for other services.
 
 service.availability.title=Service availability
 service.availability.heading=Service availability
-service.availability.status.arrivals=System Core Status - Arrivals
-service.availability.status.departures=System Core Status - Departures
-service.availability.channel.name=Channel Name
-service.availability.system.core.name=System Core Name
-service.availability.last.message.accepted=Last Message Accepted
-service.availability.system.availability=Availability Status
+service.availability.status.arrivals=Arrivals system core status
+service.availability.status.departures=Departures system core status
+service.availability.channel.name=Channel name
+service.availability.system.core.name=System core name
+service.availability.last.message.accepted=Last message accepted
+service.availability.system.availability=Availability status
 service.availability.ncts.gb.departures=NCTS GB Departures
 service.availability.ncts.xi.departures=NCTS XI Departures
 service.availability.ncts.gb.arrivals=NCTS GB Arrivals
@@ -66,9 +66,9 @@ service.availability.lastUpdated=Last updated:
 service.availability.lastUpdated.refresh=Refresh this page
 service.availability.lastUpdated.latest=for the latest availability status.
 
-service.availability.submission.channels.status.heading=Channels Status
-service.availability.submission.channels.status.xml.channel=XML Channel
-service.availability.submission.channels.status.web.channel=Web Channel
+service.availability.submission.channels.status.heading=Channels status
+service.availability.submission.channels.status.xml.channel=XML channel
+service.availability.submission.channels.status.web.channel=Web channel
 service.availability.related.links=Related links
 
 service.availability.issues.p1=The
