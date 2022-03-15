@@ -31,14 +31,14 @@ case class StatusResponse(
                            xiArrivalsStatus: HealthDetails,
                            xmlChannelStatus: HealthDetails,
                            webChannelStatus: HealthDetails,
-                           ppnStatus: HealthDetails,
+                           ppnsStatus: HealthDetails,
                            createdTs: LocalDateTime
                          ) {
   def xmlAndWebHealthy: Boolean = xmlChannelStatus.healthy && webChannelStatus.healthy
 
   def xmlHealthy: Boolean = xmlChannelStatus.healthy
 
-  def ppnsNotHealthy: Boolean = !ppnStatus.healthy
+  def ppnsNotHealthy: Boolean = !ppnsStatus.healthy
 }
 
 object StatusResponse {

@@ -48,7 +48,7 @@ class NCTSConnectorSpec extends SpecBase {
           xiArrivalsStatus = healthDetailsUnhealthy,
           xmlChannelStatus = healthDetailsUnhealthy,
           webChannelStatus = healthDetailsUnhealthy,
-          ppnStatus = healthDetailsUnhealthy,
+          ppnsStatus = healthDetailsUnhealthy,
           createdTs = LocalDateTime.now()
         )
 
@@ -68,7 +68,7 @@ class NCTSConnectorSpec extends SpecBase {
           xiArrivalsStatus = healthDetailsHealthy,
           xmlChannelStatus = healthDetailsHealthy,
           webChannelStatus = healthDetailsHealthy,
-          ppnStatus = healthDetailsHealthy,
+          ppnsStatus = healthDetailsHealthy,
           createdTs = LocalDateTime.now()
         )
 

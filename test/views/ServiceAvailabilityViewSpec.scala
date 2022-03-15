@@ -207,7 +207,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         xiArrivalsStatus = healthDetailsUnhealthy,
         xmlChannelStatus = healthDetailsUnhealthy,
         webChannelStatus = healthDetailsUnhealthy,
-        ppnStatus = healthDetailsUnhealthy,
+        ppnsStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
       val allUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
@@ -311,7 +311,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         xiArrivalsStatus = healthDetailsHealthy,
         xmlChannelStatus = healthDetailsHealthy,
         webChannelStatus = healthDetailsUnhealthy,
-        ppnStatus = healthDetailsUnhealthy,
+        ppnsStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
       val someUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
@@ -395,7 +395,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         xiArrivalsStatus = healthDetailsUnhealthy,
         xmlChannelStatus = healthDetailsUnhealthy,
         webChannelStatus = healthDetailsHealthy,
-        ppnStatus = healthDetailsUnhealthy,
+        ppnsStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
       val someUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
@@ -473,7 +473,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         xiArrivalsStatus = healthDetailsUnhealthy,
         xmlChannelStatus = healthDetailsHealthy,
         webChannelStatus = healthDetailsHealthy,
-        ppnStatus = healthDetailsUnhealthy,
+        ppnsStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
 
@@ -509,7 +509,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
     xiArrivalsStatus = healthDetailsHealthy,
     xmlChannelStatus = healthDetailsHealthy,
     webChannelStatus = healthDetailsHealthy,
-    ppnStatus = healthDetailsUnhealthy,
+    ppnsStatus = healthDetailsUnhealthy,
     createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
   )
 
@@ -527,7 +527,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         xiArrivalsStatus = healthDetails,
         xmlChannelStatus = healthDetails,
         webChannelStatus = healthDetails,
-        ppnStatus = healthDetails,
+        ppnsStatus = healthDetails,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )).body)
   }
