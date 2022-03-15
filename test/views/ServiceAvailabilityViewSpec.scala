@@ -113,10 +113,10 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         .text() mustBe messages("service.availability.system.availability")
 
       document.getElementsByClass("govuk-table__cell").get(12)
-        .text() mustBe messages("service.availability.submission.channels.status.web.channel")
+        .text() mustBe messages("service.availability.submission.channels.status.web")
 
       document.getElementsByClass("govuk-table__cell").get(14)
-        .text() mustBe messages("service.availability.submission.channels.status.xml.channel")
+        .text() mustBe messages("service.availability.submission.channels.status.xml")
     }
 
     "should have a last updated time with refresh link for arrivals" in {
