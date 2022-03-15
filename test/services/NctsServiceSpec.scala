@@ -43,7 +43,7 @@ class NctsServiceSpec extends SpecBase {
             xiArrivalsStatus = healthDetailsUnhealthy,
             xmlChannelStatus = healthDetailsHealthy,
             webChannelStatus = healthDetailsHealthy,
-            ppnsStatus = healthDetailsHealthy,
+            ppnStatus = healthDetailsHealthy,
             createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
           )))
 
@@ -59,7 +59,7 @@ class NctsServiceSpec extends SpecBase {
           xiArrivalsStatus = healthDetailsUnhealthy,
           xmlChannelStatus = healthDetailsHealthy,
           webChannelStatus = healthDetailsHealthy,
-          ppnsStatus = healthDetailsHealthy,
+          ppnStatus = healthDetailsHealthy,
           createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
         )
       )

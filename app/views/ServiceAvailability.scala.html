@@ -167,11 +167,11 @@
                 status.createdTs,
                 status.xmlChannelStatus.healthy,
                 status.webChannelStatus.healthy,
-                status.ppnsStatus.healthy
+                status.ppnStatus.healthy
             )
-            @if(status.ppnsNotHealthy){
+            @if(status.ppnNotHealthy){
                 <p class="govuk-body">
-                    @messages("service.availability.issues.ppns")
+                    @messages("service.availability.issues.ppn")
                 </p>
             }
             @if(status.xmlAndWebHealthy){

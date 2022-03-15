@@ -50,7 +50,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
         xiArrivalsStatus = healthDetailsUnhealthy,
         xmlChannelStatus = healthDetailsUnhealthy,
         webChannelStatus = healthDetailsUnhealthy,
-        ppnsStatus = healthDetailsUnhealthy,
+        ppnStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
       )
 
@@ -72,7 +72,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
         xiArrivalsStatus = healthDetailsHealthy,
         xmlChannelStatus = healthDetailsHealthy,
         webChannelStatus = healthDetailsHealthy,
-        ppnsStatus = healthDetailsHealthy,
+        ppnStatus = healthDetailsHealthy,
         createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
       )
 
@@ -162,7 +162,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
        |    "statusChangedAt": "$statusChangedAt",
        |    "lastMessageAccepted": "$lastMessageAccepted"
        |  },
-       |  "ppnsStatus": {
+       |  "ppnStatus": {
        |    "healthy": $otherChannelsHealthy,
        |    "statusChangedAt": "$statusChangedAt",
        |    "lastMessageAccepted": "$lastMessageAccepted"

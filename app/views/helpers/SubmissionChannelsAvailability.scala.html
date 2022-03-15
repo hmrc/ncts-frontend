@@ -17,7 +17,7 @@
 @import java.time.LocalDateTime
 @import utils.DateTimeFormatter._
 
-@(lastUpdated: LocalDateTime, xmlHealthy: Boolean, webHealthy: Boolean, ppnsHealthy: Boolean)(implicit request: Request[_], messages: Messages)
+@(lastUpdated: LocalDateTime, xmlHealthy: Boolean, webHealthy: Boolean, ppnHealthy: Boolean)(implicit request: Request[_], messages: Messages)
 
 <table class="govuk-table">
     <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.submission.channels.status.heading")
@@ -66,9 +66,9 @@
                 </td>
             }
         </tr>
-        @if(!ppnsHealthy){
+        @if(!ppnHealthy){
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell">@messages("service.availability.submission.channels.status.ppns")</td>
+                <td class="govuk-table__cell">@messages("service.availability.submission.channels.status.ppn")</td>
                     <td class="govuk-table__cell">
                         <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
                     </td>
