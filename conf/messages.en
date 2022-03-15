@@ -67,8 +67,8 @@ service.availability.lastUpdated.refresh=Refresh this page
 service.availability.lastUpdated.latest=for the latest availability status.
 
 service.availability.submission.channels.status.heading=Channels status
-service.availability.submission.channels.status.xml.channel=XML channel
-service.availability.submission.channels.status.web.channel=Web channel
+service.availability.submission.channels.status.xml.channel=XML
+service.availability.submission.channels.status.web.channel=Web
 service.availability.submission.channels.status.ppns=PPNS
 service.availability.related.links=Related links
 

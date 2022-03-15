@@ -53,11 +53,6 @@ object StatusResponse {
         case OK =>
           response.json.validate[StatusResponse] match {
             case JsSuccess(model, _) =>
-              println("Reads :::::: ")
-              println("Reads :::::: ")
-              println("Reads :::::: " + response.json)
-              println("Reads :::::: ")
-              println("Reads :::::: ")
               Right(model)
             case JsError(error) =>
               val errorMessage = error.flatMap(_._2.map(_.message)).mkString("\n")
