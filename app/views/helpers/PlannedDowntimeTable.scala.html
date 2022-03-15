@@ -20,7 +20,7 @@
 
 @(plannedDowntimes: PlannedDowntimes)(implicit request: Request[_], messages: Messages)
 
-<table class="govuk-table">
+<table class="govuk-table pd-table">
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
             <th scope="col" class="govuk-table__header">@messages("planned-downtime.system.core.name")</th>
@@ -41,12 +41,12 @@
                     <td class="govuk-table__cell">@messages("planned-downtime.ncts.xi.departures")</td>
                 }
                 <td class="govuk-table__cell">
-                    <b>@messages("planned-downtime.date")</b> @formatDate(downtime.startDate)<br />
-                    <b>@messages("planned-downtime.time")</b> @formatTime(downtime.startTime)
+                    @formatDate(downtime.startDate)<br />
+                    @formatTime(downtime.startTime)
                 </td>
                 <td class="govuk-table__cell">
-                    <b>@messages("planned-downtime.date")</b> @formatDate(downtime.endDate)<br />
-                    <b>@messages("planned-downtime.time")</b> @formatTime(downtime.endTime)
+                    @formatDate(downtime.endDate)<br />
+                    @formatTime(downtime.endTime)
                 </td>
             </tr>
         }

@@ -17,6 +17,7 @@
 @import models.Channel._
 @import models.PlannedDowntimes
 @import helpers.PlannedDowntimeTable
+@import helpers.PlannedDowntimeTableMobile
 
 @this(
     layout: templates.Layout
@@ -41,12 +42,8 @@
             } else {
                 @plannedDowntimes.map { downtimes =>
                     @if(downtimes.arrivalsAffected){
-
                         @PlannedDowntimeTable(downtimes.arrivalDowntimes)
-
-                        <p class="govuk-body">@messages("planned-downtime.p1")</p>
-                        <p class="govuk-body">@messages("planned-downtime.p2")</p>
-
+                        @PlannedDowntimeTableMobile(downtimes.arrivalDowntimes)
                     } else {
                         <p class="govuk-body">@messages("planned-downtime.no.downtime.planned.arrivals")</p>
                     }
@@ -60,16 +57,17 @@
             } else {
                 @plannedDowntimes.map { downtimes =>
                     @if(downtimes.departuresAffected){
-
                         @PlannedDowntimeTable(downtimes.departureDowntimes)
-
-                        <p class="govuk-body">@messages("planned-downtime.p1")</p>
-                        <p class="govuk-body">@messages("planned-downtime.p2")</p>
-
+                        @PlannedDowntimeTableMobile(downtimes.departureDowntimes)
                     } else {
                         <p class="govuk-body">@messages("planned-downtime.no.downtime.planned.departures")</p>
                     }
                 }
+            }
+
+            @if(plannedDowntimes.isDefined){
+                <p class="govuk-body">@messages("planned-downtime.p1")</p>
+                <p class="govuk-body">@messages("planned-downtime.p2")</p>
             }
 
         </div>
