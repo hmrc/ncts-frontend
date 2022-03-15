@@ -38,7 +38,11 @@ class ServiceAvailabilityController @Inject()(
 
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     healthCheckService.checkStatus().flatMap {
-      case Right(statusResponse: StatusResponse) => Future.successful(Ok(view(statusResponse)))
+      case Right(statusResponse: StatusResponse) =>
+        println("Status controller ::: ")
+        println("Status controller ::: " +statusResponse)
+        println("Status controller ::: ")
+        Future.successful(Ok(view(statusResponse)))
       case _ => Future.successful(errorHandler.showInternalServerError)
     }
   }

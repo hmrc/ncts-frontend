@@ -50,6 +50,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
         xiArrivalsStatus = healthDetailsUnhealthy,
         xmlChannelStatus = healthDetailsUnhealthy,
         webChannelStatus = healthDetailsUnhealthy,
+        ppnStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
       )
 
@@ -71,6 +72,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
         xiArrivalsStatus = healthDetailsHealthy,
         xmlChannelStatus = healthDetailsHealthy,
         webChannelStatus = healthDetailsHealthy,
+        ppnStatus = healthDetailsHealthy,
         createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
       )
 
@@ -112,7 +114,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
   "xmlAndWebHealthy" should {
 
     lazy val resp = StatusResponse(healthDetailsHealthy, healthDetailsHealthy, healthDetailsHealthy, healthDetailsHealthy,
-      healthDetailsHealthy,healthDetailsHealthy, LocalDateTime.now)
+      healthDetailsHealthy,healthDetailsHealthy, healthDetailsHealthy, LocalDateTime.now)
 
     "return true if both xml and web are healthy in the response" in {
       resp.xmlAndWebHealthy mustBe true
@@ -156,6 +158,11 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
        |    "lastMessageAccepted": "$lastMessageAccepted"
        |  },
        |  "webChannelStatus": {
+       |    "healthy": $otherChannelsHealthy,
+       |    "statusChangedAt": "$statusChangedAt",
+       |    "lastMessageAccepted": "$lastMessageAccepted"
+       |  },
+       |  "ppnStatus": {
        |    "healthy": $otherChannelsHealthy,
        |    "statusChangedAt": "$statusChangedAt",
        |    "lastMessageAccepted": "$lastMessageAccepted"
