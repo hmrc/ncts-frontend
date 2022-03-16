@@ -37,14 +37,14 @@ class DowtimeSpec extends AnyWordSpec with Matchers {
       val end3 = LocalDateTime.of(2022, 3, 9, 15, 25, 17, 12)
       val end4 = LocalDateTime.of(2022, 3, 13, 2, 29, 17, 12)
 
-      val downstimes = Seq(
+      val downtimes = Seq(
         Downtime(GBArrivals, start1, end1),
         Downtime(GBArrivals, start2, end2),
         Downtime(GBArrivals, start3, end3),
         Downtime(GBArrivals, start4, end4)
       )
 
-      val result = Downtime.filterInvalidDowntimes(downstimes)
+      val result = Downtime.filterInvalidDowntimes(downtimes)
       result mustBe Seq(Downtime(GBArrivals, start2, end2), Downtime(GBArrivals, start3, end3))
     }
   }
