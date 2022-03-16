@@ -24,7 +24,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
-import java.time.LocalDateTime
+import java.time.{Duration, LocalDateTime}
 
 case class Downtime(affectedChannel: DowntimeChannel, start: LocalDateTime, end: LocalDateTime)
 
@@ -44,6 +44,16 @@ object Downtime {
         (__ \ "start").read(MongoDateTimeFormats.localDateTimeRead) and
         (__ \ "end").read(MongoDateTimeFormats.localDateTimeRead)
       ) (Downtime.apply _)
+  }
+
+  def filterInvalidDowntimes(downtimes: Seq[Downtime]): Seq[Downtime] = {
+    val invalidDowntimeEnd1 = LocalDateTime.of(2022, 3, 9, 12, 57)
+    val invalidDowntimeEnd2 = LocalDateTime.of(2022, 3, 9, 2, 29)
+    val invaliDowtimeTimestamp = Seq(invalidDowntimeEnd1, invalidDowntimeEnd2)
+
+    downtimes.filterNot(downtime =>
+      invaliDowtimeTimestamp.exists(_.equals(downtime.end.withSecond(0).withNano(0)))
+    )
   }
 }
 
