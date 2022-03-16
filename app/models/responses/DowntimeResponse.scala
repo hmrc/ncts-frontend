@@ -24,7 +24,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
-import java.time.{Duration, LocalDateTime}
+import java.time.LocalDateTime
 
 case class Downtime(affectedChannel: DowntimeChannel, start: LocalDateTime, end: LocalDateTime)
 
