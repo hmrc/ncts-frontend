@@ -45,6 +45,16 @@ object Downtime {
         (__ \ "end").read(MongoDateTimeFormats.localDateTimeRead)
       ) (Downtime.apply _)
   }
+
+  def filterInvalidDowntimes(downtimes: Seq[Downtime]): Seq[Downtime] = {
+    val invalidDowntimeEnd1 = LocalDateTime.of(2022, 3, 9, 12, 57)
+    val invalidDowntimeEnd2 = LocalDateTime.of(2022, 3, 13, 2, 29)
+    val invaliDowtimeTimestamps = Seq(invalidDowntimeEnd1, invalidDowntimeEnd2)
+
+    downtimes.filterNot(downtime =>
+      invaliDowtimeTimestamps.exists(_.equals(downtime.end.withSecond(0).withNano(0)))
+    )
+  }
 }
 
 case class DowntimeResponse(downtimes: Seq[Downtime], createdTs: LocalDateTime)

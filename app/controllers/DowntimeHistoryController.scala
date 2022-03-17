@@ -18,7 +18,7 @@ package controllers
 
 import com.google.inject.Inject
 import handlers.ErrorHandler
-import models.responses.DowntimeResponse
+import models.responses.{Downtime, DowntimeResponse}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.DowntimeHistoryService
@@ -39,7 +39,7 @@ class DowntimeHistoryController @Inject()(
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     outageHistoryService.checkOutageHistory.flatMap {
       case Right(downtimeResponse: DowntimeResponse) =>
-        Future.successful(Ok(view(downtimeResponse.downtimes)))
+        Future.successful(Ok(view(Downtime.filterInvalidDowntimes(downtimeResponse.downtimes))))
       case _ =>
         Future.successful(errorHandler.showInternalServerError)
     }
