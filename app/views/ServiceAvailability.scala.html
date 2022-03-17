@@ -40,7 +40,7 @@
                 <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.arrivals")
                     <div class="govuk-inset-text bottom_padding">
                         <p>@messages("service.availability.lastUpdated")
-                            <b>@formatDateTime(status.createdTs.minusMinutes(30)).</b>
+                            <b>@formatTime(status.createdTs.minusMinutes(31)).</b>
                             <a href="@controllers.routes.ServiceAvailabilityController.onPageLoad.url">
                                 @messages("service.availability.lastUpdated.refresh")</a>
                             @messages("service.availability.lastUpdated.latest")
@@ -93,7 +93,7 @@
                 <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.departures")
                     <div class="govuk-inset-text bottom_padding">
                         <p>@messages("service.availability.lastUpdated")
-                            <b>@formatDateTime(status.createdTs.minusSeconds(30)).</b>
+                            <b>@formatTime(status.createdTs.minusSeconds(60)).</b>
                             <a href="@controllers.routes.ServiceAvailabilityController.onPageLoad.url">
                                 @messages("service.availability.lastUpdated.refresh")</a>
                             @messages("service.availability.lastUpdated.latest")

@@ -76,6 +76,7 @@ service.availability.related.links=Related links
 service.availability.issues.p1=The
 service.availability.issues.p2=and
 service.availability.issues.GMT=GMT
+service.availability.issues.BST=BST
 service.availability.issues.respectively=respectively.
 service.availability.issues.single.channel=system core is experiencing technical issues.
 service.availability.issues.webXML.channel=is experiencing technical issues.

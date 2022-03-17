@@ -22,7 +22,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.Injecting
 import utils.DateTimeFormatter
-import utils.DateTimeFormatter.formatDateTime
+import utils.DateTimeFormatter.{formatDateTime, formatTime}
 import utils.HealthDetailsExamples._
 import views.html.ServiceAvailability
 
@@ -104,7 +104,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
     "should have a last updated time with refresh link for arrivals" in {
       val lastUpdatedText = s"${messages("service.availability.lastUpdated")} " +
-        s"${formatDateTime(LocalDateTime.of(2022, 1, 24, 0, 0, 0).minusMinutes(30))}. " +
+        s"${formatTime(now.minusMinutes(31))}. " +
         s"${messages("service.availability.lastUpdated.refresh")} " +
         s"${messages("service.availability.lastUpdated.latest")}"
 
@@ -114,7 +114,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
     "should have a last updated time with refresh link for departures" in {
       val lastUpdatedText = s"${messages("service.availability.lastUpdated")} " +
-        s"${formatDateTime(LocalDateTime.of(2022, 1, 24, 0, 0, 0).minusSeconds(30))}. " +
+        s"${formatTime(now.minusSeconds(60))}. " +
         s"${messages("service.availability.lastUpdated.refresh")} " +
         s"${messages("service.availability.lastUpdated.latest")}"
 
@@ -123,8 +123,9 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
     }
 
     "should have a last updated time with refresh link for other systems" in {
+
       val lastUpdatedText = s"${messages("service.availability.lastUpdated")} " +
-        s"${formatDateTime(LocalDateTime.of(2022, 1, 24, 0, 0, 0))}. " +
+        s"${formatTime(now)}. " +
         s"${messages("service.availability.lastUpdated.refresh")} " +
         s"${messages("service.availability.lastUpdated.latest")}"
 
@@ -232,9 +233,9 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.ncts.xi.arrivals")} " +
             s"${messages("service.availability.issues.both.channels")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)} " +
+            s"${DateTimeFormatter.formatTime(statusResponse.gbDeparturesStatus.statusChangedAt)} " +
             s"${messages("service.availability.issues.p2")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)} " +
+            s"${DateTimeFormatter.formatTime(statusResponse.xiDeparturesStatus.statusChangedAt)} " +
             s"${messages("service.availability.issues.respectively")} " +
             s"${messages("service.availability.issues.p3")}"
 
@@ -258,9 +259,9 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.ncts.xi.departures")} " +
             s"${messages("service.availability.issues.both.channels")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)} " +
+            s"${DateTimeFormatter.formatTime(statusResponse.gbDeparturesStatus.statusChangedAt)} " +
             s"${messages("service.availability.issues.p2")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)} " +
+            s"${DateTimeFormatter.formatTime(statusResponse.xiDeparturesStatus.statusChangedAt)} " +
             s"${messages("service.availability.issues.respectively")} " +
             s"${messages("service.availability.issues.p3")}"
 
@@ -287,9 +288,9 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.submission.channels.status.xml.channel")} " +
             s"${messages("service.availability.issues.webAndXML.channel")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)} " +
+            s"${DateTimeFormatter.formatTime(statusResponse.gbDeparturesStatus.statusChangedAt)} " +
             s"${messages("service.availability.issues.p2")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)} " +
+            s"${DateTimeFormatter.formatTime(statusResponse.xiDeparturesStatus.statusChangedAt)} " +
             s"${messages("service.availability.issues.respectively")} " +
             s"${messages("service.availability.issues.p3")}"
 
@@ -360,7 +361,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.ncts.gb.arrivals")} " +
             s"${messages("service.availability.issues.single.channel")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.gbArrivalsStatus.statusChangedAt)}. " +
+            s"${DateTimeFormatter.formatTime(statusResponse.gbArrivalsStatus.statusChangedAt)}. " +
             s"${messages("service.availability.issues.p3")}"
 
         someUnhealthyView.getElementsByClass("govuk-body").get(0)
@@ -383,7 +384,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.ncts.gb.departures")} " +
             s"${messages("service.availability.issues.single.channel")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)}. " +
+            s"${DateTimeFormatter.formatTime(statusResponse.gbDeparturesStatus.statusChangedAt)}. " +
             s"${messages("service.availability.issues.p3")}"
 
         someUnhealthyView.getElementsByClass("govuk-body").get(2)
@@ -404,7 +405,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.submission.channels.status.web.channel")} " +
             s"${messages("service.availability.issues.webXML.channel")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.webChannelStatus.statusChangedAt)}. " +
+            s"${DateTimeFormatter.formatTime(statusResponse.webChannelStatus.statusChangedAt)}. " +
             s"${messages("service.availability.issues.p3")}"
 
         val thirdPartyMessage = {
@@ -444,7 +445,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.ncts.xi.arrivals")} " +
             s"${messages("service.availability.issues.single.channel")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)}. " +
+            s"${DateTimeFormatter.formatTime(statusResponse.xiArrivalsStatus.statusChangedAt)}. " +
             s"${messages("service.availability.issues.p3")}"
 
         someUnhealthyView.getElementsByClass("govuk-body").get(0)
@@ -467,7 +468,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.ncts.xi.departures")} " +
             s"${messages("service.availability.issues.single.channel")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)}. " +
+            s"${DateTimeFormatter.formatTime(statusResponse.xiDeparturesStatus.statusChangedAt)}. " +
             s"${messages("service.availability.issues.p3")}"
 
         someUnhealthyView.getElementsByClass("govuk-body").get(2)
@@ -488,7 +489,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.submission.channels.status.xml.channel")} " +
             s"${messages("service.availability.issues.webXML.channel")} " +
             s"${messages("service.availability.issues.known")} " +
-            s"${DateTimeFormatter.formatDateTime(statusResponse.xmlChannelStatus.statusChangedAt)}. " +
+            s"${DateTimeFormatter.formatTime(statusResponse.xmlChannelStatus.statusChangedAt)}. " +
             s"${messages("service.availability.issues.p3")}"
 
         someUnhealthyView.getElementsByClass("govuk-body").get(9)
@@ -544,9 +545,11 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
     createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
   )
 
-  val document: Document = {
+  val now: LocalDateTime = LocalDateTime.now
 
-    val lastMessageAccepted = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
+  val document: Document = {
+    
+    val lastMessageAccepted = now
 
     val healthDetails = healthDetailsHealthy.copy(lastMessageAccepted = Some(lastMessageAccepted))
 
@@ -559,7 +562,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         xmlChannelStatus = healthDetails,
         webChannelStatus = healthDetails,
         ppnStatus = healthDetails,
-        createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
+        createdTs = now
       )).body)
   }
 
