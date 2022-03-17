@@ -17,7 +17,7 @@
 @import java.time.LocalDateTime
 @import utils.DateTimeFormatter._
 
-@(lastUpdated: LocalDateTime, xmlHealthy: Boolean, webHealthy: Boolean)(implicit request: Request[_], messages: Messages)
+@(lastUpdated: LocalDateTime, xmlHealthy: Boolean, webHealthy: Boolean, ppnHealthy: Boolean)(implicit request: Request[_], messages: Messages)
 
 <table class="govuk-table">
     <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.submission.channels.status.heading")
@@ -43,7 +43,7 @@
     </thead>
     <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
-            <td class="govuk-table__cell">@messages("service.availability.submission.channels.status.web.channel")</td>
+            <td class="govuk-table__cell">@messages("service.availability.submission.channels.status.web")</td>
             @if(webHealthy){
             <td class="govuk-table__cell">
                 <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
@@ -55,7 +55,7 @@
             }
         </tr>
         <tr class="govuk-table__row">
-            <td class="govuk-table__cell">@messages("service.availability.submission.channels.status.xml.channel")</td>
+            <td class="govuk-table__cell">@messages("service.availability.submission.channels.status.xml")</td>
             @if(xmlHealthy){
                 <td class="govuk-table__cell">
                     <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
@@ -66,5 +66,13 @@
                 </td>
             }
         </tr>
+        @if(!ppnHealthy){
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">@messages("service.availability.submission.channels.status.ppn")</td>
+                    <td class="govuk-table__cell">
+                        <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
+                    </td>
+            </tr>
+        }
     </tbody>
 </table>

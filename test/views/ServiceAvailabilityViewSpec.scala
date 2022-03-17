@@ -113,10 +113,10 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         .text() mustBe messages("service.availability.system.availability")
 
       document.getElementsByClass("govuk-table__cell").get(12)
-        .text() mustBe messages("service.availability.submission.channels.status.web.channel")
+        .text() mustBe messages("service.availability.submission.channels.status.web")
 
       document.getElementsByClass("govuk-table__cell").get(14)
-        .text() mustBe messages("service.availability.submission.channels.status.xml.channel")
+        .text() mustBe messages("service.availability.submission.channels.status.xml")
     }
 
     "should have a last updated time with refresh link for arrivals" in {
@@ -184,6 +184,11 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           .text() mustBe messages("service.availability.status.available")
       }
 
+      "should not show PPNS row on the other systems" in {
+        document.getElementsByClass("govuk-table").last().text() mustNot
+          include(messages("service.availability.submission.channels.status.ppn"))
+      }
+
       "should have a paragraph about checking third party software for issues" in {
         val thirdPartyMessage = {
           s"${messages("service.availability.issues.p6")} ${messages("service.availability.issues.xml.channel")}" +
@@ -202,6 +207,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         xiArrivalsStatus = healthDetailsUnhealthy,
         xmlChannelStatus = healthDetailsUnhealthy,
         webChannelStatus = healthDetailsUnhealthy,
+        ppnStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
       val allUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
@@ -263,7 +269,11 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           .text() mustBe messages("service.availability.status.issues")
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(15)
           .text() mustBe messages("service.availability.status.issues")
+        allUnhealthyView.getElementsByClass("govuk-table__cell").get(17)
+          .text() mustBe messages("service.availability.status.issues")
 
+        val ppnKnownIssuesParagraph =
+          messages("service.availability.issues.ppn")
         val channelsKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
             s"${messages("service.availability.submission.channels.status.web.channel")} " +
@@ -278,6 +288,8 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.issues.p3")}"
 
         allUnhealthyView.getElementsByClass("govuk-body").get(4)
+          .text() must include(ppnKnownIssuesParagraph)
+        allUnhealthyView.getElementsByClass("govuk-body").get(5)
           .text() must include(channelsKnownIssuesParagraph)
       }
 
@@ -299,6 +311,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         xiArrivalsStatus = healthDetailsHealthy,
         xmlChannelStatus = healthDetailsHealthy,
         webChannelStatus = healthDetailsUnhealthy,
+        ppnStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
       val someUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
@@ -367,9 +380,9 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           s"${messages("service.availability.issues.p6")} ${messages("service.availability.issues.xml.channel")}" +
             s" ${messages("service.availability.issues.p7")}"
         }
-        someUnhealthyView.getElementsByClass("govuk-body").get(4)
-          .text() must include(webChannelKnownIssuesParagraph)
         someUnhealthyView.getElementsByClass("govuk-body").get(5)
+          .text() must include(webChannelKnownIssuesParagraph)
+        someUnhealthyView.getElementsByClass("govuk-body").get(6)
           .text() must include(thirdPartyMessage)
       }
     }
@@ -382,6 +395,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         xiArrivalsStatus = healthDetailsUnhealthy,
         xmlChannelStatus = healthDetailsUnhealthy,
         webChannelStatus = healthDetailsHealthy,
+        ppnStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
       val someUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
@@ -446,8 +460,44 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${DateTimeFormatter.formatDateTime(statusResponse.xmlChannelStatus.statusChangedAt)}. " +
             s"${messages("service.availability.issues.p3")}"
 
-        someUnhealthyView.getElementsByClass("govuk-body").get(4)
+        someUnhealthyView.getElementsByClass("govuk-body").get(5)
           .text() must include(xmlChannelKnownIssuesParagraph)
+      }
+    }
+
+    "when PPNS is not healthy" - {
+      val statusResponse = StatusResponse(
+        gbDeparturesStatus = healthDetailsHealthy,
+        xiDeparturesStatus = healthDetailsUnhealthy,
+        gbArrivalsStatus = healthDetailsHealthy,
+        xiArrivalsStatus = healthDetailsUnhealthy,
+        xmlChannelStatus = healthDetailsHealthy,
+        webChannelStatus = healthDetailsHealthy,
+        ppnStatus = healthDetailsUnhealthy,
+        createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
+      )
+
+      val ppnUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
+
+      "should show PPNS channel has known issues" in {
+        ppnUnhealthyView.getElementsByClass("govuk-table__cell").get(13)
+          .text() mustBe messages("service.availability.status.available")
+        ppnUnhealthyView.getElementsByClass("govuk-table__cell").get(15)
+          .text() mustBe messages("service.availability.status.available")
+        ppnUnhealthyView.getElementsByClass("govuk-table__cell").get(17)
+          .text() mustBe messages("service.availability.status.issues")
+
+        val ppnKnownIssuesParagraph =
+          messages("service.availability.issues.ppn")
+        val thirdPartyMessage = {
+          s"${messages("service.availability.issues.p6")} ${messages("service.availability.issues.xml.channel")}" +
+            s" ${messages("service.availability.issues.p7")}"
+        }
+
+        ppnUnhealthyView.getElementsByClass("govuk-body").get(4)
+          .text() must include(ppnKnownIssuesParagraph)
+        ppnUnhealthyView.getElementsByClass("govuk-body").get(5)
+          .text() must include(thirdPartyMessage)
       }
     }
   }
@@ -459,6 +509,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
     xiArrivalsStatus = healthDetailsHealthy,
     xmlChannelStatus = healthDetailsHealthy,
     webChannelStatus = healthDetailsHealthy,
+    ppnStatus = healthDetailsUnhealthy,
     createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
   )
 
@@ -476,6 +527,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         xiArrivalsStatus = healthDetails,
         xmlChannelStatus = healthDetails,
         webChannelStatus = healthDetails,
+        ppnStatus = healthDetails,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )).body)
   }

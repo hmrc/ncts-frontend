@@ -51,6 +51,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
             xiArrivalsStatus = healthDetailsUnhealthy,
             xmlChannelStatus = healthDetailsUnhealthy,
             webChannelStatus = healthDetailsUnhealthy,
+            ppnStatus = healthDetailsUnhealthy,
             createdTs = LocalDateTime.now()
           )
         ))
@@ -76,6 +77,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
           xiArrivalsStatus = healthDetailsHealthy,
           xmlChannelStatus = healthDetailsHealthy,
           webChannelStatus = healthDetailsHealthy,
+          ppnStatus = healthDetailsHealthy,
           createdTs = LocalDateTime.now()
         )))
 

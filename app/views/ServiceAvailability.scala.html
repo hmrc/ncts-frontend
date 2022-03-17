@@ -166,8 +166,14 @@
             @SubmissionChannelsAvailability(
                 status.createdTs,
                 status.xmlChannelStatus.healthy,
-                status.webChannelStatus.healthy
+                status.webChannelStatus.healthy,
+                status.ppnStatus.healthy
             )
+            @if(status.ppnNotHealthy){
+                <p class="govuk-body">
+                    @messages("service.availability.issues.ppn")
+                </p>
+            }
             @if(status.xmlAndWebHealthy){
                 <p class="govuk-body">
                     @messages("service.availability.issues.p6")

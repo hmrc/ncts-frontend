@@ -44,6 +44,7 @@ class ServiceAvailabilityControllerISpec extends SpecCommonHelper {
           xiArrivalsStatus = healthDetailsHealthy,
           xmlChannelStatus = healthDetailsHealthy,
           webChannelStatus = healthDetailsHealthy,
+          ppnStatus = healthDetailsHealthy,
           createdTs = LocalDateTime.now())).toString
       )
 
@@ -64,6 +65,7 @@ class ServiceAvailabilityControllerISpec extends SpecCommonHelper {
           xiArrivalsStatus = healthDetailsUnhealthy,
           xmlChannelStatus = healthDetailsUnhealthy,
           webChannelStatus = healthDetailsUnhealthy,
+          ppnStatus = healthDetailsUnhealthy,
           createdTs = LocalDateTime.now())).toString
       )
 
@@ -96,6 +98,7 @@ class ServiceAvailabilityControllerISpec extends SpecCommonHelper {
           xiArrivalsStatus = healthDetailsHealthy,
           xmlChannelStatus = healthDetailsHealthy,
           webChannelStatus = healthDetailsHealthy,
+          ppnStatus = healthDetailsHealthy,
           createdTs = LocalDateTime.now())).toString
       )
 
