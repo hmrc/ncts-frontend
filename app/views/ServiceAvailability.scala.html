@@ -18,6 +18,7 @@
 @import utils.DateTimeFormatter._
 @import helpers.SubmissionChannelsAvailability
 @import helpers.KnownIssuesParagraph
+@import helpers.HelpWithChannels
 @import config.FrontendAppConfig
 
 @this(
@@ -169,6 +170,7 @@
                 status.webChannelStatus.healthy,
                 status.ppnStatus.healthy
             )
+            @HelpWithChannels(status.ppnNotHealthy, appConfig.govUKNCTSGuidanceLink)
             @if(status.ppnNotHealthy){
                 <p class="govuk-body">
                     @messages("service.availability.issues.ppn")

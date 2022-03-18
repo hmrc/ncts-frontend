@@ -22,7 +22,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import java.time.LocalDateTime
 
-class DowtimeSpec extends AnyWordSpec with Matchers {
+class DowntimeSpec extends AnyWordSpec with Matchers {
 
   "filterInvalidDowntimes" should {
 

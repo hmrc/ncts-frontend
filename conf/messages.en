@@ -88,9 +88,17 @@ service.availability.issues.p4=HMRC will advise you by e-mail if the Business Co
 service.availability.issues.p5=Transit Manual Supplement.
 service.availability.issues.p6=If you are trying to use the
 service.availability.issues.p7=for submissions and are experiencing issues, check your third-party software.
-service.availability.issues.ppn=The PPNS channel is experiencing technical issues. We are aware of the problem and are working to fix this. Submissions made during this time will be successfully logged by NCTS but will not return a notification. If you have made a submission during this time, contact your 3rd party software provider who will be able to retrieve your notification.
+service.availability.issues.ppn=The PPNS channel is experiencing technical issues. We are aware of the problem and are working to fix this. Submissions made during this time will be successfully logged by NCTS but will not return a notification. If you have made a submission during this time, contact your third-party software provider who will be able to retrieve your notification.
 service.availability.issues.xml.channel=XML channel
 service.availability.related.links.planned.downtimes=Planned downtime
+
+service.availability.help.with.channels=Help with channels
+service.availability.help.with.channels.p1=Channels are the route users make submissions to NCTS through.
+service.availability.help.with.channels.p2a=Users of the web channel use
+service.availability.help.with.channels.p2b=the gov.uk website
+service.availability.help.with.channels.p2c=to make submissions.
+service.availability.help.with.channels.p3=Users of the extensible markup language (XML) channel use a third-party software provider, such as DataFreight, Descarte or Genius, to make submissions.
+service.availability.help.with.channels.p4=The Push Pull Notification Service (PPNS) is a part of the XML channel that sends users their notifications once they make a submission.
 
 planned-downtime.title=Planned downtime
 planned-downtime.heading=Planned downtime

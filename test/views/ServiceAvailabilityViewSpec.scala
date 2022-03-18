@@ -32,6 +32,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
   val view: ServiceAvailability = inject[ServiceAvailability]
   val transitManualLink = "https://www.gov.uk/government/publications/transit-manual-supplement"
+  val nctsGuidanceLink = "https://www.gov.uk/guidance/submit-union-transit-declarations-through-ncts"
 
   "ServiceAvailability" - {
 
@@ -189,6 +190,30 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           include(messages("service.availability.submission.channels.status.ppn"))
       }
 
+      "should have information which helps with channels with no mention of PPNS" in {
+        val summaryBlock = document.getElementsByClass("govuk-details__summary").first()
+        val detailsBlock = document.getElementsByClass("govuk-details__text").first()
+
+        summaryBlock.getElementsByClass("govuk-details__summary-text")
+          .first().text() mustBe messages("service.availability.help.with.channels")
+
+        detailsBlock.getElementsByClass("govuk-body")
+          .first().text() mustBe messages("service.availability.help.with.channels.p1")
+
+        val para2WithLink = detailsBlock.getElementsByClass("govuk-body")
+
+        para2WithLink.get(1).text() mustBe s"${messages("service.availability.help.with.channels.p2a")}" +
+        s" ${messages("service.availability.help.with.channels.p2b")}" +
+        s" ${messages("service.availability.help.with.channels.p2c")}"
+
+        para2WithLink.select("a").attr("href") mustBe nctsGuidanceLink
+
+        detailsBlock.getElementsByClass("govuk-body")
+          .get(2).text() mustBe messages("service.availability.help.with.channels.p3")
+
+        detailsBlock.getElementsByClass("govuk-body").size() mustBe 3
+      }
+
       "should have a paragraph about checking third party software for issues" in {
         val thirdPartyMessage = {
           s"${messages("service.availability.issues.p6")} ${messages("service.availability.issues.xml.channel")}" +
@@ -274,6 +299,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val ppnKnownIssuesParagraph =
           messages("service.availability.issues.ppn")
+
         val channelsKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
             s"${messages("service.availability.submission.channels.status.web.channel")} " +
@@ -287,10 +313,34 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${messages("service.availability.issues.respectively")} " +
             s"${messages("service.availability.issues.p3")}"
 
-        allUnhealthyView.getElementsByClass("govuk-body").get(4)
+        allUnhealthyView.getElementsByClass("govuk-body").get(8)
           .text() must include(ppnKnownIssuesParagraph)
-        allUnhealthyView.getElementsByClass("govuk-body").get(5)
+        allUnhealthyView.getElementsByClass("govuk-body").get(9)
           .text() must include(channelsKnownIssuesParagraph)
+      }
+
+      "should have information which helps with channels with mention of PPNS" in {
+        val summaryBlock = allUnhealthyView.getElementsByClass("govuk-details__summary").first()
+        val detailsBlock = allUnhealthyView.getElementsByClass("govuk-details__text").first()
+
+        summaryBlock.getElementsByClass("govuk-details__summary-text")
+          .first().text() mustBe messages("service.availability.help.with.channels")
+
+        detailsBlock.getElementsByClass("govuk-body")
+          .first().text() mustBe messages("service.availability.help.with.channels.p1")
+
+        detailsBlock.getElementsByClass("govuk-body")
+          .get(1).text() mustBe s"${messages("service.availability.help.with.channels.p2a")}" +
+          s" ${messages("service.availability.help.with.channels.p2b")}" +
+          s" ${messages("service.availability.help.with.channels.p2c")}"
+
+        detailsBlock.getElementsByClass("govuk-body")
+          .get(2).text() mustBe messages("service.availability.help.with.channels.p3")
+
+        detailsBlock.getElementsByClass("govuk-body")
+          .get(3).text() mustBe messages("service.availability.help.with.channels.p4")
+
+        detailsBlock.getElementsByClass("govuk-body").size() mustBe 4
       }
 
       "should not have a paragraph about checking third party software for issues" in {
@@ -303,7 +353,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       }
     }
 
-    "when GB channels and the Web channel are not healthy" - {
+    "when GB departures and arrivals and the Web channel are unhealthy but XI departures and arrivals are healthy" - {
       val statusResponse = StatusResponse(
         gbDeparturesStatus = healthDetailsUnhealthy,
         xiDeparturesStatus = healthDetailsHealthy,
@@ -314,9 +364,10 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         ppnStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
+
       val someUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
 
-      "should show that the GB channel has known issues for arrivals" in {
+      "should show that GB arrivals has known issues" in {
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
           .text() mustBe messages("service.availability.status.issues")
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(4)
@@ -339,7 +390,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
       }
 
-      "should show that the GB channel has known issues for departures" in {
+      "should show that GB departures has known issues" in {
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(7)
           .text() mustBe messages("service.availability.status.issues")
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(10)
@@ -380,14 +431,14 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           s"${messages("service.availability.issues.p6")} ${messages("service.availability.issues.xml.channel")}" +
             s" ${messages("service.availability.issues.p7")}"
         }
-        someUnhealthyView.getElementsByClass("govuk-body").get(5)
+        someUnhealthyView.getElementsByClass("govuk-body").get(9)
           .text() must include(webChannelKnownIssuesParagraph)
-        someUnhealthyView.getElementsByClass("govuk-body").get(6)
+        someUnhealthyView.getElementsByClass("govuk-body").get(10)
           .text() must include(thirdPartyMessage)
       }
     }
 
-    "when XI channels and the XML channel are not healthy" - {
+    "when XI departures and arrivals and the XML channel are unhealthy but GB departures and arrivals are healthy" - {
       val statusResponse = StatusResponse(
         gbDeparturesStatus = healthDetailsHealthy,
         xiDeparturesStatus = healthDetailsUnhealthy,
@@ -400,7 +451,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       )
       val someUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
 
-      "should show that the XI channel has known issues for arrivals" in {
+      "should show that XI arrivals has known issues" in {
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
           .text() mustBe messages("service.availability.status.available")
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(4)
@@ -423,7 +474,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}"
       }
 
-      "should show that the XI channel has known issues for departures" in {
+      "should show that XI departures has known issues" in {
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(7)
           .text() mustBe messages("service.availability.status.available")
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(10)
@@ -460,46 +511,11 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
             s"${DateTimeFormatter.formatDateTime(statusResponse.xmlChannelStatus.statusChangedAt)}. " +
             s"${messages("service.availability.issues.p3")}"
 
-        someUnhealthyView.getElementsByClass("govuk-body").get(5)
+        someUnhealthyView.getElementsByClass("govuk-body").get(9)
           .text() must include(xmlChannelKnownIssuesParagraph)
       }
     }
 
-    "when PPNS is not healthy" - {
-      val statusResponse = StatusResponse(
-        gbDeparturesStatus = healthDetailsHealthy,
-        xiDeparturesStatus = healthDetailsUnhealthy,
-        gbArrivalsStatus = healthDetailsHealthy,
-        xiArrivalsStatus = healthDetailsUnhealthy,
-        xmlChannelStatus = healthDetailsHealthy,
-        webChannelStatus = healthDetailsHealthy,
-        ppnStatus = healthDetailsUnhealthy,
-        createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
-      )
-
-      val ppnUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
-
-      "should show PPNS channel has known issues" in {
-        ppnUnhealthyView.getElementsByClass("govuk-table__cell").get(13)
-          .text() mustBe messages("service.availability.status.available")
-        ppnUnhealthyView.getElementsByClass("govuk-table__cell").get(15)
-          .text() mustBe messages("service.availability.status.available")
-        ppnUnhealthyView.getElementsByClass("govuk-table__cell").get(17)
-          .text() mustBe messages("service.availability.status.issues")
-
-        val ppnKnownIssuesParagraph =
-          messages("service.availability.issues.ppn")
-        val thirdPartyMessage = {
-          s"${messages("service.availability.issues.p6")} ${messages("service.availability.issues.xml.channel")}" +
-            s" ${messages("service.availability.issues.p7")}"
-        }
-
-        ppnUnhealthyView.getElementsByClass("govuk-body").get(4)
-          .text() must include(ppnKnownIssuesParagraph)
-        ppnUnhealthyView.getElementsByClass("govuk-body").get(5)
-          .text() must include(thirdPartyMessage)
-      }
-    }
   }
 
   StatusResponse(
