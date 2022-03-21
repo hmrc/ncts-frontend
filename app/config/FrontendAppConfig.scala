@@ -56,4 +56,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val govUKTransitManualLink: String = configuration.get[String]("govUKLinks.govUKTransitManualLink")
 
+  val govUKNCTSGuidanceLink: String = configuration.get[String]("govUKLinks.govUKNCTSGuidanceLink")
+
 }

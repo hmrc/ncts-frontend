@@ -41,7 +41,7 @@ object DateTimeFormatter {
   def formatDateTime(dateTime: LocalDateTime)(implicit messages: Messages): String =
     s"${dateTime.format(DateTimeGen.ofPattern("h:mma")).toLowerCase(Locale.ENGLISH)} ${messages("service.availability.issues.GMT")}"
 
-  def formatDateTimeDowntimeHistory(dateTime: LocalDateTime)(implicit messages: Messages): String =
+  def formatDateTimeDowntimeHistory(dateTime: LocalDateTime): String =
     s"${dateTime.format(DateTimeGen.ofPattern("d MMMM yyyy"))}"
 
   def formatDateTimeKnownIssues(dateTime: LocalDateTime)(implicit messages: Messages): String = {
