@@ -27,17 +27,17 @@ class DowntimeSpec extends AnyWordSpec with Matchers {
   "filterInvalidDowntimes" should {
 
     "should filter out the invalid downtimes" in {
-      val start1 = LocalDateTime.of(2022, 3, 9, 12, 19, 17, 40)
+      val start1 = LocalDateTime.of(2022, 3, 9, 0, 19, 17, 40)
       val start2 = LocalDateTime.of(2022, 3, 9, 14, 3, 17, 40)
       val start3 = LocalDateTime.of(2022, 3, 9, 14, 39, 17, 40)
       val start4 = LocalDateTime.of(2022, 3, 13, 1, 59, 17, 40)
-      val start5 = LocalDateTime.of(2022, 3, 20, 12, 18, 17, 40)
+      val start5 = LocalDateTime.of(2022, 3, 20, 0, 18, 17, 40)
 
-      val end1 = LocalDateTime.of(2022, 3, 9, 12, 57, 17, 12)
+      val end1 = LocalDateTime.of(2022, 3, 9, 0, 57, 17, 12)
       val end2 = LocalDateTime.of(2022, 3, 9, 14, 56, 17, 13)
       val end3 = LocalDateTime.of(2022, 3, 9, 15, 25, 17, 12)
       val end4 = LocalDateTime.of(2022, 3, 13, 2, 29, 17, 12)
-      val end5 = LocalDateTime.of(2022, 3, 20, 12, 41, 17, 12)
+      val end5 = LocalDateTime.of(2022, 3, 20, 0, 41, 17, 12)
 
       val downtimes = Seq(
         Downtime(GBArrivals, start1, end1),
