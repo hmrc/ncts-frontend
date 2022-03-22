@@ -49,10 +49,11 @@ object Downtime {
   def filterInvalidDowntimes(downtimes: Seq[Downtime]): Seq[Downtime] = {
     val invalidDowntimeEnd1 = LocalDateTime.of(2022, 3, 9, 12, 57)
     val invalidDowntimeEnd2 = LocalDateTime.of(2022, 3, 13, 2, 29)
-    val invaliDowtimeTimestamps = Seq(invalidDowntimeEnd1, invalidDowntimeEnd2)
+    val invalidDowntimeEnd3 = LocalDateTime.of(2022, 3, 20, 12, 41)
+    val invalidDowntimeTimestamps = Seq(invalidDowntimeEnd1, invalidDowntimeEnd2, invalidDowntimeEnd3)
 
     downtimes.filterNot(downtime =>
-      invaliDowtimeTimestamps.exists(_.equals(downtime.end.withSecond(0).withNano(0)))
+      invalidDowntimeTimestamps.exists(_.equals(downtime.end.withSecond(0).withNano(0)))
     )
   }
 }
