@@ -57,7 +57,7 @@
                     <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
                 </td>
                 <td class="govuk-table__cell">
-                    @formatDateTimeKnownIssues(webChannelHealth.statusChangedAt)
+                    @formatDateTime(webChannelHealth.statusChangedAt)
                 </td>
             }
 
@@ -76,7 +76,7 @@
                     <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
                 </td>
                 <td class="govuk-table__cell">
-                    @formatDateTimeKnownIssues(xmlChannelHealth.statusChangedAt)
+                    @formatDateTime(xmlChannelHealth.statusChangedAt)
                 </td>
             }
         </tr>
@@ -87,7 +87,7 @@
                     <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
                 </td>
                 <td class="govuk-table__cell">
-                    @formatDateTimeKnownIssues(ppnHealthy.statusChangedAt)
+                    @formatDateTime(ppnHealthy.statusChangedAt)
                 </td>
             </tr>
         }

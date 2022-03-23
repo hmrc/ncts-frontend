@@ -69,7 +69,7 @@
                                   <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
                             </td>
                             <td class="govuk-table__cell">
-                                @formatDateTimeKnownIssues(status.gbArrivalsStatus.statusChangedAt)
+                                @formatDateTime(status.gbArrivalsStatus.statusChangedAt)
                             </td>
                         }
                     </tr>
@@ -87,7 +87,7 @@
                                 <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
                             </td>
                             <td class="govuk-table__cell">
-                                @formatDateTimeKnownIssues(status.xiArrivalsStatus.statusChangedAt)
+                                @formatDateTime(status.xiArrivalsStatus.statusChangedAt)
                             </td>
                         }
                     </tr>
@@ -137,7 +137,7 @@
                             <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
                         </td>
                         <td class="govuk-table__cell">
-                            @formatDateTimeKnownIssues(status.gbDeparturesStatus.statusChangedAt)
+                            @formatDateTime(status.gbDeparturesStatus.statusChangedAt)
                         </td>
                     }
                 </tr>
@@ -155,7 +155,7 @@
                             <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
                         </td>
                         <td class="govuk-table__cell">
-                            @formatDateTimeKnownIssues(status.xiDeparturesStatus.statusChangedAt)
+                            @formatDateTime(status.xiDeparturesStatus.statusChangedAt)
                         </td>
                     }
                 </tr>
