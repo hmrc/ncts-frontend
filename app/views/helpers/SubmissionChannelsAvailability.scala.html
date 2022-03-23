@@ -18,7 +18,7 @@
 @import utils.DateTimeFormatter._
 @import models.responses.HealthDetails
 
-@(lastUpdated: LocalDateTime, xmlChannelHealth: HealthDetails, webChannelHealth: HealthDetails, ppnHealthy: HealthDetails)(implicit request: Request[_], messages: Messages)
+@(lastUpdated: LocalDateTime, xmlChannelHealth: HealthDetails, webChannelHealth: HealthDetails, ppnHealth: HealthDetails)(implicit request: Request[_], messages: Messages)
 
 <table class="govuk-table">
     <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.submission.channels.status.heading")
@@ -80,7 +80,7 @@
                 </td>
             }
         </tr>
-        @if(!ppnHealthy.healthy){
+        @if(!ppnHealth.healthy){
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">@messages("service.availability.submission.channels.status.ppn")</td>
                 <td class="govuk-table__cell">
