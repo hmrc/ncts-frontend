@@ -21,6 +21,7 @@ import models.responses.StatusResponse
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.Injecting
+import utils.DateTimeFormatter
 import utils.DateTimeFormatter.formatTime
 import utils.HealthDetailsExamples._
 import views.html.ServiceAvailability
@@ -72,12 +73,9 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       document.getElementsByClass("govuk-table__cell").first()
         .text() mustBe messages("service.availability.ncts.gb.arrivals")
 
-<<<<<<< HEAD
-=======
       document.getElementsByClass("govuk-table__cell").get(2)
         .text() mustBe messages("service.availability.status.no.issues")
 
->>>>>>> c497450 (NSP-495 update unit tests)
       document.getElementsByClass("govuk-table__cell").get(3)
         .text() mustBe messages("service.availability.ncts.xi.arrivals")
 
@@ -92,26 +90,8 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       document.getElementsByClass("govuk-table__header").get(4)
         .text() mustBe messages("service.availability.system.availability")
 
-<<<<<<< HEAD
-      document.getElementsByClass("govuk-table__cell").get(6)
-        .text() mustBe messages("service.availability.ncts.gb.departures")
-
-=======
       document.getElementsByClass("govuk-table__header").get(5)
         .text() mustBe messages("service.availability.system.known.issues.since")
-
-      document.getElementsByClass("govuk-table__cell").get(6)
-        .text() mustBe messages("service.availability.ncts.gb.departures")
-
-      document.getElementsByClass("govuk-table__cell").get(8)
-        .text() mustBe messages("service.availability.status.no.issues")
-
->>>>>>> c497450 (NSP-495 update unit tests)
-      document.getElementsByClass("govuk-table__cell").get(9)
-        .text() mustBe messages("service.availability.ncts.xi.departures")
-
-      document.getElementsByClass("govuk-table__cell").get(11)
-        .text() mustBe messages("service.availability.status.no.issues")
     }
 
     "should have a table for other systems" in {
@@ -121,26 +101,8 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       document.getElementsByClass("govuk-table__header").get(7)
         .text() mustBe messages("service.availability.system.availability")
 
-<<<<<<< HEAD
-      document.getElementsByClass("govuk-table__cell").get(12)
-        .text() mustBe messages("service.availability.submission.channels.status.web")
-
-=======
       document.getElementsByClass("govuk-table__header").get(8)
         .text() mustBe messages("service.availability.system.known.issues.since")
-
-      document.getElementsByClass("govuk-table__cell").get(12)
-        .text() mustBe messages("service.availability.submission.channels.status.web")
-
-      document.getElementsByClass("govuk-table__cell").get(14)
-        .text() mustBe messages("service.availability.status.no.issues")
-
->>>>>>> c497450 (NSP-495 update unit tests)
-      document.getElementsByClass("govuk-table__cell").get(15)
-        .text() mustBe messages("service.availability.submission.channels.status.xml")
-
-      document.getElementsByClass("govuk-table__cell").get(17)
-        .text() mustBe messages("service.availability.status.no.issues")
     }
 
     "should have a last updated time with refresh link for arrivals" in {
@@ -261,18 +223,15 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       )
       val allUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
 
-      "should show that services have known issues for arrivals" in {
+      "should show that services have known issues and known issues since time for arrivals" in {
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
           .text() mustBe messages("service.availability.status.issues")
-<<<<<<< HEAD
-=======
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(2)
-          .text() mustBe  DateTimeFormatter.formatDateTime(statusResponse.gbArrivalsStatus.statusChangedAt)
->>>>>>> c497450 (NSP-495 update unit tests)
+          .text() mustBe DateTimeFormatter.formatDateTime(statusResponse.gbArrivalsStatus.statusChangedAt)
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(4)
           .text() mustBe messages("service.availability.status.issues")
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(5)
-          .text() mustBe  DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)
+          .text() mustBe DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)
 
         val arrivalsKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
@@ -289,20 +248,15 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         bcpPara.select("a").attr("href") mustBe transitManualLink
       }
 
-      "should show that services have known issues for departures" in {
+      "should show that services have known issues and known issues since time for departures" in {
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(7)
           .text() mustBe messages("service.availability.status.issues")
-<<<<<<< HEAD
-        allUnhealthyView.getElementsByClass("govuk-table__cell").get(10)
-          .text() mustBe messages("service.availability.status.issues")
-=======
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(8)
           .text() mustBe  DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(10)
           .text() mustBe messages("service.availability.status.issues")
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(11)
           .text() mustBe  DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)
->>>>>>> c497450 (NSP-495 update unit tests)
 
         val departuresKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
@@ -319,14 +273,11 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         bcpPara.select("a").attr("href") mustBe transitManualLink
       }
 
-      "should show that services have known issues for other systems" in {
+      "should show that services have known issues and known issues since time for other systems" in {
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(13)
           .text() mustBe messages("service.availability.status.issues")
-<<<<<<< HEAD
-=======
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(14)
           .text() mustBe  DateTimeFormatter.formatDateTime(statusResponse.webChannelStatus.statusChangedAt)
->>>>>>> c497450 (NSP-495 update unit tests)
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(16)
           .text() mustBe messages("service.availability.status.issues")
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(17)
@@ -406,11 +357,6 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           .text() mustBe messages("service.availability.status.issues")
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(4)
           .text() mustBe messages("service.availability.status.available")
-<<<<<<< HEAD
-=======
-        someUnhealthyView.getElementsByClass("govuk-table__cell").get(13)
-          .text() mustBe messages("service.availability.status.issues")
->>>>>>> c497450 (NSP-495 update unit tests)
 
         val arrivalsKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
@@ -425,21 +371,12 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}."
       }
 
-<<<<<<< HEAD
+
       "should show that the GB departures has known issues" in {
-        someUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
-          .text() mustBe messages("service.availability.status.issues")
-        someUnhealthyView.getElementsByClass("govuk-table__cell").get(4)
-          .text() mustBe messages("service.availability.status.available")
-=======
-      "should show that the GB channel has known issues for departures" in {
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(7)
           .text() mustBe messages("service.availability.status.issues")
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(10)
           .text() mustBe messages("service.availability.status.available")
-        someUnhealthyView.getElementsByClass("govuk-table__cell").get(13)
-          .text() mustBe messages("service.availability.status.issues")
->>>>>>> c497450 (NSP-495 update unit tests)
 
         val departuresKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
@@ -494,11 +431,6 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
           .text() mustBe messages("service.availability.status.available")
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(4)
-<<<<<<< HEAD
-=======
-          .text() mustBe messages("service.availability.status.issues")
-        someUnhealthyView.getElementsByClass("govuk-table__cell").get(16)
->>>>>>> c497450 (NSP-495 update unit tests)
           .text() mustBe messages("service.availability.status.issues")
 
         val arrivalsKnownIssuesParagraph =
@@ -518,11 +450,6 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(7)
           .text() mustBe messages("service.availability.status.available")
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(10)
-<<<<<<< HEAD
-=======
-          .text() mustBe messages("service.availability.status.issues")
-        someUnhealthyView.getElementsByClass("govuk-table__cell").get(16)
->>>>>>> c497450 (NSP-495 update unit tests)
           .text() mustBe messages("service.availability.status.issues")
 
         val departuresKnownIssuesParagraph =
@@ -543,6 +470,8 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           .text() mustBe messages("service.availability.status.available")
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(16)
           .text() mustBe messages("service.availability.status.issues")
+        someUnhealthyView.getElementsByClass("govuk-table__cell").get(17)
+          .text() mustBe DateTimeFormatter.formatDateTime(statusResponse.xmlChannelStatus.statusChangedAt)
 
         val xmlChannelKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
@@ -625,5 +554,4 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         createdTs = now
       )).body)
   }
-
 }
