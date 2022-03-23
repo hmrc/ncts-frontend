@@ -66,7 +66,10 @@ object StatusResponse {
   }
 }
 
-case class HealthDetails(healthy: Boolean, statusChangedAt: LocalDateTime, lastMessageAccepted: Option[LocalDateTime])
+case class HealthDetails(healthy: Boolean, statusChangedAt: LocalDateTime, lastMessageAccepted: Option[LocalDateTime]){
+
+  def nonHealthy: Boolean = !healthy
+}
 
 object HealthDetails {
   implicit val format: OFormat[HealthDetails] = Json.format[HealthDetails]
