@@ -68,10 +68,10 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
           .get(0).text() mustBe messages("planned-downtime.ncts.gb.arrivals")
 
         document.select("table:nth-child(2) > tbody > tr:nth-child(1) > td:nth-child(2)")
-          .get(0).text() mustBe "Saturday 1 January 2022 8AM"
+          .get(0).text() mustBe "Saturday 1 January 2022 8am GMT"
 
         document.select("table:nth-child(2) > tbody > tr:nth-child(1) > td:nth-child(3)")
-          .get(0).text() mustBe "Wednesday 1 June 2022 8PM"
+          .get(0).text() mustBe "Wednesday 1 June 2022 8pm BST"
       }
 
       "should have a table for arrivals with a row for XI" in {
@@ -79,10 +79,10 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
           .get(0).text() mustBe messages("planned-downtime.ncts.xi.arrivals")
 
         document.select("table:nth-child(2) > tbody > tr:nth-child(2) > td:nth-child(2)")
-          .get(0).text() mustBe "Saturday 1 January 2022 8AM"
+          .get(0).text() mustBe "Saturday 1 January 2022 8am GMT"
 
         document.select("table:nth-child(2) > tbody > tr:nth-child(2) > td:nth-child(3)")
-          .get(0).text() mustBe "Wednesday 1 June 2022 8PM"
+          .get(0).text() mustBe "Wednesday 1 June 2022 8pm BST"
       }
 
       "should have some content about submissions when the service is down and an apology for arrivals" in {
@@ -131,10 +131,10 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
           .get(0).text() mustBe messages("planned-downtime.ncts.gb.departures")
 
         tableRow.select("td:nth-child(2)")
-          .get(0).text() mustBe "Saturday 1 January 2022 8AM"
+          .get(0).text() mustBe "Saturday 1 January 2022 8am GMT"
 
         tableRow.select("td:nth-child(3)")
-          .get(0).text() mustBe "Wednesday 1 June 2022 8PM"
+          .get(0).text() mustBe "Wednesday 1 June 2022 8pm BST"
       }
 
       "should have a table for departures with a row for XI" in {
@@ -145,10 +145,10 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
           .get(0).text() mustBe messages("planned-downtime.ncts.xi.departures")
 
         tableRow.select("td:nth-child(2)")
-          .get(0).text() mustBe "Saturday 1 January 2022 8AM"
+          .get(0).text() mustBe "Saturday 1 January 2022 8am GMT"
 
         tableRow.select("td:nth-child(3)")
-          .get(0).text() mustBe "Wednesday 1 June 2022 8PM"
+          .get(0).text() mustBe "Wednesday 1 June 2022 8pm BST"
       }
 
       "should have some content about submissions when the service is down and an apology for departures" in {

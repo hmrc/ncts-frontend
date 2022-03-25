@@ -19,7 +19,7 @@ package utils
 import play.api.i18n.Messages
 
 import java.time.format.{DateTimeFormatter => DateTimeGen}
-import java.time.{LocalDate, LocalDateTime, LocalTime}
+import java.time.{LocalDate, LocalDateTime, ZoneId}
 import java.util.Locale
 
 object DateTimeFormatter {
@@ -28,30 +28,43 @@ object DateTimeFormatter {
     formatter.format(localDate)
   }
 
-  def formatTime(localTime: LocalTime): String = {
-    val formatter = if (localTime.getMinute > 0) {
+  def formatTime(dateTime: LocalDateTime)(implicit messages: Messages): String = {
+
+    val timeFormat = if (dateTime.toLocalTime.getMinute > 0) {
       DateTimeGen.ofPattern("h:mma")
     } else {
       DateTimeGen.ofPattern("ha")
     }
 
-    formatter.format(localTime)
+    s"${dateTime.format(timeFormat).toLowerCase(Locale.ENGLISH)} ${getTimeZone(dateTime)}"
   }
 
-  def formatDateTime(dateTime: LocalDateTime)(implicit messages: Messages): String =
-    s"${dateTime.format(DateTimeGen.ofPattern("h:mma")).toLowerCase(Locale.ENGLISH)} ${messages("service.availability.issues.GMT")}"
+  def getTimeZone(localDateTime: LocalDateTime)(implicit messages: Messages): String = {
+    val dateTimeWithZone = localDateTime.atZone(ZoneId.of("Europe/London"))
 
-  def formatDateTimeDowntimeHistory(dateTime: LocalDateTime): String =
+    val isGMT = dateTimeWithZone.getOffset.getTotalSeconds == 0
+
+    if(isGMT){
+      messages("service.availability.issues.GMT")
+    } else {
+      messages("service.availability.issues.BST")
+    }
+  }
+
+  def formatDateDowntimeHistory(dateTime: LocalDateTime): String =
     s"${dateTime.format(DateTimeGen.ofPattern("d MMMM yyyy"))}"
 
-  def formatDateTimeKnownIssues(dateTime: LocalDateTime)(implicit messages: Messages): String = {
+  def formatDateTime(dateTime: LocalDateTime)(implicit messages: Messages): String = {
     val knownIssueSince = dateTime.toLocalDate
     val now = LocalDate.now
-    if (now.isAfter(knownIssueSince))
-      s"${dateTime.format(DateTimeGen.ofPattern("h:mma")).toLowerCase(Locale.ENGLISH)} ${messages("service.availability.issues.GMT")}, " +
+
+    val time = formatTime(dateTime)
+
+    if (now.isAfter(knownIssueSince)) {
+      s"$time, " +
         s"${dateTime.format(DateTimeGen.ofPattern("d MMMM yyyy"))}"
-    else {
-      s"${dateTime.format(DateTimeGen.ofPattern("h:mma")).toLowerCase(Locale.ENGLISH)} ${messages("service.availability.issues.GMT")}"
+    } else {
+      s"$time"
     }
   }
 }

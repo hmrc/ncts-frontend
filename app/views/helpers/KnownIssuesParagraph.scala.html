@@ -37,9 +37,9 @@
             } else {
                 @messages("service.availability.issues.both.channels")
             }
-            @messages("service.availability.issues.known") <b>@formatDateTimeKnownIssues(channelOneStatusChangedAt)</b>
+            @messages("service.availability.issues.known") <b>@formatDateTime(channelOneStatusChangedAt)</b>
             @messages("service.availability.issues.p2")
-            <b>@formatDateTimeKnownIssues(channelTwoStatusChangedAt)</b>
+            <b>@formatDateTime(channelTwoStatusChangedAt)</b>
             @messages("service.availability.issues.respectively")
             @messages("service.availability.issues.p3")
         </p>
@@ -66,9 +66,9 @@
             @messages("service.availability.issues.known")
             <b>
                 @if(!channelTwoHealthy){
-                    @formatDateTimeKnownIssues(channelTwoStatusChangedAt).
+                    @formatDateTime(channelTwoStatusChangedAt).
                 }else{
-                    @formatDateTimeKnownIssues(channelOneStatusChangedAt).
+                    @formatDateTime(channelOneStatusChangedAt).
                 }
             </b>
             @messages("service.availability.issues.p3")

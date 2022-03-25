@@ -17,6 +17,7 @@
 @import models.Channel._
 @import models.PlannedDowntimes
 @import utils.DateTimeFormatter._
+@import java.time.LocalDateTime
 
 @(plannedDowntimes: PlannedDowntimes)(implicit request: Request[_], messages: Messages)
 
@@ -42,11 +43,17 @@
                 }
                 <td class="govuk-table__cell">
                     @formatDate(downtime.startDate)<br />
-                    @formatTime(downtime.startTime)
+                    @formatTime(LocalDateTime.of(
+                        downtime.startDate,
+                        downtime.startTime)
+                    )
                 </td>
                 <td class="govuk-table__cell">
                     @formatDate(downtime.endDate)<br />
-                    @formatTime(downtime.endTime)
+                    @formatTime(LocalDateTime.of(
+                        downtime.endDate,
+                        downtime.endTime)
+                    )
                 </td>
             </tr>
         }
