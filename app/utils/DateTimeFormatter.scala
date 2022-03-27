@@ -30,13 +30,15 @@ object DateTimeFormatter {
 
   def formatTime(dateTime: LocalDateTime)(implicit messages: Messages): String = {
 
+    val dateTimeWithZone = dateTime.atZone(ZoneId.of("Europe/London"))
+
     val timeFormat = if (dateTime.toLocalTime.getMinute > 0) {
       DateTimeGen.ofPattern("h:mma")
     } else {
       DateTimeGen.ofPattern("ha")
     }
 
-    s"${dateTime.format(timeFormat).toLowerCase(Locale.ENGLISH)} ${getTimeZone(dateTime)}"
+    s"${dateTimeWithZone.format(timeFormat).toLowerCase(Locale.ENGLISH)} ${getTimeZone(dateTime)}"
   }
 
   def getTimeZone(localDateTime: LocalDateTime)(implicit messages: Messages): String = {
