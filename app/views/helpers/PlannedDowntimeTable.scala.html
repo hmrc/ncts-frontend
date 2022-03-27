@@ -43,14 +43,14 @@
                 }
                 <td class="govuk-table__cell">
                     @formatDate(downtime.startDate)<br />
-                    @formatTime(LocalDateTime.of(
+                    @formatTimePlannedDowntime(LocalDateTime.of(
                         downtime.startDate,
                         downtime.startTime)
                     )
                 </td>
                 <td class="govuk-table__cell">
                     @formatDate(downtime.endDate)<br />
-                    @formatTime(LocalDateTime.of(
+                    @formatTimePlannedDowntime(LocalDateTime.of(
                         downtime.endDate,
                         downtime.endTime)
                     )

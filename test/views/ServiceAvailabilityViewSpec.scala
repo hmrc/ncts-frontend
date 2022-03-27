@@ -22,7 +22,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.Injecting
 import utils.DateTimeFormatter
-import utils.DateTimeFormatter.{formatDateTime, formatTime}
+import utils.DateTimeFormatter.formatTime
 import utils.HealthDetailsExamples._
 import views.html.ServiceAvailability
 

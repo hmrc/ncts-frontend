@@ -28,9 +28,28 @@ object DateTimeFormatter {
     formatter.format(localDate)
   }
 
-  def formatTime(dateTime: LocalDateTime)(implicit messages: Messages): String = {
-
+  def setTimeOffset(dateTime: LocalDateTime): LocalDateTime = {
     val dateTimeWithZone = dateTime.atZone(ZoneId.of("Europe/London"))
+    val isGMT = dateTimeWithZone.getOffset.getTotalSeconds == 0
+
+    if(isGMT){
+      dateTime
+    } else {
+      dateTime.plusHours(1)
+    }
+  }
+
+  def formatTimePlannedDowntime(dateTime: LocalDateTime)(implicit messages: Messages): String = {
+    val timeFormat = if (dateTime.toLocalTime.getMinute > 0) {
+      DateTimeGen.ofPattern("h:mma")
+    } else {
+      DateTimeGen.ofPattern("ha")
+    }
+
+    s"${dateTime.format(timeFormat).toLowerCase(Locale.ENGLISH)} ${getTimeZone(dateTime)}"
+  }
+
+  def formatTime(dateTime: LocalDateTime)(implicit messages: Messages): String = {
 
     val timeFormat = if (dateTime.toLocalTime.getMinute > 0) {
       DateTimeGen.ofPattern("h:mma")
@@ -38,7 +57,9 @@ object DateTimeFormatter {
       DateTimeGen.ofPattern("ha")
     }
 
-    s"${dateTimeWithZone.format(timeFormat).toLowerCase(Locale.ENGLISH)} ${getTimeZone(dateTime)}"
+    val offsetTime = setTimeOffset(dateTime)
+
+    s"${offsetTime.format(timeFormat).toLowerCase(Locale.ENGLISH)} ${getTimeZone(dateTime)}"
   }
 
   def getTimeZone(localDateTime: LocalDateTime)(implicit messages: Messages): String = {

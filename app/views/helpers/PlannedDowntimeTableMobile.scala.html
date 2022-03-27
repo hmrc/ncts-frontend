@@ -41,7 +41,7 @@
         <th scope="col" class="govuk-table__header">@messages("planned-downtime.start")</th>
         <td class="govuk-table__cell govuk-!-text-align-right">
             @formatDate(downtime.startDate)<br />
-            @formatTime(LocalDateTime.of(
+            @formatTimePlannedDowntime(LocalDateTime.of(
                 downtime.startDate,
                 downtime.startTime)
             )
@@ -51,7 +51,7 @@
         <th scope="col" class="govuk-table__header">@messages("planned-downtime.end")</th>
         <td class="govuk-table__cell govuk-!-text-align-right">
             @formatDate(downtime.endDate)<br />
-            @formatTime(LocalDateTime.of(
+            @formatTimePlannedDowntime(LocalDateTime.of(
                 downtime.endDate,
                 downtime.endTime)
             )

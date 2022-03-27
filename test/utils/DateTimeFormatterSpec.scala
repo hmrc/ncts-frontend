@@ -36,7 +36,7 @@ class DateTimeFormatterSpec extends SpecBase {
 
       val knownIssueSince = DateTimeFormatter.formatDateTime(now)
 
-      knownIssueSince mustBe s"10:10am ${DateTimeFormatter.getTimeZone(now)}"
+      knownIssueSince mustBe s"${DateTimeFormatter.formatTime(now)}"
     }
   }
 
