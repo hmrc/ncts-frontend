@@ -19,17 +19,25 @@ package services
 import com.google.inject.Inject
 import com.typesafe.config.{ConfigList, ConfigRenderOptions}
 import config.FrontendAppConfig
+import models.Channel.Channel
 import models.responses.ErrorResponse.DowntimeConfigParseError
-import models.{PlannedDowntime, PlannedDowntimes}
+import models.{PlannedDowmtimeViewModel, PlannedDowntime, PlannedDowntimes}
 import play.api.Logging
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
+import java.time.LocalDateTime
 import javax.inject.Singleton
+import scala.annotation.tailrec
 
 @Singleton
 class PlannedDowntimeService @Inject()(appConfig: FrontendAppConfig) extends Logging {
 
   def getPlannedDowntime: Either[DowntimeConfigParseError, Option[PlannedDowntimes]] = {
+    println("real deal :::::::")
+    println("real deal :::::::")
+    println("real deal :::::::" + appConfig.plannedDowntimesConfig)
+    println("real deal :::::::")
+    println("real deal :::::::")
     appConfig.plannedDowntimesConfig.fold[Either[DowntimeConfigParseError, Option[PlannedDowntimes]]](Right(None)) {
       downtimeConfig: ConfigList =>
         try {
@@ -49,6 +57,35 @@ class PlannedDowntimeService @Inject()(appConfig: FrontendAppConfig) extends Log
               s" Failed to parse planned downtime with message ${ex.getMessage}")
             Left(DowntimeConfigParseError(s"Exception thrown when trying to parse downtime config: ${ex.getMessage}"))
         }
+    }
+  }
+
+  def getPlannedDowntimeViewModel: PlannedDowmtimeViewModel = {
+    getPlannedDowntime match {
+      case Right(downtimes) =>
+        println("downtimes :::: ")
+        println("downtimes :::: " + downtimes)
+        println("downtimes :::: ")
+        val plannedDowntimes: Seq[PlannedDowntime] = downtimes.get.plannedDowntimes
+        val defaultPlannedDowntime = PlannedDowmtimeViewModel.default
+
+        @tailrec
+        def loop(plannedDowntimes: Seq[PlannedDowntime], index: Int, result: PlannedDowmtimeViewModel): PlannedDowmtimeViewModel = {
+          if (index >= plannedDowntimes.size) result
+          else {
+            val newResult = plannedDowntimes(index).affectedChannel match {
+              case gbArrival: Channel => result.copy(gbArrivals = Some(plannedDowntimes(index)))
+              case xiArrival: Channel => result.copy(gbArrivals = Some(plannedDowntimes(index)))
+              case gbDeparture: Channel => result.copy(gbArrivals = Some(plannedDowntimes(index)))
+              case xiDeparture: Channel => result.copy(gbArrivals = Some(plannedDowntimes(index)))
+            }
+            loop(plannedDowntimes, index + 1, newResult)
+          }
+        }
+
+        loop(plannedDowntimes, 0, defaultPlannedDowntime)
+      case Left(_) =>
+        PlannedDowmtimeViewModel.default
     }
   }
 }
