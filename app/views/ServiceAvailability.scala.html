@@ -51,35 +51,49 @@
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header">@messages("service.availability.system.core.name")</th>
                         <th scope="col" class="govuk-table__header">@messages("service.availability.system.availability")</th>
+                        <th scope="col" class="govuk-table__header">@messages("service.availability.system.known.issues.since")</th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">@messages("service.availability.ncts.gb.arrivals")</td>
                         @if(status.gbArrivalsStatus.healthy){
-                        <td class="govuk-table__cell">
-                            <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
-                        </td>
+                            <td class="govuk-table__cell">
+                                <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
+                            </td>
+                            <td class="govuk-table__cell">
+                                @messages("service.availability.status.no.issues")
+                            </td>
                         } else {
-                        <td class="govuk-table__cell">
-                              <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
-                        </td>
+                            <td class="govuk-table__cell">
+                                  <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
+                            </td>
+                            <td class="govuk-table__cell">
+                                @formatDateTime(status.gbArrivalsStatus.statusChangedAt)
+                            </td>
                         }
                     </tr>
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">@messages("service.availability.ncts.xi.arrivals")</td>
                         @if(status.xiArrivalsStatus.healthy){
-                        <td class="govuk-table__cell">
-                            <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
-                        </td>
+                            <td class="govuk-table__cell">
+                                <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
+                            </td>
+                            <td class="govuk-table__cell">
+                                @messages("service.availability.status.no.issues")
+                            </td>
                         } else {
-                        <td class="govuk-table__cell">
-                            <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
-                        </td>
+                            <td class="govuk-table__cell">
+                                <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
+                            </td>
+                            <td class="govuk-table__cell">
+                                @formatDateTime(status.xiArrivalsStatus.statusChangedAt)
+                            </td>
                         }
                     </tr>
                 </tbody>
             </table>
+
             @KnownIssuesParagraph(
                 status.gbArrivalsStatus.healthy,
                 status.xiArrivalsStatus.healthy,
@@ -89,6 +103,7 @@
                 messages("service.availability.ncts.xi.arrivals"),
                 appConfig
             )
+
             <table class="govuk-table">
                 <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.status.departures")
                     <div class="govuk-inset-text bottom_padding">
@@ -104,35 +119,49 @@
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header">@messages("service.availability.system.core.name")</th>
                         <th scope="col" class="govuk-table__header">@messages("service.availability.system.availability")</th>
+                        <th scope="col" class="govuk-table__header">@messages("service.availability.system.known.issues.since")</th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">@messages("service.availability.ncts.gb.departures")</td>
                     @if(status.gbDeparturesStatus.healthy){
-                    <td class="govuk-table__cell">
-                        <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
-                    </td>
+                        <td class="govuk-table__cell">
+                            <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            @messages("service.availability.status.no.issues")
+                        </td>
                     } else {
-                    <td class="govuk-table__cell">
-                        <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
-                    </td>
+                        <td class="govuk-table__cell">
+                            <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            @formatDateTime(status.gbDeparturesStatus.statusChangedAt)
+                        </td>
                     }
                 </tr>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">@messages("service.availability.ncts.xi.departures")</td>
                     @if(status.xiDeparturesStatus.healthy){
-                    <td class="govuk-table__cell">
-                        <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
-                    </td>
+                        <td class="govuk-table__cell">
+                            <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            @messages("service.availability.status.no.issues")
+                        </td>
                     } else {
-                    <td class="govuk-table__cell">
-                        <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
-                    </td>
+                        <td class="govuk-table__cell">
+                            <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            @formatDateTime(status.xiDeparturesStatus.statusChangedAt)
+                        </td>
                     }
                 </tr>
                 </tbody>
             </table>
+
             @KnownIssuesParagraph(
                 status.gbDeparturesStatus.healthy,
                 status.xiDeparturesStatus.healthy,
@@ -144,9 +173,9 @@
             )
             @SubmissionChannelsAvailability(
                 status.createdTs,
-                status.xmlChannelStatus.healthy,
-                status.webChannelStatus.healthy,
-                status.ppnStatus.healthy
+                status.xmlChannelStatus,
+                status.webChannelStatus,
+                status.ppnStatus
             )
             @HelpWithChannels(status.ppnNotHealthy, appConfig.govUKNCTSGuidanceLink)
             @if(status.ppnNotHealthy){
