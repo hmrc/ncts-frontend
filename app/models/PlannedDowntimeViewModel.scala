@@ -16,22 +16,21 @@
 
 package models
 
-import models.Channel.Channel
 import models.responses.ErrorResponse.DowntimeConfigParseError
 
 import scala.annotation.tailrec
 
-case class PlannedDowmtimeViewModel(
+case class PlannedDowntimeViewModel(
                                      gbArrivals: Option[PlannedDowntime],
                                      xiArrivals: Option[PlannedDowntime],
                                      gbDepartures: Option[PlannedDowntime],
                                      xiDepartures: Option[PlannedDowntime]
                                    )
 
-object PlannedDowmtimeViewModel {
+object PlannedDowntimeViewModel {
 
-  def default: PlannedDowmtimeViewModel = {
-    PlannedDowmtimeViewModel(
+  def default: PlannedDowntimeViewModel = {
+    PlannedDowntimeViewModel(
       gbArrivals = None,
       xiArrivals = None,
       gbDepartures = None,
@@ -39,21 +38,22 @@ object PlannedDowmtimeViewModel {
     )
   }
 
-  def fromPlannedDowntimes(downtimes: Either[DowntimeConfigParseError, Option[PlannedDowntimes]]): PlannedDowmtimeViewModel = {
+  def fromPlannedDowntimes(downtimes: Either[DowntimeConfigParseError, Option[PlannedDowntimes]]): PlannedDowntimeViewModel = {
     downtimes match {
       case Right(downtimes) =>
         val plannedDowntimes: Seq[PlannedDowntime] = downtimes.get.plannedDowntimes
-        val defaultPlannedDowntime = PlannedDowmtimeViewModel.default
+        val defaultPlannedDowntime = PlannedDowntimeViewModel.default
 
         @tailrec
-        def loop(plannedDowntimes: Seq[PlannedDowntime], index: Int, result: PlannedDowmtimeViewModel): PlannedDowmtimeViewModel = {
+        def loop(plannedDowntimes: Seq[PlannedDowntime], index: Int, result: PlannedDowntimeViewModel): PlannedDowntimeViewModel = {
+
           if (index >= plannedDowntimes.size) result
           else {
-            val newResult = plannedDowntimes(index).affectedChannel match {
-              case gbArrival: Channel => result.copy(gbArrivals = Some(plannedDowntimes(index)))
-              case xiArrival: Channel => result.copy(xiArrivals = Some(plannedDowntimes(index)))
-              case gbDeparture: Channel => result.copy(gbDepartures = Some(plannedDowntimes(index)))
-              case xiDeparture: Channel => result.copy(xiDepartures = Some(plannedDowntimes(index)))
+            val newResult = plannedDowntimes(index).affectedChannel.toString match {
+              case "gbArrivals" => result.copy(gbArrivals = Some(plannedDowntimes(index)))
+              case "xiArrivals" => result.copy(xiArrivals = Some(plannedDowntimes(index)))
+              case "gbDepartures" => result.copy(gbDepartures = Some(plannedDowntimes(index)))
+              case "xiDepartures" => result.copy(xiDepartures = Some(plannedDowntimes(index)))
             }
             loop(plannedDowntimes, index + 1, newResult)
           }
@@ -61,7 +61,7 @@ object PlannedDowmtimeViewModel {
 
         loop(plannedDowntimes, 0, defaultPlannedDowntime)
       case Left(_) =>
-        PlannedDowmtimeViewModel.default
+        PlannedDowntimeViewModel.default
     }
   }
 }

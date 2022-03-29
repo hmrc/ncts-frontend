@@ -21,7 +21,7 @@ import com.typesafe.config.{ConfigList, ConfigRenderOptions}
 import config.FrontendAppConfig
 import models.Channel.Channel
 import models.responses.ErrorResponse.DowntimeConfigParseError
-import models.{PlannedDowmtimeViewModel, PlannedDowntime, PlannedDowntimes}
+import models.{PlannedDowntimeViewModel, PlannedDowntime, PlannedDowntimes}
 import play.api.Logging
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
@@ -55,17 +55,17 @@ class PlannedDowntimeService @Inject()(appConfig: FrontendAppConfig) extends Log
     }
   }
 
-  def getPlannedDowntimeViewModel: PlannedDowmtimeViewModel = {
+  def getPlannedDowntimeViewModel: PlannedDowntimeViewModel = {
     getPlannedDowntime match {
       case Right(downtimes) =>
         println("downtimes :::: ")
         println("downtimes :::: " + downtimes)
         println("downtimes :::: ")
         val plannedDowntimes: Seq[PlannedDowntime] = downtimes.get.plannedDowntimes
-        val defaultPlannedDowntime = PlannedDowmtimeViewModel.default
+        val defaultPlannedDowntime = PlannedDowntimeViewModel.default
 
         @tailrec
-        def loop(plannedDowntimes: Seq[PlannedDowntime], index: Int, result: PlannedDowmtimeViewModel): PlannedDowmtimeViewModel = {
+        def loop(plannedDowntimes: Seq[PlannedDowntime], index: Int, result: PlannedDowntimeViewModel): PlannedDowntimeViewModel = {
           if (index >= plannedDowntimes.size) result
           else {
             val newResult = plannedDowntimes(index).affectedChannel match {
@@ -80,7 +80,7 @@ class PlannedDowntimeService @Inject()(appConfig: FrontendAppConfig) extends Log
 
         loop(plannedDowntimes, 0, defaultPlannedDowntime)
       case Left(_) =>
-        PlannedDowmtimeViewModel.default
+        PlannedDowntimeViewModel.default
     }
   }
 }

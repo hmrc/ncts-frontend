@@ -17,7 +17,7 @@
 package controllers
 
 import handlers.ErrorHandler
-import models.PlannedDowmtimeViewModel
+import models.PlannedDowntimeViewModel
 import models.responses.StatusResponse
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -41,7 +41,7 @@ class ServiceAvailabilityController @Inject()(
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     healthCheckService.checkStatus().flatMap {
       case Right(statusResponse: StatusResponse) =>
-        val viewModel = PlannedDowmtimeViewModel.fromPlannedDowntimes(plannedDowntimeService.getPlannedDowntime)
+        val viewModel = PlannedDowntimeViewModel.fromPlannedDowntimes(plannedDowntimeService.getPlannedDowntime)
         Future.successful(Ok(view(statusResponse)))
       case _ => Future.successful(errorHandler.showInternalServerError)
     }
