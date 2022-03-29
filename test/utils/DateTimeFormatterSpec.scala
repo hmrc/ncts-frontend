@@ -22,11 +22,11 @@ import java.time.LocalDateTime
 
 class DateTimeFormatterSpec extends SpecBase {
 
-  "formatDateTimeKnownIssue" - {
+  "formatDateTime" - {
     "should return the time with date if it is prior to today" in {
       val localDateTime = LocalDateTime.of(2022, 1, 1, 10, 50, 50)
 
-      val knownIssueSince = DateTimeFormatter.formatDateTimeKnownIssues(localDateTime)
+      val knownIssueSince = DateTimeFormatter.formatDateTime(localDateTime)
 
       knownIssueSince mustBe "10:50am GMT, 1 January 2022"
     }
@@ -34,9 +34,23 @@ class DateTimeFormatterSpec extends SpecBase {
     "should return just the time if it is today" in {
       val now = LocalDateTime.now().withHour(10).withMinute(10)
 
-      val knownIssueSince = DateTimeFormatter.formatDateTimeKnownIssues(now)
+      val knownIssueSince = DateTimeFormatter.formatDateTime(now)
 
-      knownIssueSince mustBe "10:10am GMT"
+      knownIssueSince mustBe s"${DateTimeFormatter.formatTime(now)}"
+    }
+  }
+
+  "getTimeZone" - {
+    "should retrieve the correct time zone when the provided date is in GMT" in {
+      DateTimeFormatter.getTimeZone(
+        LocalDateTime.of(2022, 3, 1, 0, 0)
+      ) mustBe "GMT"
+    }
+
+    "should retrieve the correct time zone when the provided date is in BST" in {
+      DateTimeFormatter.getTimeZone(
+        LocalDateTime.of(2022, 4, 1, 0, 0)
+      ) mustBe "BST"
     }
   }
 }

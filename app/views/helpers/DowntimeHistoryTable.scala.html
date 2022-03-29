@@ -47,12 +47,12 @@
         }
         <td class="govuk-table__cell">@messages("service.downtime.history.unplanned.event")</td>
         <td class="govuk-table__cell">
-            <b>@messages("service.downtime.history.date")</b> @formatDateTimeDowntimeHistory(downtime.start)<br />
-            <b>@messages("service.downtime.history.time")</b> @formatDateTime(downtime.start)
+            <b>@messages("service.downtime.history.date")</b> @formatDateDowntimeHistory(downtime.start)<br />
+            <b>@messages("service.downtime.history.time")</b> @formatTime(downtime.start)
         </td>
         <td class="govuk-table__cell">
-            <b>@messages("service.downtime.history.date")</b> @formatDateTimeDowntimeHistory(downtime.end)<br />
-            <b>@messages("service.downtime.history.time")</b> @formatDateTime(downtime.end)
+            <b>@messages("service.downtime.history.date")</b> @formatDateDowntimeHistory(downtime.end)<br />
+            <b>@messages("service.downtime.history.time")</b> @formatTime(downtime.end)
         </td>
     </tr>
     }

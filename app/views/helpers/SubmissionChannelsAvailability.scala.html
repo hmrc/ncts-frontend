@@ -16,8 +16,9 @@
 
 @import java.time.LocalDateTime
 @import utils.DateTimeFormatter._
+@import models.responses.HealthDetails
 
-@(lastUpdated: LocalDateTime, xmlHealthy: Boolean, webHealthy: Boolean, ppnHealthy: Boolean)(implicit request: Request[_], messages: Messages)
+@(lastUpdated: LocalDateTime, xmlChannelHealth: HealthDetails, webChannelHealth: HealthDetails, ppnHealth: HealthDetails)(implicit request: Request[_], messages: Messages)
 
 <table class="govuk-table">
     <caption class="govuk-table__caption govuk-table__caption--m">@messages("service.availability.submission.channels.status.heading")
@@ -38,39 +39,56 @@
             <th scope="col" class="govuk-table__header">
                 @messages("service.availability.system.availability")
             </th>
+            <th scope="col" class="govuk-table__header">@messages("service.availability.system.known.issues.since")</th>
         </tr>
     </thead>
     <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
             <td class="govuk-table__cell">@messages("service.availability.submission.channels.status.web")</td>
-            @if(webHealthy){
-            <td class="govuk-table__cell">
-                <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
-            </td>
-            } else {
-            <td class="govuk-table__cell">
-                <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
-            </td>
-            }
-        </tr>
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell">@messages("service.availability.submission.channels.status.xml")</td>
-            @if(xmlHealthy){
+            @if(webChannelHealth.healthy){
                 <td class="govuk-table__cell">
                     <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
+                </td>
+                <td class="govuk-table__cell">
+                    @messages("service.availability.status.no.issues")
                 </td>
             } else {
                 <td class="govuk-table__cell">
                     <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
                 </td>
+                <td class="govuk-table__cell">
+                    @formatDateTime(webChannelHealth.statusChangedAt)
+                </td>
+            }
+
+        </tr>
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell">@messages("service.availability.submission.channels.status.xml")</td>
+            @if(xmlChannelHealth.healthy){
+                <td class="govuk-table__cell">
+                    <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
+                </td>
+                <td class="govuk-table__cell">
+                    @messages("service.availability.status.no.issues")
+                </td>
+            } else {
+                <td class="govuk-table__cell">
+                    <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
+                </td>
+                <td class="govuk-table__cell">
+                    @formatDateTime(xmlChannelHealth.statusChangedAt)
+                </td>
             }
         </tr>
-        @if(!ppnHealthy){
+        @if(!ppnHealth.healthy){
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">@messages("service.availability.submission.channels.status.ppn")</td>
-                    <td class="govuk-table__cell">
-                        <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
-                    </td>
+                <td class="govuk-table__cell">
+                    <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
+                </td>
+                <td class="govuk-table__cell">
+                    @formatDateTime(ppnHealth.statusChangedAt)
+                </td>
             </tr>
         }
     </tbody>

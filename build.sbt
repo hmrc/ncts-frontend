@@ -2,7 +2,6 @@ import play.sbt.routes.RoutesKeys
 import sbt.Def
 import scoverage.ScoverageKeys
 import uk.gov.hmrc.DefaultBuildSettings
-import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 lazy val appName: String = "ncts-frontend"
@@ -49,8 +48,6 @@ lazy val root = (project in file("."))
     scalacOptions ++= Seq("-feature"),
     libraryDependencies ++= AppDependencies(),
     retrieveManaged := true,
-    evictionWarningOptions in update :=
-      EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     resolvers ++= Seq(Resolver.jcenterRepo),
     // concatenate js
     Concat.groups := Seq(
