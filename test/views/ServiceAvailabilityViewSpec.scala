@@ -28,13 +28,17 @@ import utils.DateTimeFormatter.formatTime
 import utils.HealthDetailsExamples._
 import views.html.ServiceAvailability
 
-import java.time.{LocalDate, LocalDateTime, LocalTime}
+import java.time.{LocalDateTime, ZoneId, ZonedDateTime}
 
 class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
   val view: ServiceAvailability = inject[ServiceAvailability]
   val transitManualLink = "https://www.gov.uk/government/publications/transit-manual-supplement"
   val nctsGuidanceLink = "https://www.gov.uk/guidance/submit-union-transit-declarations-through-ncts"
+
+  val now = ZonedDateTime.now(ZoneId.of("Europe/London")).toLocalDateTime
+  val date = now.toLocalDate
+  val time = now.toLocalTime
 
   "ServiceAvailability" - {
 
@@ -526,8 +530,6 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
     "when there is PlannedDowntime" -{
       "should show planned downtime for the availability status" in {
-        val date = LocalDate.now()
-        val time = LocalTime.now()
 
         val statusResponse =   StatusResponse(
           gbDeparturesStatus = healthDetailsHealthy,
@@ -568,8 +570,6 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       }
     }
   }
-
-  val now: LocalDateTime = LocalDateTime.now
 
   val document: Document = {
     
