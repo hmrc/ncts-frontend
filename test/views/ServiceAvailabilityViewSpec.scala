@@ -17,6 +17,7 @@
 package views
 
 import base.SpecBase
+import models.PlannedDowntimeViewModel
 import models.responses.StatusResponse
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -221,7 +222,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         ppnStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
-      val allUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
+      val allUnhealthyView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
 
       "should show that services have known issues and known issues since time for arrivals" in {
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
@@ -350,7 +351,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
 
-      val someUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
+      val someUnhealthyView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
 
       "should show that GB arrivals has known issues" in {
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
@@ -425,7 +426,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         ppnStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
-      val someUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
+      val someUnhealthyView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
 
       "should show that XI arrivals has known issues" in {
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
@@ -496,7 +497,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
 
-      val ppnUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
+      val ppnUnhealthyView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
 
       "should show PPNS channel has known issues" in {
         ppnUnhealthyView.getElementsByClass("govuk-table__cell").get(13)
@@ -552,6 +553,6 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         webChannelStatus = healthDetails,
         ppnStatus = healthDetails,
         createdTs = now
-      )).body)
+      ), PlannedDowntimeViewModel.default).body)
   }
 }
