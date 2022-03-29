@@ -62,6 +62,17 @@ object DateTimeFormatter {
     s"${offsetTime.format(timeFormat).toLowerCase(Locale.ENGLISH)} ${getTimeZone(dateTime)}"
   }
 
+  def formatTimeDowntimeHistory(dateTime: LocalDateTime)(implicit messages: Messages): String = {
+
+    val timeFormat = if (dateTime.toLocalTime.getMinute > 0) {
+      DateTimeGen.ofPattern("h:mma")
+    } else {
+      DateTimeGen.ofPattern("ha")
+    }
+
+    s"${dateTime.format(timeFormat).toLowerCase(Locale.ENGLISH)} ${getTimeZone(dateTime)}"
+  }
+
   def getTimeZone(localDateTime: LocalDateTime)(implicit messages: Messages): String = {
     val dateTimeWithZone = localDateTime.atZone(ZoneId.of("Europe/London"))
 

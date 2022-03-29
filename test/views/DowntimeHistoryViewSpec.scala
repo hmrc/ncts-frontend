@@ -183,12 +183,12 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
     downtimeEndDate
   )
 
-  val downtimeHistory: Seq[Downtime] = Seq(
-    downtime,
-    downtime.copy(affectedChannel = GBArrivals),
-    downtime.copy(affectedChannel = XIDepartures),
-    downtime.copy(affectedChannel = XIArrivals),
-    downtime.copy(affectedChannel = Web),
-    downtime.copy(affectedChannel = XML)
+  val downtimeHistory: Seq[DowntimeHistoryRow] = Seq(
+    DowntimeHistoryRow(downtime, planned = false),
+    DowntimeHistoryRow(downtime.copy(affectedChannel = GBArrivals), planned = false),
+    DowntimeHistoryRow(downtime.copy(affectedChannel = XIDepartures), planned = false),
+    DowntimeHistoryRow(downtime.copy(affectedChannel = XIArrivals), planned = false),
+    DowntimeHistoryRow(downtime.copy(affectedChannel = Web), planned = false),
+    DowntimeHistoryRow(downtime.copy(affectedChannel = XML), planned = false)
   )
 }

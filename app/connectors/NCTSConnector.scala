@@ -34,6 +34,6 @@ class NCTSConnector @Inject()(
   def checkStatus()(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, StatusResponse]] =
     httpClient.GET[Either[ErrorResponse, StatusResponse]](s"${config.nctsUrl}/status-check")
 
-  def checkOutageHistory()(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, DowntimeResponse]] =
+  def getDowntimeHistory()(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, DowntimeResponse]] =
     httpClient.GET[Either[ErrorResponse, DowntimeResponse]](s"${config.nctsUrl}/downtime-history")
 }

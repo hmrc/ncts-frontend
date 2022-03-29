@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import models.responses.DowntimeResponse
+@import models.DowntimeHistoryRow
 @import models.responses.Downtime
 @import helpers.DowntimeHistoryTable
 
@@ -22,7 +22,7 @@
     layout: templates.Layout
 )
 
-@(downtimes: Seq[Downtime])(implicit request: Request[_], messages: Messages)
+@(downtimes: Seq[DowntimeHistoryRow])(implicit request: Request[_], messages: Messages)
 
 @layout(
     pageTitle = title(messages("service.downtime.history.title")),

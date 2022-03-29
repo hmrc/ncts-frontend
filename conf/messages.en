@@ -105,6 +105,7 @@ planned-downtime.ncts.arrivals=Arrivals planned downtime
 planned-downtime.ncts.departures=Departures planned downtime
 planned-downtime.system.core.name=System core name
 service.downtime.history.event.type=Type of event
+service.downtime.history.planned.event=Planned
 service.downtime.history.unplanned.event=Unplanned
 planned-downtime.start=Downtime start
 planned-downtime.end=Downtime end

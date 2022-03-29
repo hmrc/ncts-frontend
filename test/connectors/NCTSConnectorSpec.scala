@@ -103,7 +103,7 @@ class NCTSConnectorSpec extends SpecBase {
         when(mockHttp.GET[Either[ErrorResponse, DowntimeResponse]](any(), any(), any())(any(), any(), any()))
           .thenReturn(Future.successful(Right(response)))
 
-        val result = nctsConnector.checkOutageHistory().futureValue
+        val result = nctsConnector.getDowntimeHistory().futureValue
 
         result mustBe Right(response)
       }
@@ -120,7 +120,7 @@ class NCTSConnectorSpec extends SpecBase {
         when(mockHttp.GET[Either[ErrorResponse, DowntimeResponse]](any(), any(), any())(any(), any(), any()))
           .thenReturn(Future.successful(Right(response)))
 
-        val result = nctsConnector.checkOutageHistory().futureValue
+        val result = nctsConnector.getDowntimeHistory().futureValue
 
         result mustBe Right(response)
       }
@@ -129,7 +129,7 @@ class NCTSConnectorSpec extends SpecBase {
         when(mockHttp.GET[Either[ErrorResponse, DowntimeResponse]](any(), any(), any())(any(), any(), any()))
           .thenReturn(Future.successful(Left(DowntimeResponseError("something went wrong"))))
 
-        val result = nctsConnector.checkOutageHistory().futureValue
+        val result = nctsConnector.getDowntimeHistory().futureValue
 
         result mustBe Left(DowntimeResponseError("something went wrong"))
       }

@@ -17,9 +17,9 @@
 package controllers
 
 import base.SpecBase
-import models.GBDepartures
+import models.responses.Downtime
 import models.responses.ErrorResponse.DowntimeResponseError
-import models.responses.{Downtime, DowntimeResponse}
+import models.{DowntimeHistoryRow, GBDepartures}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.inject.bind
@@ -42,12 +42,9 @@ class DowntimeHistoryControllerSpec extends SpecBase {
 
     "must return OK for a GET with downtime history" in {
 
-      when(downtimeHistoryService.checkOutageHistory()(any())) thenReturn
+      when(downtimeHistoryService.getDowntimeHistory()(any())) thenReturn
         Future(Right(
-          DowntimeResponse(
-            Seq(
-              Downtime(GBDepartures, LocalDateTime.now(), LocalDateTime.now())
-            ), LocalDateTime.of(2022, 1, 1, 10, 25, 55))))
+          Seq(DowntimeHistoryRow(Downtime(GBDepartures, LocalDateTime.now(), LocalDateTime.now()), planned = false))))
 
       val application = applicationBuilder().overrides(mocks).build()
 
@@ -62,7 +59,7 @@ class DowntimeHistoryControllerSpec extends SpecBase {
     }
 
     "must return INTERNAL_SERVER_ERROR when backend returns an error response" in {
-      when(downtimeHistoryService.checkOutageHistory()(any())) thenReturn Future(Left(DowntimeResponseError("something went wrong")))
+      when(downtimeHistoryService.getDowntimeHistory()(any())) thenReturn Future(Left(DowntimeResponseError("something went wrong")))
 
       val application = applicationBuilder().overrides(mocks).build()
 
