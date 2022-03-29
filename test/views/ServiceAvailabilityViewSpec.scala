@@ -17,7 +17,9 @@
 package views
 
 import base.SpecBase
+import models.Channel.{gbArrivals, gbDepartures, xiArrivals, xiDepartures}
 import models.responses.StatusResponse
+import models.{PlannedDowntime, PlannedDowntimeViewModel}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.Injecting
@@ -26,7 +28,7 @@ import utils.DateTimeFormatter.formatTime
 import utils.HealthDetailsExamples._
 import views.html.ServiceAvailability
 
-import java.time.LocalDateTime
+import java.time.{LocalDate, LocalDateTime, LocalTime}
 
 class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
@@ -221,7 +223,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         ppnStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
-      val allUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
+      val allUnhealthyView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
 
       "should show that services have known issues and known issues since time for arrivals" in {
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
@@ -350,7 +352,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
 
-      val someUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
+      val someUnhealthyView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
 
       "should show that GB arrivals has known issues" in {
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
@@ -425,7 +427,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         ppnStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
-      val someUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
+      val someUnhealthyView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
 
       "should show that XI arrivals has known issues" in {
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(1)
@@ -496,7 +498,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
 
-      val ppnUnhealthyView: Document = Jsoup.parse(view(statusResponse).body)
+      val ppnUnhealthyView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
 
       "should show PPNS channel has known issues" in {
         ppnUnhealthyView.getElementsByClass("govuk-table__cell").get(13)
@@ -521,18 +523,51 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           .text() must include(thirdPartyMessage)
       }
     }
-  }
 
-  StatusResponse(
-    gbDeparturesStatus = healthDetailsHealthy,
-    xiDeparturesStatus = healthDetailsHealthy,
-    gbArrivalsStatus = healthDetailsHealthy,
-    xiArrivalsStatus = healthDetailsHealthy,
-    xmlChannelStatus = healthDetailsHealthy,
-    webChannelStatus = healthDetailsHealthy,
-    ppnStatus = healthDetailsUnhealthy,
-    createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
-  )
+    "when there is PlannedDowntime" -{
+      "should show planned downtime for the availability status" in {
+        val date = LocalDate.now()
+        val time = LocalTime.now()
+
+        val statusResponse =   StatusResponse(
+          gbDeparturesStatus = healthDetailsHealthy,
+          xiDeparturesStatus = healthDetailsHealthy,
+          gbArrivalsStatus = healthDetailsHealthy,
+          xiArrivalsStatus = healthDetailsHealthy,
+          xmlChannelStatus = healthDetailsHealthy,
+          webChannelStatus = healthDetailsHealthy,
+          ppnStatus = healthDetailsHealthy,
+          createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
+        )
+
+        val plannedDowntimeViewModel = PlannedDowntimeViewModel(
+          Some(PlannedDowntime(date, time.minusMinutes(1), date, time.plusMinutes(1), gbArrivals)),
+          Some(PlannedDowntime(date, time.minusMinutes(1), date, time.plusMinutes(1), xiArrivals)),
+          Some(PlannedDowntime(date, time.minusMinutes(1), date, time.plusMinutes(1), gbDepartures)),
+          Some(PlannedDowntime(date, time.minusMinutes(1), date, time.plusMinutes(1), xiDepartures))
+        )
+
+        val allHealthyWithPlannedDowntime: Document = Jsoup.parse(view(statusResponse, plannedDowntimeViewModel).body)
+
+        allHealthyWithPlannedDowntime.getElementsByClass("govuk-table__cell").get(1)
+          .text() mustBe messages("service.availability.status.planned.downtime")
+        allHealthyWithPlannedDowntime.getElementsByClass("govuk-table__cell").get(2)
+          .text() mustBe messages("service.availability.status.no.issues")
+        allHealthyWithPlannedDowntime.getElementsByClass("govuk-table__cell").get(4)
+          .text() mustBe messages("service.availability.status.planned.downtime")
+        allHealthyWithPlannedDowntime.getElementsByClass("govuk-table__cell").get(5)
+          .text() mustBe messages("service.availability.status.no.issues")
+        allHealthyWithPlannedDowntime.getElementsByClass("govuk-table__cell").get(7)
+          .text() mustBe messages("service.availability.status.planned.downtime")
+        allHealthyWithPlannedDowntime.getElementsByClass("govuk-table__cell").get(8)
+          .text() mustBe messages("service.availability.status.no.issues")
+        allHealthyWithPlannedDowntime.getElementsByClass("govuk-table__cell").get(10)
+          .text() mustBe messages("service.availability.status.planned.downtime")
+        allHealthyWithPlannedDowntime.getElementsByClass("govuk-table__cell").get(11)
+          .text() mustBe messages("service.availability.status.no.issues")
+      }
+    }
+  }
 
   val now: LocalDateTime = LocalDateTime.now
 
@@ -552,6 +587,6 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         webChannelStatus = healthDetails,
         ppnStatus = healthDetails,
         createdTs = now
-      )).body)
+      ), PlannedDowntimeViewModel.default).body)
   }
 }
