@@ -41,7 +41,7 @@ object PlannedDowntimeViewModel {
   def fromPlannedDowntimes(downtimes: Either[DowntimeConfigParseError, Option[PlannedDowntimes]]): PlannedDowntimeViewModel = {
     downtimes match {
       case Right(downtimes) =>
-        val plannedDowntimes: Seq[PlannedDowntime] = downtimes.get.plannedDowntimes
+        val plannedDowntimes: Seq[PlannedDowntime] = downtimes.getOrElse(PlannedDowntimes(Seq.empty)).plannedDowntimes
         val defaultPlannedDowntime = PlannedDowntimeViewModel.default
 
         @tailrec
