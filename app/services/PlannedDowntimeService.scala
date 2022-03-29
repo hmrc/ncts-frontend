@@ -33,11 +33,6 @@ import scala.annotation.tailrec
 class PlannedDowntimeService @Inject()(appConfig: FrontendAppConfig) extends Logging {
 
   def getPlannedDowntime: Either[DowntimeConfigParseError, Option[PlannedDowntimes]] = {
-    println("real deal :::::::")
-    println("real deal :::::::")
-    println("real deal :::::::" + appConfig.plannedDowntimesConfig)
-    println("real deal :::::::")
-    println("real deal :::::::")
     appConfig.plannedDowntimesConfig.fold[Either[DowntimeConfigParseError, Option[PlannedDowntimes]]](Right(None)) {
       downtimeConfig: ConfigList =>
         try {

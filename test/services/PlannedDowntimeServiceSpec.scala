@@ -17,17 +17,10 @@
 package services
 
 import base.SpecBase
-import com.typesafe.config.{ConfigFactory, ConfigList}
+import com.typesafe.config.ConfigList
 import config.FrontendAppConfig
-import models.Channel.{Channel, gbArrivals}
-import models.{PlannedDowmtimeViewModel, PlannedDowntime, PlannedDowntimes}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
-import play.api.Configuration
-import play.api.inject.guice.GuiceApplicationBuilder
-
-import java.io.File
-import java.time.{LocalDate, LocalDateTime, LocalTime}
 
 class PlannedDowntimeServiceSpec extends SpecBase {
 
@@ -68,50 +61,6 @@ class PlannedDowntimeServiceSpec extends SpecBase {
 
       service.getPlannedDowntime mustBe Right(None)
 
-    }
-  }
-
-  "getPlannedDowntimeViewModel" - {
-    "should return a PlannedDowntimeViewModel with correct fields populated" in {
-
-/*      when(mockConfigList.render(ArgumentMatchers.any())).thenReturn(
-        """
-          |[
-          |    { "startDate": "2021-03-15", "startTime": "08:15", "endDate": "2021-03-16", "endTime": "17:00", "affectedChannel": "gbArrivals" },
-          |    { "startDate": "2021-03-15", "startTime": "08:00", "endDate": "2021-03-16", "endTime": "17:00", "affectedChannel": "xiArrivals" },
-          |    { "startDate": "2021-03-15", "startTime": "08:00", "endDate": "2021-03-16", "endTime": "17:45", "affectedChannel": "gbDepartures" },
-          |    { "startDate": "2021-03-15", "startTime": "08:00", "endDate": "2021-03-16", "endTime": "17:00", "affectedChannel": "xiDepartures" }
-          |]
-          |""".stripMargin)*/
-
-
-      when(mockAppConfig.plannedDowntimesConfig).thenReturn(
-        Some("""
-               |[
-               |    { "startDate": "2021-03-15", "startTime": "08:15", "endDate": "2021-03-16", "endTime": "17:00", "affectedChannel": "gbArrivals" },
-               |    { "startDate": "2021-03-15", "startTime": "08:00", "endDate": "2021-03-16", "endTime": "17:00", "affectedChannel": "xiArrivals" },
-               |    { "startDate": "2021-03-15", "startTime": "08:00", "endDate": "2021-03-16", "endTime": "17:45", "affectedChannel": "gbDepartures" },
-               |    { "startDate": "2021-03-15", "startTime": "08:00", "endDate": "2021-03-16", "endTime": "17:00", "affectedChannel": "xiDepartures" }
-               |]
-               |""".stripMargin)
-      )
-      )
-
-
-
-      //Either[DowntimeConfigParseError, Option[PlannedDowntimes]]
-      when(service.getPlannedDowntime) thenReturn Right(Some(
-        PlannedDowntimes(
-          Seq(PlannedDowntime(
-            LocalDate.now,
-            LocalTime.now,
-            LocalDate.now,
-            LocalTime.now,
-            gbArrivals
-          )))))
-
-
-          service.getPlannedDowntimeViewModel mustBe PlannedDowmtimeViewModel.default
     }
   }
 }

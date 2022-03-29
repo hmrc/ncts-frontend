@@ -17,10 +17,11 @@
 package controllers
 
 import handlers.ErrorHandler
+import models.PlannedDowmtimeViewModel
 import models.responses.StatusResponse
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.HealthCheckService
+import services.{HealthCheckService, PlannedDowntimeService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ServiceAvailability
 
@@ -31,6 +32,7 @@ import scala.concurrent.Future
 class ServiceAvailabilityController @Inject()(
                                                val controllerComponents: MessagesControllerComponents,
                                                healthCheckService: HealthCheckService,
+                                               plannedDowntimeService: PlannedDowntimeService,
                                                errorHandler: ErrorHandler,
                                                view: ServiceAvailability
                                             ) extends FrontendBaseController with I18nSupport {
@@ -38,7 +40,9 @@ class ServiceAvailabilityController @Inject()(
 
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     healthCheckService.checkStatus().flatMap {
-      case Right(statusResponse: StatusResponse) => Future.successful(Ok(view(statusResponse)))
+      case Right(statusResponse: StatusResponse) =>
+        val viewModel = PlannedDowmtimeViewModel.fromPlannedDowntimes(plannedDowntimeService.getPlannedDowntime)
+        Future.successful(Ok(view(statusResponse)))
       case _ => Future.successful(errorHandler.showInternalServerError)
     }
   }

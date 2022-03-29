@@ -16,6 +16,11 @@
 
 package models
 
+import models.Channel.Channel
+import models.responses.ErrorResponse.DowntimeConfigParseError
+
+import scala.annotation.tailrec
+
 case class PlannedDowmtimeViewModel(
                                      gbArrivals: Option[PlannedDowntime],
                                      xiArrivals: Option[PlannedDowntime],
@@ -32,5 +37,31 @@ object PlannedDowmtimeViewModel {
       gbDepartures = None,
       xiDepartures = None
     )
+  }
+
+  def fromPlannedDowntimes(downtimes: Either[DowntimeConfigParseError, Option[PlannedDowntimes]]): PlannedDowmtimeViewModel = {
+    downtimes match {
+      case Right(downtimes) =>
+        val plannedDowntimes: Seq[PlannedDowntime] = downtimes.get.plannedDowntimes
+        val defaultPlannedDowntime = PlannedDowmtimeViewModel.default
+
+        @tailrec
+        def loop(plannedDowntimes: Seq[PlannedDowntime], index: Int, result: PlannedDowmtimeViewModel): PlannedDowmtimeViewModel = {
+          if (index >= plannedDowntimes.size) result
+          else {
+            val newResult = plannedDowntimes(index).affectedChannel match {
+              case gbArrival: Channel => result.copy(gbArrivals = Some(plannedDowntimes(index)))
+              case xiArrival: Channel => result.copy(xiArrivals = Some(plannedDowntimes(index)))
+              case gbDeparture: Channel => result.copy(gbDepartures = Some(plannedDowntimes(index)))
+              case xiDeparture: Channel => result.copy(xiDepartures = Some(plannedDowntimes(index)))
+            }
+            loop(plannedDowntimes, index + 1, newResult)
+          }
+        }
+
+        loop(plannedDowntimes, 0, defaultPlannedDowntime)
+      case Left(_) =>
+        PlannedDowmtimeViewModel.default
+    }
   }
 }
