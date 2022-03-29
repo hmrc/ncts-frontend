@@ -16,9 +16,8 @@
 
 @import models._
 @import utils.DateTimeFormatter._
-@import models.responses.Downtime
 
-@(downtimes: Seq[Downtime])(implicit request: Request[_], messages: Messages)
+@(downtimes: Seq[DowntimeHistoryRow])(implicit request: Request[_], messages: Messages)
 
 <table class="govuk-table">
     <thead class="govuk-table__head">
@@ -30,29 +29,35 @@
         </tr>
     </thead>
     <tbody class="govuk-table__body">
-    @for(downtime <- downtimes) {
+    @for(downtimeRow <- downtimes) {
     <tr class="govuk-table__row">
-        @if(downtime.affectedChannel == GBArrivals){
+        @if(downtimeRow.downtime.affectedChannel == GBArrivals){
         <td class="govuk-table__cell">@messages("service.downtime.history.ncts.gb.arrivals")</td>
-        }else if(downtime.affectedChannel == XIArrivals){
+        }else if(downtimeRow.downtime.affectedChannel == XIArrivals){
         <td class="govuk-table__cell">@messages("service.downtime.history.ncts.xi.arrivals")</td>
-        }else if(downtime.affectedChannel == GBDepartures){
+        }else if(downtimeRow.downtime.affectedChannel == GBDepartures){
         <td class="govuk-table__cell">@messages("service.downtime.history.ncts.gb.departures")</td>
-        }else if(downtime.affectedChannel == XIDepartures){
+        }else if(downtimeRow.downtime.affectedChannel == XIDepartures){
         <td class="govuk-table__cell">@messages("service.downtime.history.ncts.xi.departures")</td>
-        }else if(downtime.affectedChannel == Web){
+        }else if(downtimeRow.downtime.affectedChannel == Web){
         <td class="govuk-table__cell">@messages("service.downtime.history.ncts.web.channel")</td>
-        }else if(downtime.affectedChannel == XML){
+        }else if(downtimeRow.downtime.affectedChannel == XML){
         <td class="govuk-table__cell">@messages("service.downtime.history.ncts.xml.channel")</td>
         }
-        <td class="govuk-table__cell">@messages("service.downtime.history.unplanned.event")</td>
         <td class="govuk-table__cell">
-            <b>@messages("service.downtime.history.date")</b> @formatDateDowntimeHistory(downtime.start)<br />
-            <b>@messages("service.downtime.history.time")</b> @formatTime(downtime.start)
+            @if(downtimeRow.planned){
+                @messages("service.downtime.history.planned.event")
+            } else {
+                @messages("service.downtime.history.unplanned.event")
+            }
         </td>
         <td class="govuk-table__cell">
-            <b>@messages("service.downtime.history.date")</b> @formatDateDowntimeHistory(downtime.end)<br />
-            <b>@messages("service.downtime.history.time")</b> @formatTime(downtime.end)
+            <b>@messages("service.downtime.history.date")</b> @formatDateDowntimeHistory(downtimeRow.downtime.start)<br />
+            <b>@messages("service.downtime.history.time")</b> @formatTimeDowntimeHistory(downtimeRow.downtime.start)
+        </td>
+        <td class="govuk-table__cell">
+            <b>@messages("service.downtime.history.date")</b> @formatDateDowntimeHistory(downtimeRow.downtime.end)<br />
+            <b>@messages("service.downtime.history.time")</b> @formatTimeDowntimeHistory(downtimeRow.downtime.end)
         </td>
     </tr>
     }

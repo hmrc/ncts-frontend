@@ -6,8 +6,6 @@ GET         /                                            controllers.IndexContro
 
 GET         /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
 
-GET         /language/:lang                              controllers.LanguageSwitchController.switchToLanguage(lang: String)
-
 GET         /service-availability                        controllers.ServiceAvailabilityController.onPageLoad
 
 GET         /planned-downtime                            controllers.PlannedDowntimeController.onPageLoad
