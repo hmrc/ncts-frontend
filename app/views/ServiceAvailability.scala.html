@@ -22,6 +22,7 @@
 @import helpers.HelpWithChannels
 @import config.FrontendAppConfig
 @import java.time.LocalDateTime
+@import java.time.{LocalDateTime, ZoneId, ZonedDateTime}
 
 @this(
     appConfig: FrontendAppConfig,
@@ -80,7 +81,7 @@
 
                         val startDateTime = createDateTime(arrival.startDate, arrival.startTime)
                         val endDateTime = createDateTime(arrival.endDate, arrival.endTime)
-                        val now = LocalDateTime.now()
+                        val now = ZonedDateTime.now(ZoneId.of("Europe/London")).toLocalDateTime
 
                         if ((now.isEqual(startDateTime) || now.isAfter(startDateTime)) && (now.isEqual(endDateTime) || now.isBefore(endDateTime))) {
                             <td class="govuk-table__cell">
@@ -131,7 +132,7 @@
 
                         val startDateTime = createDateTime(arrival.startDate, arrival.startTime)
                         val endDateTime = createDateTime(arrival.endDate, arrival.endTime)
-                        val now = LocalDateTime.now()
+                        val now = ZonedDateTime.now(ZoneId.of("Europe/London")).toLocalDateTime
 
                         if ((now.isEqual(startDateTime) || now.isAfter(startDateTime)) && (now.isEqual(endDateTime) || now.isBefore(endDateTime))) {
                             <td class="govuk-table__cell">
@@ -214,7 +215,7 @@
 
                     val startDateTime = createDateTime(departure.startDate, departure.startTime)
                     val endDateTime = createDateTime(departure.endDate, departure.endTime)
-                    val now = LocalDateTime.now()
+                    val now = ZonedDateTime.now(ZoneId.of("Europe/London")).toLocalDateTime
 
                     if ((now.isEqual(startDateTime) || now.isAfter(startDateTime)) && (now.isEqual(endDateTime) || now.isBefore(endDateTime))) {
                         <td class="govuk-table__cell">
@@ -265,7 +266,7 @@
 
                     val startDateTime = createDateTime(departure.startDate, departure.startTime)
                     val endDateTime = createDateTime(departure.endDate, departure.endTime)
-                    val now = LocalDateTime.now()
+                    val now = ZonedDateTime.now(ZoneId.of("Europe/London")).toLocalDateTime
 
                     if ((now.isEqual(startDateTime) || now.isAfter(startDateTime)) && (now.isEqual(endDateTime) || now.isBefore(endDateTime))) {
                         <td class="govuk-table__cell">
