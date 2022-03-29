@@ -17,6 +17,7 @@
 package models
 
 import models.Channel.{gbArrivals, gbDepartures, xiArrivals, xiDepartures}
+import models.responses.ErrorResponse.DowntimeConfigParseError
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -63,6 +64,18 @@ class PlannedDowntimeViewModelSpec extends AnyWordSpec with Matchers {
     "return default PlannedDowntimeViewModel when there arent any planned downtimes" in {
       val plannedDowntimes: Seq[PlannedDowntime] = Seq.empty
       val downtimes = Right(Some(PlannedDowntimes(plannedDowntimes)))
+
+      val result = PlannedDowntimeViewModel.fromPlannedDowntimes(downtimes)
+      result mustBe PlannedDowntimeViewModel(
+        None,
+        None,
+        None,
+        None
+      )
+    }
+
+    "return default PlannedDowntimeViewModel when there are errors" in {
+      val downtimes = Left(DowntimeConfigParseError("something went wrong"))
 
       val result = PlannedDowntimeViewModel.fromPlannedDowntimes(downtimes)
       result mustBe PlannedDowntimeViewModel(

@@ -15,18 +15,21 @@
  *@
 
 @import models.responses.StatusResponse
+@import models.PlannedDowntimeViewModel
 @import utils.DateTimeFormatter._
 @import helpers.SubmissionChannelsAvailability
 @import helpers.KnownIssuesParagraph
 @import helpers.HelpWithChannels
+@import helpers.RowHelper
 @import config.FrontendAppConfig
+@import java.time.LocalDateTime
 
 @this(
     appConfig: FrontendAppConfig,
     layout: templates.Layout
 )
 
-@(status: StatusResponse)(implicit request: Request[_], messages: Messages)
+@(status: StatusResponse, plannedDowntimeViewModel: PlannedDowntimeViewModel)(implicit request: Request[_], messages: Messages)
 
 @layout(
     pageTitle = title(messages("service.availability.title")),
@@ -57,38 +60,105 @@
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">@messages("service.availability.ncts.gb.arrivals")</td>
-                        @if(status.gbArrivalsStatus.healthy){
+
+                        @{plannedDowntimeViewModel.gbArrivals.fold(
+                            if(status.gbArrivalsStatus.healthy){
+                                <td class="govuk-table__cell">
+                                    <span class="govuk-tag govuk-tag--green">{messages("service.availability.status.available")}</span>
+                                </td>
+                                <td class="govuk-table__cell">
+                                    {messages("service.availability.status.no.issues")}
+                                </td>
+                            } else {
+                                <td class="govuk-table__cell">
+                                    <span class="govuk-tag govuk-tag--red">{messages("service.availability.status.issues")}</span>
+                                </td>
+                                <td class="govuk-table__cell">
+                                    {formatDateTime(status.gbArrivalsStatus.statusChangedAt)}
+                                </td>
+                            }
+                        ) { arrival =>
+
+                        val startDateTime = createDateTime(arrival.startDate, arrival.startTime)
+                        val endDateTime = createDateTime(arrival.endDate, arrival.endTime)
+                        val now = LocalDateTime.now()
+
+                        if ((now.isEqual(startDateTime) || now.isAfter(startDateTime)) && (now.isEqual(endDateTime) || now.isBefore(endDateTime))) {
                             <td class="govuk-table__cell">
-                                <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
+                                <span class="govuk-tag govuk-tag--yellow">{messages("service.availability.status.planned.downtime")}</span>
                             </td>
                             <td class="govuk-table__cell">
-                                @messages("service.availability.status.no.issues")
+                                {messages("service.availability.status.no.issues")}
                             </td>
                         } else {
-                            <td class="govuk-table__cell">
-                                  <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
-                            </td>
-                            <td class="govuk-table__cell">
-                                @formatDateTime(status.gbArrivalsStatus.statusChangedAt)
-                            </td>
+                                if(status.gbArrivalsStatus.healthy){
+                                        <td class="govuk-table__cell">
+                                            <span class="govuk-tag govuk-tag--green">{messages("service.availability.status.available")}</span>
+                                        </td>
+                                        <td class="govuk-table__cell">
+                                            {messages("service.availability.status.no.issues")}
+                                        </td>
+                                    } else {
+                                        <td class="govuk-table__cell">
+                                            <span class="govuk-tag govuk-tag--red">{messages("service.availability.status.issues")}</span>
+                                        </td>
+                                        <td class="govuk-table__cell">
+                                            {formatDateTime(status.gbArrivalsStatus.statusChangedAt)}
+                                        </td>
+                                    }
+                                }
+                            }
                         }
                     </tr>
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">@messages("service.availability.ncts.xi.arrivals")</td>
-                        @if(status.xiArrivalsStatus.healthy){
+                        @{plannedDowntimeViewModel.xiArrivals.fold(
+                            if(status.xiArrivalsStatus.healthy){
+                                <td class="govuk-table__cell">
+                                    <span class="govuk-tag govuk-tag--green">{messages("service.availability.status.available")}</span>
+                                </td>
+                                <td class="govuk-table__cell">
+                                    {messages("service.availability.status.no.issues")}
+                                </td>
+                            } else {
+                                <td class="govuk-table__cell">
+                                    <span class="govuk-tag govuk-tag--red">{messages("service.availability.status.issues")}</span>
+                                </td>
+                                <td class="govuk-table__cell">
+                                    {formatDateTime(status.xiArrivalsStatus.statusChangedAt)}
+                                </td>
+                            }
+                        ) { arrival =>
+
+                        val startDateTime = createDateTime(arrival.startDate, arrival.startTime)
+                        val endDateTime = createDateTime(arrival.endDate, arrival.endTime)
+                        val now = LocalDateTime.now()
+
+                        if ((now.isEqual(startDateTime) || now.isAfter(startDateTime)) && (now.isEqual(endDateTime) || now.isBefore(endDateTime))) {
                             <td class="govuk-table__cell">
-                                <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
+                                <span class="govuk-tag govuk-tag--yellow">{messages("service.availability.status.planned.downtime")}</span>
                             </td>
                             <td class="govuk-table__cell">
-                                @messages("service.availability.status.no.issues")
+                                {messages("service.availability.status.no.issues")}
                             </td>
                         } else {
-                            <td class="govuk-table__cell">
-                                <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
-                            </td>
-                            <td class="govuk-table__cell">
-                                @formatDateTime(status.xiArrivalsStatus.statusChangedAt)
-                            </td>
+                                    if(status.xiArrivalsStatus.healthy){
+                                        <td class="govuk-table__cell">
+                                            <span class="govuk-tag govuk-tag--green">{messages("service.availability.status.available")}</span>
+                                        </td>
+                                        <td class="govuk-table__cell">
+                                            {messages("service.availability.status.no.issues")}
+                                        </td>
+                                    } else {
+                                        <td class="govuk-table__cell">
+                                            <span class="govuk-tag govuk-tag--red">{messages("service.availability.status.issues")}</span>
+                                        </td>
+                                        <td class="govuk-table__cell">
+                                            {formatDateTime(status.xiArrivalsStatus.statusChangedAt)}
+                                        </td>
+                                    }
+                                }
+                            }
                         }
                     </tr>
                 </tbody>
@@ -125,38 +195,104 @@
                 <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">@messages("service.availability.ncts.gb.departures")</td>
-                    @if(status.gbDeparturesStatus.healthy){
+                    @{plannedDowntimeViewModel.gbDepartures.fold(
+                    if(status.gbDeparturesStatus.healthy){
                         <td class="govuk-table__cell">
-                            <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
+                            <span class="govuk-tag govuk-tag--green">{messages("service.availability.status.available")}</span>
                         </td>
                         <td class="govuk-table__cell">
-                            @messages("service.availability.status.no.issues")
+                            {messages("service.availability.status.no.issues")}
                         </td>
                     } else {
                         <td class="govuk-table__cell">
-                            <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
+                            <span class="govuk-tag govuk-tag--red">{messages("service.availability.status.issues")}</span>
                         </td>
                         <td class="govuk-table__cell">
-                            @formatDateTime(status.gbDeparturesStatus.statusChangedAt)
+                            {formatDateTime(status.gbDeparturesStatus.statusChangedAt)}
                         </td>
+                    }
+                    ) { departure =>
+
+                    val startDateTime = createDateTime(departure.startDate, departure.startTime)
+                    val endDateTime = createDateTime(departure.endDate, departure.endTime)
+                    val now = LocalDateTime.now()
+
+                    if ((now.isEqual(startDateTime) || now.isAfter(startDateTime)) && (now.isEqual(endDateTime) || now.isBefore(endDateTime))) {
+                        <td class="govuk-table__cell">
+                            <span class="govuk-tag govuk-tag--yellow">{messages("service.availability.status.planned.downtime")}</span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            {messages("service.availability.status.no.issues")}
+                        </td>
+                    } else {
+                                if(status.gbDeparturesStatus.healthy){
+                                    <td class="govuk-table__cell">
+                                        <span class="govuk-tag govuk-tag--green">{messages("service.availability.status.available")}</span>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        {messages("service.availability.status.no.issues")}
+                                    </td>
+                                } else {
+                                    <td class="govuk-table__cell">
+                                        <span class="govuk-tag govuk-tag--red">{messages("service.availability.status.issues")}</span>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        {formatDateTime(status.gbDeparturesStatus.statusChangedAt)}
+                                    </td>
+                                }
+                            }
+                        }
                     }
                 </tr>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">@messages("service.availability.ncts.xi.departures")</td>
-                    @if(status.xiDeparturesStatus.healthy){
+                    @{plannedDowntimeViewModel.xiDepartures.fold(
+                    if(status.xiDeparturesStatus.healthy){
                         <td class="govuk-table__cell">
-                            <span class="govuk-tag govuk-tag--green">@messages("service.availability.status.available")</span>
+                            <span class="govuk-tag govuk-tag--green">{messages("service.availability.status.available")}</span>
                         </td>
                         <td class="govuk-table__cell">
-                            @messages("service.availability.status.no.issues")
+                            {messages("service.availability.status.no.issues")}
                         </td>
                     } else {
                         <td class="govuk-table__cell">
-                            <span class="govuk-tag govuk-tag--red">@messages("service.availability.status.issues")</span>
+                            <span class="govuk-tag govuk-tag--red">{messages("service.availability.status.issues")}</span>
                         </td>
                         <td class="govuk-table__cell">
-                            @formatDateTime(status.xiDeparturesStatus.statusChangedAt)
+                            {formatDateTime(status.gbArrivalsStatus.statusChangedAt)}
                         </td>
+                    }
+                    ) { departure =>
+
+                    val startDateTime = createDateTime(departure.startDate, departure.startTime)
+                    val endDateTime = createDateTime(departure.endDate, departure.endTime)
+                    val now = LocalDateTime.now()
+
+                    if ((now.isEqual(startDateTime) || now.isAfter(startDateTime)) && (now.isEqual(endDateTime) || now.isBefore(endDateTime))) {
+                        <td class="govuk-table__cell">
+                            <span class="govuk-tag govuk-tag--yellow">{messages("service.availability.status.planned.downtime")}</span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            {messages("service.availability.status.no.issues")}
+                        </td>
+                    } else {
+                                if(status.xiDeparturesStatus.healthy){
+                                    <td class="govuk-table__cell">
+                                        <span class="govuk-tag govuk-tag--green">{messages("service.availability.status.available")}</span>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        {messages("service.availability.status.no.issues")}
+                                    </td>
+                                } else {
+                                    <td class="govuk-table__cell">
+                                        <span class="govuk-tag govuk-tag--red">{messages("service.availability.status.issues")}</span>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        {formatDateTime(status.xiDeparturesStatus.statusChangedAt)}
+                                    </td>
+                                }
+                            }
+                        }
                     }
                 </tr>
                 </tbody>

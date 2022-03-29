@@ -19,7 +19,7 @@ package utils
 import play.api.i18n.Messages
 
 import java.time.format.{DateTimeFormatter => DateTimeGen}
-import java.time.{LocalDate, LocalDateTime, ZoneId}
+import java.time.{LocalDate,LocalTime, LocalDateTime, ZoneId}
 import java.util.Locale
 
 object DateTimeFormatter {
@@ -89,5 +89,9 @@ object DateTimeFormatter {
     } else {
       s"$time"
     }
+  }
+
+  def createDateTime(date: LocalDate, time: LocalTime) = {
+    LocalDateTime.of(date, time)
   }
 }

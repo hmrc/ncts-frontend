@@ -58,6 +58,7 @@ service.availability.ncts.gb.arrivals=NCTS GB Arrivals
 service.availability.ncts.xi.arrivals=NCTS XI Arrivals
 service.availability.status.available=Available
 service.availability.status.issues=Known issues
+service.availability.status.planned.downtime=Planned downtime
 service.availability.status.no.issues=N/A
 service.availability.lastUpdated=Last updated:
 service.availability.lastUpdated.refresh=Refresh this page

@@ -41,8 +41,16 @@ class ServiceAvailabilityController @Inject()(
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     healthCheckService.checkStatus().flatMap {
       case Right(statusResponse: StatusResponse) =>
-        val viewModel = PlannedDowntimeViewModel.fromPlannedDowntimes(plannedDowntimeService.getPlannedDowntime)
-        Future.successful(Ok(view(statusResponse)))
+        val plannedDowntimeViewModel: PlannedDowntimeViewModel =
+          PlannedDowntimeViewModel.fromPlannedDowntimes(plannedDowntimeService.getPlannedDowntime)
+        println("controller ::: ")
+        println("controller ::: ")
+        println("controller ::: ")
+        println("controller ::: " + plannedDowntimeViewModel)
+        println("controller ::: ")
+        println("controller ::: ")
+        println("controller ::: ")
+        Future.successful(Ok(view(statusResponse, plannedDowntimeViewModel)))
       case _ => Future.successful(errorHandler.showInternalServerError)
     }
   }

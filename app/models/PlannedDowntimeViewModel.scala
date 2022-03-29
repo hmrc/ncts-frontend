@@ -46,7 +46,6 @@ object PlannedDowntimeViewModel {
 
         @tailrec
         def loop(plannedDowntimes: Seq[PlannedDowntime], index: Int, result: PlannedDowntimeViewModel): PlannedDowntimeViewModel = {
-
           if (index >= plannedDowntimes.size) result
           else {
             val newResult = plannedDowntimes(index).affectedChannel.toString match {
