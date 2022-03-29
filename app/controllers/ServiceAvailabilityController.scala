@@ -43,13 +43,6 @@ class ServiceAvailabilityController @Inject()(
       case Right(statusResponse: StatusResponse) =>
         val plannedDowntimeViewModel: PlannedDowntimeViewModel =
           PlannedDowntimeViewModel.fromPlannedDowntimes(plannedDowntimeService.getPlannedDowntime)
-        println("controller ::: ")
-        println("controller ::: ")
-        println("controller ::: ")
-        println("controller ::: " + plannedDowntimeViewModel)
-        println("controller ::: ")
-        println("controller ::: ")
-        println("controller ::: ")
         Future.successful(Ok(view(statusResponse, plannedDowntimeViewModel)))
       case _ => Future.successful(errorHandler.showInternalServerError)
     }
