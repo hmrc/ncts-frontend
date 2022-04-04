@@ -19,52 +19,16 @@
 @import config.FrontendAppConfig
 
 @(channelOneHealthy: Boolean,
-  channelTwoHealthy: Boolean,
-  channelOneStatusChangedAt: LocalDateTime,
-  channelTwoStatusChangedAt: LocalDateTime,
-  channelOneHealthMessage: String,
-  channelTwoHealthMessage: String,
-  appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
+channelTwoHealthy: Boolean,
+channelOneStatusChangedAt: LocalDateTime,
+channelTwoStatusChangedAt: LocalDateTime,
+channelOneHealthMessage: String,
+channelTwoHealthMessage: String,
+appConfig: FrontendAppConfig,
+ppns: Option[(Boolean, LocalDateTime, String)] = None)(implicit request: Request[_], messages: Messages)
 
-    @if(!channelOneHealthy && !channelTwoHealthy){
-        <p class="govuk-body">
-            @messages("service.availability.issues.p1")
-            <b>@channelOneHealthMessage </b>
-            @messages("service.availability.issues.p2")
-            <b>@channelTwoHealthMessage </b>
-
-            @if(channelOneHealthMessage.contains("Web") || channelOneHealthMessage.contains("XML")){
-                @messages("service.availability.issues.webAndXML.channel")
-            } else {
-                @messages("service.availability.issues.both.channels")
-            }
-            @messages("service.availability.issues.p3")
-        </p>
-        @if(!channelOneHealthMessage.contains("Web") && !channelOneHealthMessage.contains("XML")){
-            <p class="govuk-body">
-                @messages("service.availability.issues.p4")
-                <a href="@appConfig.govUKTransitManualLink">@messages("service.availability.issues.p5")</a>.
-            </p>
-        }
-    } else if (!channelOneHealthy || !channelTwoHealthy){
-        <p class="govuk-body">
-            @messages("service.availability.issues.p1")
-            @if(!channelTwoHealthy) {
-                <b>@channelTwoHealthMessage</b>
-            } else {
-                <b>@channelOneHealthMessage</b>
-            }
-            @if(channelOneHealthMessage.contains("Web") || channelOneHealthMessage.contains("XML")){
-                @messages("service.availability.issues.webXML.channel")
-            } else {
-                @messages("service.availability.issues.single.channel")
-            }
-            @messages("service.availability.issues.p3")
-        </p>
-        @if(!channelOneHealthMessage.contains("Web") && !channelOneHealthMessage.contains("XML")){
-            <p class="govuk-body">
-                @messages("service.availability.issues.p4")
-                <a href="@appConfig.govUKTransitManualLink">@messages("service.availability.issues.p5")</a>.
-            </p>
-        }
-    }
+@{val channels = List((channelOneHealthy, channelOneStatusChangedAt, channelOneHealthMessage),
+(channelTwoHealthy, channelTwoStatusChangedAt, channelTwoHealthMessage)) ++ ppns.toList
+implicit val dateTimeOrdering: Ordering[LocalDateTime] = _ compareTo _
+val channelsWithIssues = channels.filter(!_._1).map(ch => (ch._2,ch._3)).sortBy(_._1).reverse
+KnownIssuesTimeline(channelsWithIssues, appConfig)}

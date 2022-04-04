@@ -348,7 +348,8 @@
                     status.xmlChannelStatus.statusChangedAt,
                     messages("service.availability.submission.channels.status.web.channel"),
                     messages("service.availability.submission.channels.status.xml.channel"),
-                    appConfig
+                    appConfig,
+                    Some((status.ppnNotHealthy, status.ppnStatus.statusChangedAt, messages("service.availability.issues.ppn")))
                 )
             }
         </div>
