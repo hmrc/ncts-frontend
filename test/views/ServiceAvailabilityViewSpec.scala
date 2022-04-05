@@ -69,6 +69,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       (s"""${messages("service.availability.status.issues")} - ${messages(s"service.availability.submission.channels.status.$channel")}""")
     timelineEvent.message mustBe (s"${messages("service.availability.issues.p1")} " +
       s"${messages(s"service.availability.submission.channels.status.$channel")} " +
+      s"${messages(s"service.availability.issues.channel")} " +
       s"${messages("service.availability.issues.webXML.channel")} " +
       s"${messages("service.availability.issues.p3")}")
   }
@@ -491,6 +492,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         val xmlChannelKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
             s"${messages("service.availability.submission.channels.status.xml")} " +
+            s"${messages("service.availability.issues.channel")} " +
             s"${messages("service.availability.issues.webXML.channel")} " +
             s"${messages("service.availability.issues.p3")}"
 

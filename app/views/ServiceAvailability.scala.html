@@ -304,7 +304,7 @@
                 status.ppnStatus
             )
             @HelpWithChannels(status.ppnNotHealthy, appConfig.govUKNCTSGuidanceLink)
-            @if(status.xmlAndWebHealthy){
+            @if(status.xmlHealthy){
                 <p class="govuk-body">
                     @messages("service.availability.issues.p6")
                     <b>@messages("service.availability.issues.xml.channel")</b>
