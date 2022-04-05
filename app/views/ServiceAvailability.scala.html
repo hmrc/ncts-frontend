@@ -18,7 +18,7 @@
 @import models.PlannedDowntimeViewModel
 @import utils.DateTimeFormatter._
 @import helpers.SubmissionChannelsAvailability
-@import helpers.KnownIssuesParagraph
+@import helpers.TimelineOfKnownIssues
 @import helpers.HelpWithChannels
 @import config.FrontendAppConfig
 @import java.time.LocalDateTime
@@ -164,13 +164,8 @@
                 </tbody>
             </table>
 
-            @KnownIssuesParagraph(
-                status.gbArrivalsStatus.healthy,
-                status.xiArrivalsStatus.healthy,
-                status.gbArrivalsStatus.statusChangedAt,
-                status.xiArrivalsStatus.statusChangedAt,
-                messages("service.availability.ncts.gb.arrivals"),
-                messages("service.availability.ncts.xi.arrivals"),
+            @TimelineOfKnownIssues(
+                status.arrivalsWithKnownIssues,
                 appConfig
             )
 
@@ -298,13 +293,8 @@
                 </tbody>
             </table>
 
-            @KnownIssuesParagraph(
-                status.gbDeparturesStatus.healthy,
-                status.xiDeparturesStatus.healthy,
-                status.gbDeparturesStatus.statusChangedAt,
-                status.xiDeparturesStatus.statusChangedAt,
-                messages("service.availability.ncts.gb.departures"),
-                messages("service.availability.ncts.xi.departures"),
+            @TimelineOfKnownIssues(
+                status.departuresWithKnownIssues,
                 appConfig
             )
             @SubmissionChannelsAvailability(
@@ -314,43 +304,17 @@
                 status.ppnStatus
             )
             @HelpWithChannels(status.ppnNotHealthy, appConfig.govUKNCTSGuidanceLink)
-            @if(status.ppnNotHealthy){
-                <p class="govuk-body">
-                    @messages("service.availability.issues.ppn")
-                </p>
-            }
-            @if(status.xmlAndWebHealthy){
+            @if(status.xmlHealthy){
                 <p class="govuk-body">
                     @messages("service.availability.issues.p6")
                     <b>@messages("service.availability.issues.xml.channel")</b>
                     @messages("service.availability.issues.p7")
                 </p>
-            } else if(status.xmlHealthy) {
-                @KnownIssuesParagraph(
-                    status.webChannelStatus.healthy,
-                    status.xmlChannelStatus.healthy,
-                    status.webChannelStatus.statusChangedAt,
-                    status.xmlChannelStatus.statusChangedAt,
-                    messages("service.availability.submission.channels.status.web.channel"),
-                    messages("service.availability.submission.channels.status.xml.channel"),
-                    appConfig
-                )
-                <p class="govuk-body">
-                    @messages("service.availability.issues.p6")
-                    <b>@messages("service.availability.issues.xml.channel")</b>
-                    @messages("service.availability.issues.p7")
-                </p>
-            } else {
-                @KnownIssuesParagraph(
-                    status.webChannelStatus.healthy,
-                    status.xmlChannelStatus.healthy,
-                    status.webChannelStatus.statusChangedAt,
-                    status.xmlChannelStatus.statusChangedAt,
-                    messages("service.availability.submission.channels.status.web.channel"),
-                    messages("service.availability.submission.channels.status.xml.channel"),
-                    appConfig
-                )
             }
+            @TimelineOfKnownIssues(
+                status.channelsWithKnownIssues,
+                appConfig
+            )
         </div>
     </div>
     <div class="govuk-grid-row">

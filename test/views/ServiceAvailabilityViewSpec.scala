@@ -40,6 +40,39 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
   val date = now.toLocalDate
   val time = now.toLocalTime
 
+  case class TimeLine(caption: String, time: String, message: String, bcpLink: String)
+
+  def timeLineContent(view: Document, eventIndex: Int): TimeLine = {
+    val events = view.getElementsByClass("hmrc-timeline__event")
+    val event = events.get(eventIndex)
+    val caption = event.getElementsByClass("hmrc-timeline__event-title govuk-table__caption--s").text()
+    val time = event.getElementsByTag("time").text()
+    val message = event.getElementsByClass("hmrc-timeline__event-content").text()
+    val bcpLink = event.select("a").attr("href")
+    TimeLine(caption, time, message, bcpLink)
+  }
+
+  def checkGbOrXiContent(timelineEvent: TimeLine, channel: String) = {
+    timelineEvent.caption mustBe
+      (s"""${messages("service.availability.status.issues")} - ${messages(s"service.availability.ncts.$channel")}""")
+    timelineEvent.message mustBe (s"${messages("service.availability.issues.p1")} " +
+      s"${messages(s"service.availability.ncts.$channel")} " +
+      s"${messages("service.availability.issues.single.channel")} " +
+      s"${messages("service.availability.issues.p3")} " +
+      s"${messages("service.availability.issues.p4")} " +
+      s"${messages("service.availability.issues.p5")}.")
+    timelineEvent.bcpLink mustBe transitManualLink
+  }
+
+  def checkWebOrXmlContent(timelineEvent: TimeLine, channel: String) = {
+    timelineEvent.caption mustBe
+      (s"""${messages("service.availability.status.issues")} - ${messages(s"service.availability.submission.channels.status.$channel")}""")
+    timelineEvent.message mustBe (s"${messages("service.availability.issues.p1")} " +
+      s"${messages(s"service.availability.submission.channels.status.$channel")} " +
+      s"${messages(s"service.availability.issues.channel")} " +
+      s"${messages("service.availability.issues.webXML.channel")} " +
+      s"${messages("service.availability.issues.p3")}")
+  }
   "ServiceAvailability" - {
 
     "should have the correct breadcrumbs" in {
@@ -217,14 +250,16 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
     }
 
     "when all services are unhealthy" - {
+      val oldUnhealthyEvent = healthDetailsUnhealthy.copy(statusChangedAt = healthDetailsUnhealthy.statusChangedAt.minusMinutes(1))
+      val olderUnhealthyEvent = oldUnhealthyEvent.copy(statusChangedAt = oldUnhealthyEvent.statusChangedAt.minusMinutes(1))
       val statusResponse = StatusResponse(
-        gbDeparturesStatus = healthDetailsUnhealthy,
+        gbDeparturesStatus = oldUnhealthyEvent,
         xiDeparturesStatus = healthDetailsUnhealthy,
         gbArrivalsStatus = healthDetailsUnhealthy,
-        xiArrivalsStatus = healthDetailsUnhealthy,
+        xiArrivalsStatus = oldUnhealthyEvent,
         xmlChannelStatus = healthDetailsUnhealthy,
-        webChannelStatus = healthDetailsUnhealthy,
-        ppnStatus = healthDetailsUnhealthy,
+        webChannelStatus = oldUnhealthyEvent,
+        ppnStatus = olderUnhealthyEvent,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
       val allUnhealthyView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
@@ -239,19 +274,13 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(5)
           .text() mustBe DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)
 
-        val arrivalsKnownIssuesParagraph =
-          s"${messages("service.availability.issues.p1")} " +
-            s"${messages("service.availability.ncts.gb.arrivals")} " +
-            s"${messages("service.availability.issues.p2")} " +
-            s"${messages("service.availability.ncts.xi.arrivals")} " +
-            s"${messages("service.availability.issues.both.channels")} " +
-            s"${messages("service.availability.issues.p3")}"
+        val gbArrivalEvent = timeLineContent(allUnhealthyView, 0)
+        checkGbOrXiContent(gbArrivalEvent, "gb.arrivals")
+        gbArrivalEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.gbArrivalsStatus.statusChangedAt)
 
-        allUnhealthyView.getElementsByClass("govuk-body").get(0)
-          .text() mustBe arrivalsKnownIssuesParagraph
-        val bcpPara = allUnhealthyView.getElementsByClass("govuk-body").get(1)
-        bcpPara.text() mustBe s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}."
-        bcpPara.select("a").attr("href") mustBe transitManualLink
+        val xiArrivalEvent = timeLineContent(allUnhealthyView, 1)
+        xiArrivalEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)
+        checkGbOrXiContent(xiArrivalEvent, "xi.arrivals")
       }
 
       "should show that services have known issues and known issues since time for departures" in {
@@ -264,19 +293,13 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(11)
           .text() mustBe  DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)
 
-        val departuresKnownIssuesParagraph =
-          s"${messages("service.availability.issues.p1")} " +
-            s"${messages("service.availability.ncts.gb.departures")} " +
-            s"${messages("service.availability.issues.p2")} " +
-            s"${messages("service.availability.ncts.xi.departures")} " +
-            s"${messages("service.availability.issues.both.channels")} " +
-            s"${messages("service.availability.issues.p3")}"
+        val xiDepartureEvent = timeLineContent(allUnhealthyView, 2)
+        xiDepartureEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)
+        checkGbOrXiContent(xiDepartureEvent, "xi.departures")
 
-        allUnhealthyView.getElementsByClass("govuk-body").get(2)
-          .text() mustBe departuresKnownIssuesParagraph
-        val bcpPara = allUnhealthyView.getElementsByClass("govuk-body").get(3)
-        bcpPara.text() mustBe s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}."
-        bcpPara.select("a").attr("href") mustBe transitManualLink
+        val gbDepartureEvent = timeLineContent(allUnhealthyView, 3)
+        gbDepartureEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)
+        checkGbOrXiContent(gbDepartureEvent, "gb.departures")
       }
 
       "should show that services have known issues and known issues since time for other systems" in {
@@ -293,21 +316,19 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         allUnhealthyView.getElementsByClass("govuk-table__cell").get(20)
           .text() mustBe  DateTimeFormatter.formatDateTime(statusResponse.ppnStatus.statusChangedAt)
 
-        val ppnKnownIssuesParagraph =
-          messages("service.availability.issues.ppn")
+        val xmlEvent = timeLineContent(allUnhealthyView, 4)
+        checkWebOrXmlContent(xmlEvent, "xml")
+        xmlEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xmlChannelStatus.statusChangedAt)
 
-        val channelsKnownIssuesParagraph =
-          s"${messages("service.availability.issues.p1")} " +
-            s"${messages("service.availability.submission.channels.status.web.channel")} " +
-            s"${messages("service.availability.issues.p2")} " +
-            s"${messages("service.availability.submission.channels.status.xml.channel")} " +
-            s"${messages("service.availability.issues.webAndXML.channel")} " +
-            s"${messages("service.availability.issues.p3")}"
+        val webEvent = timeLineContent(allUnhealthyView, 5)
+        checkWebOrXmlContent(webEvent, "web")
+        webEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.webChannelStatus.statusChangedAt)
 
-        allUnhealthyView.getElementsByClass("govuk-body").get(8)
-          .text() must include(ppnKnownIssuesParagraph)
-        allUnhealthyView.getElementsByClass("govuk-body").get(9)
-          .text() must include(channelsKnownIssuesParagraph)
+        val ppnEvent = timeLineContent(allUnhealthyView, 6)
+        ppnEvent.caption mustBe
+          (s"""${messages("service.availability.status.issues")} - ${messages(s"service.availability.submission.channels.status.ppn")}""")
+        ppnEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.ppnStatus.statusChangedAt)
+        ppnEvent.message mustBe messages("service.availability.issues.ppn")
       }
 
       "should have information which helps with channels with mention of PPNS" in {
@@ -352,7 +373,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         xiArrivalsStatus = healthDetailsHealthy,
         xmlChannelStatus = healthDetailsHealthy,
         webChannelStatus = healthDetailsUnhealthy,
-        ppnStatus = healthDetailsUnhealthy,
+        ppnStatus = healthDetailsUnhealthy.copy(statusChangedAt = healthDetailsUnhealthy.statusChangedAt.minusMinutes(10)),
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
 
@@ -403,20 +424,9 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         someUnhealthyView.getElementsByClass("govuk-table__cell").get(16)
           .text() mustBe messages("service.availability.status.available")
 
-        val webChannelKnownIssuesParagraph =
-          s"${messages("service.availability.issues.p1")} " +
-            s"${messages("service.availability.submission.channels.status.web.channel")} " +
-            s"${messages("service.availability.issues.webXML.channel")} " +
-            s"${messages("service.availability.issues.p3")}"
-
-        val thirdPartyMessage = {
-          s"${messages("service.availability.issues.p6")} ${messages("service.availability.issues.xml.channel")}" +
-            s" ${messages("service.availability.issues.p7")}"
-        }
-        someUnhealthyView.getElementsByClass("govuk-body").get(9)
-          .text() must include(webChannelKnownIssuesParagraph)
-        someUnhealthyView.getElementsByClass("govuk-body").get(10)
-          .text() must include(thirdPartyMessage)
+        val webEvent = timeLineContent(someUnhealthyView, 2)
+        checkWebOrXmlContent(webEvent, "web")
+        webEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.webChannelStatus.statusChangedAt)
       }
     }
 
@@ -481,7 +491,8 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val xmlChannelKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
-            s"${messages("service.availability.submission.channels.status.xml.channel")} " +
+            s"${messages("service.availability.submission.channels.status.xml")} " +
+            s"${messages("service.availability.issues.channel")} " +
             s"${messages("service.availability.issues.webXML.channel")} " +
             s"${messages("service.availability.issues.p3")}"
 
@@ -497,7 +508,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         gbArrivalsStatus = healthDetailsHealthy,
         xiArrivalsStatus = healthDetailsUnhealthy,
         xmlChannelStatus = healthDetailsHealthy,
-        webChannelStatus = healthDetailsHealthy,
+        webChannelStatus = healthDetailsUnhealthy,
         ppnStatus = healthDetailsUnhealthy,
         createdTs = LocalDateTime.of(2022, 1, 24, 0, 0, 0)
       )
@@ -505,26 +516,10 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       val ppnUnhealthyView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
 
       "should show PPNS channel has known issues" in {
-        ppnUnhealthyView.getElementsByClass("govuk-table__cell").get(13)
-          .text() mustBe messages("service.availability.status.available")
-        ppnUnhealthyView.getElementsByClass("govuk-table__cell").get(16)
-          .text() mustBe messages("service.availability.status.available")
-        ppnUnhealthyView.getElementsByClass("govuk-table__cell").get(19)
-          .text() mustBe messages("service.availability.status.issues")
-        ppnUnhealthyView.getElementsByClass("govuk-table__cell").get(20)
-          .text() mustBe DateTimeFormatter.formatDateTime(statusResponse.ppnStatus.statusChangedAt)
-
-        val ppnKnownIssuesParagraph =
-          messages("service.availability.issues.ppn")
-        val thirdPartyMessage = {
-          s"${messages("service.availability.issues.p6")} ${messages("service.availability.issues.xml.channel")}" +
-            s" ${messages("service.availability.issues.p7")}"
-        }
-
-        ppnUnhealthyView.getElementsByClass("govuk-body").get(8)
-          .text() must include(ppnKnownIssuesParagraph)
-        ppnUnhealthyView.getElementsByClass("govuk-body").get(9)
-          .text() must include(thirdPartyMessage)
+        val ppnEvent = timeLineContent(ppnUnhealthyView, 2)
+        ppnEvent.caption mustBe (s"""${messages("service.availability.status.issues")} - ${messages("service.availability.submission.channels.status.ppn")}""")
+        ppnEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.ppnStatus.statusChangedAt)
+        ppnEvent.message mustBe messages("service.availability.issues.ppn")
       }
     }
 
