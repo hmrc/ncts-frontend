@@ -32,13 +32,13 @@
     <tbody class="govuk-table__body">
         @for(downtime <- plannedDowntimes.plannedDowntimes) {
             <tr class="govuk-table__row">
-                @if(downtime.affectedChannel.equals(gbArrivals)){
+                @if(downtime.affectedChannel.equals(GBArrivals)){
                     <td class="govuk-table__cell">@messages("planned-downtime.ncts.gb.arrivals")</td>
-                }else if(downtime.affectedChannel.equals(xiArrivals)){
+                }else if(downtime.affectedChannel.equals(XIArrivals)){
                     <td class="govuk-table__cell">@messages("planned-downtime.ncts.xi.arrivals")</td>
-                }else if(downtime.affectedChannel.equals(gbDepartures)){
+                }else if(downtime.affectedChannel.equals(GBDepartures)){
                     <td class="govuk-table__cell">@messages("planned-downtime.ncts.gb.departures")</td>
-                }else if(downtime.affectedChannel.equals(xiDepartures)){
+                }else if(downtime.affectedChannel.equals(XIDepartures)){
                     <td class="govuk-table__cell">@messages("planned-downtime.ncts.xi.departures")</td>
                 }
                 <td class="govuk-table__cell">

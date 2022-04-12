@@ -49,10 +49,10 @@ object PlannedDowntimeViewModel {
           if (index >= plannedDowntimes.size) result
           else {
             val newResult = plannedDowntimes(index).affectedChannel.toString match {
-              case "gbArrivals" => result.copy(gbArrivals = Some(plannedDowntimes(index)))
-              case "xiArrivals" => result.copy(xiArrivals = Some(plannedDowntimes(index)))
-              case "gbDepartures" => result.copy(gbDepartures = Some(plannedDowntimes(index)))
-              case "xiDepartures" => result.copy(xiDepartures = Some(plannedDowntimes(index)))
+              case "GBArrivals" => result.copy(gbArrivals = Some(plannedDowntimes(index)))
+              case "XIArrivals" => result.copy(xiArrivals = Some(plannedDowntimes(index)))
+              case "GBDepartures" => result.copy(gbDepartures = Some(plannedDowntimes(index)))
+              case "XIDepartures" => result.copy(xiDepartures = Some(plannedDowntimes(index)))
             }
             loop(plannedDowntimes, index + 1, newResult)
           }

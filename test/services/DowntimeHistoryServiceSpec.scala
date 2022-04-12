@@ -128,7 +128,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
               middayToday.toLocalTime,
               middayToday.toLocalDate.minusDays(1),
               middayToday.toLocalTime,
-              affectedChannel = Channel.gbArrivals,
+              affectedChannel = GBArrivals,
             )
           ))
         ))
@@ -198,7 +198,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
               middayToday.toLocalTime,
               middayToday.toLocalDate.minusDays(1),
               middayToday.toLocalTime,
-              affectedChannel = Channel.gbArrivals,
+              affectedChannel = GBArrivals,
             )
           ))
         ))
@@ -237,7 +237,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
               middayToday.toLocalTime,
               middayToday.toLocalDate.minusDays(1),
               middayToday.toLocalTime,
-              affectedChannel = Channel.gbArrivals,
+              affectedChannel = GBArrivals,
             )
           ))
         ))
@@ -276,7 +276,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
               middayToday.toLocalTime,
               middayToday.toLocalDate.minusDays(1),
               middayToday.toLocalTime,
-              affectedChannel = Channel.gbArrivals,
+              affectedChannel = GBArrivals,
             )
           ))
         ))

@@ -16,20 +16,19 @@
 
 package models
 
-import models.Channel.gbArrivals
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import play.api.libs.json.{JsString, JsSuccess}
+import play.api.libs.json.{JsError, JsString, JsValue}
 
 class ChannelSpec extends AnyWordSpec with Matchers {
 
   "Channel" should {
-    "read correctly from JSON" in {
-      val json: JsString = JsString("gbArrivals")
+    "return a JsError if the channel cannot be parsed from Json" in {
+      val fakeChannel: JsValue = JsString("fakeChannelName")
 
-      val expectedResult = JsSuccess(gbArrivals)
+      val expectedResult = JsError(s"Failed to construct Channel from value fakeChannelName")
 
-      json.validate[models.Channel.Value] mustBe expectedResult
+      Channel(fakeChannel) mustBe expectedResult
 
     }
 

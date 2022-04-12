@@ -17,7 +17,7 @@
 package views
 
 import base.SpecBase
-import models.{Channel, PlannedDowntime, PlannedDowntimes}
+import models.{GBArrivals, GBDepartures, PlannedDowntime, PlannedDowntimes, XIArrivals, XIDepartures}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.Injecting
@@ -180,14 +180,14 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
     downtimeStartTime,
     downtimeEndDate,
     downtimeEndTime,
-    Channel.gbDepartures
+    GBDepartures
   )
 
   val plannedDowntimes: PlannedDowntimes = PlannedDowntimes(Seq(
     gbDeparturesPlannedDowntime,
-    gbDeparturesPlannedDowntime.copy(affectedChannel = Channel.gbArrivals),
-    gbDeparturesPlannedDowntime.copy(affectedChannel = Channel.xiDepartures),
-    gbDeparturesPlannedDowntime.copy(affectedChannel = Channel.xiArrivals)
+    gbDeparturesPlannedDowntime.copy(affectedChannel = GBArrivals),
+    gbDeparturesPlannedDowntime.copy(affectedChannel = XIDepartures),
+    gbDeparturesPlannedDowntime.copy(affectedChannel = XIArrivals)
   ))
 
 }
