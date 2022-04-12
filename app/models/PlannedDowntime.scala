@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime}
 
 case class PlannedDowntime(startDate: LocalDate, startTime: LocalTime,
-                           endDate: LocalDate, endTime: LocalTime, affectedChannel: Channel.Value)
+                           endDate: LocalDate, endTime: LocalTime, affectedChannel: Channel)
 
 object PlannedDowntime {
 
@@ -45,6 +45,6 @@ object PlannedDowntime {
       (__ \ "startTime").read[LocalTime] and
       (__ \ "endDate").read[LocalDate] and
       (__ \ "endTime").read[LocalTime] and
-      (__ \ "affectedChannel").read[Channel.Value]
+      (__ \ "affectedChannel").read[Channel]
     ) (PlannedDowntime.apply _)
 }

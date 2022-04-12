@@ -17,9 +17,8 @@
 package views
 
 import base.SpecBase
-import models.Channel.{gbArrivals, gbDepartures, xiArrivals, xiDepartures}
-import models.responses.StatusResponse
-import models.{PlannedDowntime, PlannedDowntimeViewModel}
+import models.responses.{ETA, StatusResponse}
+import models.{Channel, GBArrivals, GBDepartures, PPN, PlannedDowntime, PlannedDowntimeViewModel, Web, XIArrivals, XIDepartures, XML}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.Injecting
@@ -28,7 +27,7 @@ import utils.DateTimeFormatter.formatTime
 import utils.HealthDetailsExamples._
 import views.html.ServiceAvailability
 
-import java.time.{LocalDateTime, ZoneId, ZonedDateTime}
+import java.time.{LocalDate, LocalDateTime, ZoneId, ZonedDateTime}
 
 class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
@@ -39,6 +38,24 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
   val now = ZonedDateTime.now(ZoneId.of("Europe/London")).toLocalDateTime
   val date = now.toLocalDate
   val time = now.toLocalTime
+  val allChannelsHealthyWithoutEtas = StatusResponse(
+    gbDeparturesStatus = healthDetailsHealthy,
+    xiDeparturesStatus = healthDetailsHealthy,
+    gbArrivalsStatus = healthDetailsHealthy,
+    xiArrivalsStatus = healthDetailsHealthy,
+    xmlChannelStatus = healthDetailsHealthy,
+    webChannelStatus = healthDetailsHealthy,
+    ppnStatus = healthDetailsHealthy,
+    createdTs = now
+  )
+  val twentyMinutesAgo = LocalDateTime.now.minusMinutes(20)
+  val tenMinutesAgo = LocalDateTime.now.minusMinutes(10)
+  val fiveMinutesAgo = LocalDateTime.now.minusMinutes(5)
+  val twoMinutesAgo = LocalDateTime.now.minusMinutes(2)
+  val fewSecondsAgo = LocalDateTime.now.minusSeconds(15)
+  val etaTime = "10am BST"
+
+  def eta(ch: Channel, createdTs: LocalDateTime) = ETA(ch, etaTime, LocalDate.now(), createdTs)
 
   case class TimeLine(caption: String, time: String, message: String, bcpLink: String)
 
@@ -52,7 +69,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
     TimeLine(caption, time, message, bcpLink)
   }
 
-  def checkGbOrXiContent(timelineEvent: TimeLine, channel: String) = {
+  def checkGbOrXiIssueContent(timelineEvent: TimeLine, channel: String) = {
     timelineEvent.caption mustBe
       (s"""${messages("service.availability.status.issues")} - ${messages(s"service.availability.ncts.$channel")}""")
     timelineEvent.message mustBe (s"${messages("service.availability.issues.p1")} " +
@@ -64,15 +81,45 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
     timelineEvent.bcpLink mustBe transitManualLink
   }
 
-  def checkWebOrXmlContent(timelineEvent: TimeLine, channel: String) = {
+  def checkWebOrXmlIssueContent(timelineEvent: TimeLine, channel: String) = {
     timelineEvent.caption mustBe
-      (s"""${messages("service.availability.status.issues")} - ${messages(s"service.availability.submission.channels.status.$channel")}""")
+      (s"""${messages("service.availability.status.issues")} - ${messages(s"service.availability.timeline.channel.caption.$channel")}""")
     timelineEvent.message mustBe (s"${messages("service.availability.issues.p1")} " +
       s"${messages(s"service.availability.submission.channels.status.$channel")} " +
-      s"${messages(s"service.availability.issues.channel")} " +
       s"${messages("service.availability.issues.webXML.channel")} " +
       s"${messages("service.availability.issues.p3")}")
   }
+
+  def checkPpnIssueContent(timelineEvent: TimeLine, channel: String) = {
+    timelineEvent.caption mustBe
+      (s"""${messages("service.availability.status.issues")} - ${messages(s"service.availability.timeline.channel.caption.$channel")}""")
+    timelineEvent.message mustBe s"${messages("service.availability.issues.ppn")}"
+  }
+
+  def checkGbOrXiEtaContent(etaTimeline: TimeLine, channel: String) = {
+    val expectedEtaDateTime = s"$etaTime, ${DateTimeFormatter.formatDateWithoutDayOfWeek(date)}"
+
+    etaTimeline.caption mustBe
+      (s"""${messages("service.availability.eta")} - ${messages(s"service.availability.timeline.channel.caption.$channel")}""")
+    etaTimeline.message mustBe (s"${messages("service.availability.eta.estimate")} " +
+      s"${messages(s"service.availability.timeline.channel.display.$channel")} " +
+      s"${messages("service.availability.eta.availability")} " +
+      s"$expectedEtaDateTime. " +
+      s"${messages("service.availability.eta.notify.component")}")
+  }
+
+  def checkWebOrXmlOrPpnEtaContent(etaTimeline: TimeLine, channel: String) = {
+    val expectedEtaDateTime = s"$etaTime, ${DateTimeFormatter.formatDateWithoutDayOfWeek(date)}"
+
+    etaTimeline.caption mustBe
+      (s"""${messages("service.availability.eta")} - ${messages(s"service.availability.timeline.channel.caption.$channel")}""")
+    etaTimeline.message mustBe (s"${messages("service.availability.eta.estimate")} " +
+      s"${messages(s"service.availability.timeline.channel.display.$channel")} " +
+      s"${messages("service.availability.eta.availability")} " +
+      s"$expectedEtaDateTime. " +
+      s"${messages("service.availability.eta.notify.channel")}")
+  }
+
   "ServiceAvailability" - {
 
     "should have the correct breadcrumbs" in {
@@ -275,12 +322,12 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           .text() mustBe DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)
 
         val gbArrivalEvent = timeLineContent(allUnhealthyView, 0)
-        checkGbOrXiContent(gbArrivalEvent, "gb.arrivals")
+        checkGbOrXiIssueContent(gbArrivalEvent, "gb.arrivals")
         gbArrivalEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.gbArrivalsStatus.statusChangedAt)
 
         val xiArrivalEvent = timeLineContent(allUnhealthyView, 1)
         xiArrivalEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)
-        checkGbOrXiContent(xiArrivalEvent, "xi.arrivals")
+        checkGbOrXiIssueContent(xiArrivalEvent, "xi.arrivals")
       }
 
       "should show that services have known issues and known issues since time for departures" in {
@@ -295,11 +342,11 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val xiDepartureEvent = timeLineContent(allUnhealthyView, 2)
         xiDepartureEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)
-        checkGbOrXiContent(xiDepartureEvent, "xi.departures")
+        checkGbOrXiIssueContent(xiDepartureEvent, "xi.departures")
 
         val gbDepartureEvent = timeLineContent(allUnhealthyView, 3)
         gbDepartureEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)
-        checkGbOrXiContent(gbDepartureEvent, "gb.departures")
+        checkGbOrXiIssueContent(gbDepartureEvent, "gb.departures")
       }
 
       "should show that services have known issues and known issues since time for other systems" in {
@@ -317,11 +364,11 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           .text() mustBe  DateTimeFormatter.formatDateTime(statusResponse.ppnStatus.statusChangedAt)
 
         val xmlEvent = timeLineContent(allUnhealthyView, 4)
-        checkWebOrXmlContent(xmlEvent, "xml")
+        checkWebOrXmlIssueContent(xmlEvent, "xml.channel")
         xmlEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xmlChannelStatus.statusChangedAt)
 
         val webEvent = timeLineContent(allUnhealthyView, 5)
-        checkWebOrXmlContent(webEvent, "web")
+        checkWebOrXmlIssueContent(webEvent, "web.channel")
         webEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.webChannelStatus.statusChangedAt)
 
         val ppnEvent = timeLineContent(allUnhealthyView, 6)
@@ -425,7 +472,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           .text() mustBe messages("service.availability.status.available")
 
         val webEvent = timeLineContent(someUnhealthyView, 2)
-        checkWebOrXmlContent(webEvent, "web")
+        checkWebOrXmlIssueContent(webEvent, "web.channel")
         webEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.webChannelStatus.statusChangedAt)
       }
     }
@@ -538,10 +585,10 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         )
 
         val plannedDowntimeViewModel = PlannedDowntimeViewModel(
-          Some(PlannedDowntime(date, time.minusMinutes(1), date, time.plusMinutes(1), gbArrivals)),
-          Some(PlannedDowntime(date, time.minusMinutes(1), date, time.plusMinutes(1), xiArrivals)),
-          Some(PlannedDowntime(date, time.minusMinutes(1), date, time.plusMinutes(1), gbDepartures)),
-          Some(PlannedDowntime(date, time.minusMinutes(1), date, time.plusMinutes(1), xiDepartures))
+          Some(PlannedDowntime(date, time.minusMinutes(1), date, time.plusMinutes(1), GBArrivals)),
+          Some(PlannedDowntime(date, time.minusMinutes(1), date, time.plusMinutes(1), XIArrivals)),
+          Some(PlannedDowntime(date, time.minusMinutes(1), date, time.plusMinutes(1), GBDepartures)),
+          Some(PlannedDowntime(date, time.minusMinutes(1), date, time.plusMinutes(1), XIDepartures))
         )
 
         val allHealthyWithPlannedDowntime: Document = Jsoup.parse(view(statusResponse, plannedDowntimeViewModel).body)
@@ -563,6 +610,99 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         allHealthyWithPlannedDowntime.getElementsByClass("govuk-table__cell").get(11)
           .text() mustBe messages("service.availability.status.no.issues")
       }
+    }
+
+    "should not show ETA in timeline if the channel is healthy" in {
+      val allChannelsHealthyButHasEtas = allChannelsHealthyWithoutEtas.copy(
+        timelineEntries = Seq(GBDepartures, GBArrivals, XIDepartures, XIArrivals, Web, XML, PPN).map(eta(_, now))
+      )
+      val healthyView: Document = Jsoup.parse(view(allChannelsHealthyButHasEtas, PlannedDowntimeViewModel.default).body)
+      val timelineEvents = healthyView.getElementsByClass("hmrc-timeline__event")
+      timelineEvents mustBe empty
+    }
+
+    "should show Known issues and corresponding ETAs(if present) in timeline from most recent to oldest events" - {
+
+      "when GB and XI Departures are unhealthy and GB has an ETA" in {
+        val statusResponse = allChannelsHealthyWithoutEtas.copy(
+          gbDeparturesStatus = healthDetailsUnhealthy.copy(statusChangedAt = tenMinutesAgo),
+          xiDeparturesStatus = healthDetailsUnhealthy.copy(statusChangedAt = fiveMinutesAgo),
+          timelineEntries = Seq(eta(GBDepartures, twoMinutesAgo))
+        )
+        val unhealthyDeparturesView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
+
+        val gbEtaEvent = timeLineContent(unhealthyDeparturesView, 0)
+        gbEtaEvent.time mustBe DateTimeFormatter.formatDateTime(twoMinutesAgo)
+       checkGbOrXiEtaContent(gbEtaEvent, "gb.departures")
+
+        val xiDepartureEvent = timeLineContent(unhealthyDeparturesView, 1)
+        xiDepartureEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)
+        checkGbOrXiIssueContent(xiDepartureEvent, "xi.departures")
+
+        val gbDeparturesEvent = timeLineContent(unhealthyDeparturesView, 2)
+        checkGbOrXiIssueContent(gbDeparturesEvent, "gb.departures")
+        gbDeparturesEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)
+      }
+
+      "when GB and XI Arrivals are unhealthy and XI has an ETA" in {
+        val statusResponse = allChannelsHealthyWithoutEtas.copy(
+          gbArrivalsStatus = healthDetailsUnhealthy.copy(statusChangedAt = tenMinutesAgo),
+          xiArrivalsStatus = healthDetailsUnhealthy.copy(statusChangedAt = fiveMinutesAgo),
+          timelineEntries = Seq(eta(XIArrivals, twoMinutesAgo))
+        )
+        val unhealthyArrivalsView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
+
+        val xiEtaEvent = timeLineContent(unhealthyArrivalsView, 0)
+        xiEtaEvent.time mustBe DateTimeFormatter.formatDateTime(twoMinutesAgo)
+        checkGbOrXiEtaContent(xiEtaEvent, "xi.arrivals")
+
+        val xiArrivalsEvent = timeLineContent(unhealthyArrivalsView, 1)
+        xiArrivalsEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)
+        checkGbOrXiIssueContent(xiArrivalsEvent, "xi.arrivals")
+
+        val gbArrivalsEvent = timeLineContent(unhealthyArrivalsView, 2)
+        checkGbOrXiIssueContent(gbArrivalsEvent, "gb.arrivals")
+        gbArrivalsEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.gbArrivalsStatus.statusChangedAt)
+      }
+
+      "when Web, XML and PPN are unhealthy and have an ETA" in {
+        val now = LocalDateTime.now
+        val statusResponse = allChannelsHealthyWithoutEtas.copy(
+          webChannelStatus = healthDetailsUnhealthy.copy(statusChangedAt = fiveMinutesAgo),
+          xmlChannelStatus = healthDetailsUnhealthy.copy(statusChangedAt = tenMinutesAgo),
+          ppnStatus = healthDetailsUnhealthy.copy(statusChangedAt = twentyMinutesAgo),
+          timelineEntries = Seq(
+            eta(XML, twoMinutesAgo),
+            eta(Web, fewSecondsAgo),
+            eta(PPN, now))
+        )
+        val unhealthyDeparturesView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
+
+        val ppnEtaEvent = timeLineContent(unhealthyDeparturesView, 0)
+        ppnEtaEvent.time mustBe DateTimeFormatter.formatDateTime(now)
+        checkWebOrXmlOrPpnEtaContent(ppnEtaEvent, "ppn")
+
+        val webEtaEvent = timeLineContent(unhealthyDeparturesView, 1)
+        webEtaEvent.time mustBe DateTimeFormatter.formatDateTime(fewSecondsAgo)
+        checkWebOrXmlOrPpnEtaContent(webEtaEvent, "web.channel")
+
+        val xmlEtaEvent = timeLineContent(unhealthyDeparturesView, 2)
+        xmlEtaEvent.time mustBe DateTimeFormatter.formatDateTime(twoMinutesAgo)
+        checkWebOrXmlOrPpnEtaContent(xmlEtaEvent, "xml.channel")
+
+        val webIssuesEvent = timeLineContent(unhealthyDeparturesView, 3)
+        webIssuesEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.webChannelStatus.statusChangedAt)
+        checkWebOrXmlIssueContent(webIssuesEvent, "web.channel")
+
+        val xmlIssuesEvent = timeLineContent(unhealthyDeparturesView, 4)
+        xmlIssuesEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xmlChannelStatus.statusChangedAt)
+        checkWebOrXmlIssueContent(xmlIssuesEvent, "xml.channel")
+
+        val ppnIssuesEvent = timeLineContent(unhealthyDeparturesView, 5)
+        ppnIssuesEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.ppnStatus.statusChangedAt)
+        checkPpnIssueContent(ppnIssuesEvent, "ppn")
+      }
+
     }
   }
 

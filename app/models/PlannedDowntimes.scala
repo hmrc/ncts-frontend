@@ -19,10 +19,10 @@ package models
 case class PlannedDowntimes(plannedDowntimes: Seq[PlannedDowntime]) {
 
   def isArrival(downtime: PlannedDowntime): Boolean =
-    downtime.affectedChannel.equals(Channel.gbArrivals) || downtime.affectedChannel.equals(Channel.xiArrivals)
+    downtime.affectedChannel.equals(GBArrivals) || downtime.affectedChannel.equals(XIArrivals)
 
   def isDeparture(downtime: PlannedDowntime): Boolean =
-    downtime.affectedChannel.equals(Channel.gbDepartures) || downtime.affectedChannel.equals(Channel.xiDepartures)
+    downtime.affectedChannel.equals(GBDepartures) || downtime.affectedChannel.equals(XIDepartures)
 
   def arrivalsAffected: Boolean = plannedDowntimes.exists(isArrival)
 

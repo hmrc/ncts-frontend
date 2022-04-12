@@ -28,6 +28,11 @@ object DateTimeFormatter {
     formatter.format(localDate)
   }
 
+  def formatDateWithoutDayOfWeek(localDate: LocalDate): String = {
+    val formatter = DateTimeGen.ofPattern("d MMMM yyyy")
+    formatter.format(localDate)
+  }
+
   def setTimeOffset(dateTime: LocalDateTime): LocalDateTime = {
     val dateTimeWithZone = dateTime.atZone(ZoneId.of("Europe/London"))
     val isGMT = dateTimeWithZone.getOffset.getTotalSeconds == 0

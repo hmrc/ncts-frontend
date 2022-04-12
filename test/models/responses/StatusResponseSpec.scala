@@ -16,16 +16,19 @@
 
 package models.responses
 
+import base.SpecBase
 import models.responses.ErrorResponse.StatusResponseError
-import models.responses.StatusResponse.StatusResponseReads
+import models.responses.StatusResponse.{StatusResponseReads, dateTimeOrdering}
+import models._
+import org.scalatest.enablers.Sortable
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.wordspec.AnyWordSpec
 import play.api.http.Status
 import uk.gov.hmrc.http.HttpResponse
 
-import java.time.LocalDateTime
+import java.time.{LocalDate, LocalDateTime}
+import scala.collection.GenSeq
 
-class StatusResponseSpec extends AnyWordSpec with Matchers {
+class StatusResponseSpec extends SpecBase with  Matchers {
 
   private val statusChangedAt =
     LocalDateTime.of(2022, 1, 1, 10, 25, 55)
@@ -33,16 +36,32 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
   private val lastMessageAccepted =
     LocalDateTime.of(2022, 1, 1, 10, 25, 55)
 
+  private val etaDate = LocalDate.of(2022, 3, 23)
+  private val etaTime = "10am BST"
   private val healthDetailsHealthy =
     HealthDetails(healthy = true, statusChangedAt = statusChangedAt, lastMessageAccepted = Some(lastMessageAccepted))
   private val healthDetailsUnhealthy =
     HealthDetails(healthy = false, statusChangedAt = statusChangedAt, lastMessageAccepted = Some(lastMessageAccepted))
+  lazy val allHealthyResp = StatusResponse(healthDetailsHealthy, healthDetailsHealthy, healthDetailsHealthy, healthDetailsHealthy,
+    healthDetailsHealthy,healthDetailsHealthy, healthDetailsHealthy, Nil, LocalDateTime.now)
+  private val twentyMinutesAgo = LocalDateTime.now.minusMinutes(20)
+  private val tenMinutesAgo = LocalDateTime.now.minusMinutes(10)
+  private val fiveMinutesAgo = LocalDateTime.now.minusMinutes(5)
+  private val twoMinutesAgo = LocalDateTime.now.minusMinutes(2)
+  private val fewSecondsAgo = LocalDateTime.now.minusSeconds(15)
 
-  "StatusResponseReads" should {
-    "return a StatusResponse when status is OK and can be parsed for GB/XI departures true and GB/XI arrivals false" in {
+  implicit val dateTimeReverseSortable: Sortable[GenSeq[LocalDateTime]] = Sortable.sortableNatureOfSeq(dateTimeOrdering.reverse)
 
-      val depHealthyArrUnhealthyJson = json(true, false, false)
+  private def eta(ch: Channel, createdTs: LocalDateTime) = ETA(ch, "10am GMT", LocalDate.now(), createdTs)
 
+  "StatusResponseReads" - {
+    "should return a StatusResponse when status is OK and can be parsed for GB/XI departures true, GB/XI arrivals false and ETA for XI arrivals and XML" in {
+
+      val depHealthyArrUnhealthyJson = json(true, false, false,
+        timelineEntriesJson(etaDate, etaTime))
+      val createdTimestamp = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+      val etas = Seq(ETA(XIArrivals, etaTime, etaDate, createdTimestamp),
+        ETA(XML, etaTime, etaDate, createdTimestamp))
       val expectedResult = StatusResponse(
         gbDeparturesStatus = healthDetailsHealthy,
         xiDeparturesStatus = healthDetailsHealthy,
@@ -51,7 +70,8 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
         xmlChannelStatus = healthDetailsUnhealthy,
         webChannelStatus = healthDetailsUnhealthy,
         ppnStatus = healthDetailsUnhealthy,
-        createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+        timelineEntries = etas,
+        createdTs = createdTimestamp
       )
 
       val httpResponse = HttpResponse(Status.OK, depHealthyArrUnhealthyJson)
@@ -61,7 +81,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
       result mustBe expectedResult
     }
 
-    "return a StatusResponse when status is OK and can be parsed for GB/XI departures false and GB/XI arrivals true" in {
+    "should return a StatusResponse when status is OK and can be parsed for GB/XI departures false and GB/XI arrivals true" in {
 
       val depUnhealthyArrHealthy = json(false, true, true)
 
@@ -83,7 +103,7 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
       result mustBe expectedResult
     }
 
-    "return StatusResponseError" when {
+    "should return StatusResponseError" - {
       "the response is on an invalid format" in {
         val invalidJson =
           """
@@ -111,25 +131,90 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
     }
   }
 
-  "xmlAndWebHealthy" should {
+  "xmlAndWebHealthy" - {
 
     lazy val resp = StatusResponse(healthDetailsHealthy, healthDetailsHealthy, healthDetailsHealthy, healthDetailsHealthy,
-      healthDetailsHealthy,healthDetailsHealthy, healthDetailsHealthy, LocalDateTime.now)
+      healthDetailsHealthy,healthDetailsHealthy, healthDetailsHealthy, Nil, LocalDateTime.now)
 
-    "return true if both xml and web are healthy in the response" in {
+    "should return true if both xml and web are healthy in the response" in {
       resp.xmlAndWebHealthy mustBe true
     }
 
-    "return false if xml is healthy but web is unhealthy in the response" in {
+    "should return false if xml is healthy but web is unhealthy in the response" in {
       resp.copy(xmlChannelStatus = healthDetailsUnhealthy).xmlAndWebHealthy mustBe false
     }
 
-    "return false if web is healthy but xml is unhealthy in the response" in {
+    "should return false if web is healthy but xml is unhealthy in the response" in {
       resp.copy(webChannelStatus = healthDetailsUnhealthy).xmlAndWebHealthy mustBe false
     }
   }
 
-  def json(departuresHealthy: Boolean, arrivalsHealthy: Boolean, otherChannelsHealthy: Boolean): String = {
+  "arrivalsWithKnownIssuesAndEta should return ETA and Known issues sorted - recent to old" in {
+    val resp = allHealthyResp.copy(
+      gbArrivalsStatus = healthDetailsUnhealthy.copy(statusChangedAt = twoMinutesAgo),
+      xiArrivalsStatus = healthDetailsUnhealthy.copy(statusChangedAt = tenMinutesAgo),
+      timelineEntries = Seq(eta(XIArrivals, fiveMinutesAgo), eta(GBArrivals, LocalDateTime.now))
+    )
+    val timeline = resp.arrivalsWithKnownIssuesAndEta
+    timeline.size mustBe 4
+    timeline.map(_.issueSince) mustBe sorted
+    timeline.head.channel mustBe GBArrivals
+    timeline.head.eta mustBe defined
+    timeline(1).channel mustBe GBArrivals
+    timeline(1).eta mustBe empty
+    timeline(2).channel mustBe XIArrivals
+    timeline(2).eta mustBe defined
+    timeline(3).channel mustBe XIArrivals
+    timeline(3).eta mustBe empty
+  }
+
+  "departureWithKnownIssuesAndEta should return ETA and Known issues sorted - recent to old" in {
+    val resp = allHealthyResp.copy(
+      gbDeparturesStatus = healthDetailsUnhealthy.copy(statusChangedAt = fiveMinutesAgo),
+      xiDeparturesStatus = healthDetailsUnhealthy.copy(statusChangedAt = tenMinutesAgo),
+      timelineEntries = Seq(eta(GBDepartures, twoMinutesAgo), eta(XIDepartures, LocalDateTime.now))
+    )
+    val timeline = resp.departuresWithKnownIssuesAndEta
+    timeline.size mustBe 4
+    timeline.map(_.issueSince) mustBe sorted
+    timeline.head.channel mustBe XIDepartures
+    timeline.head.eta mustBe defined
+    timeline(1).channel mustBe GBDepartures
+    timeline(1).eta mustBe defined
+    timeline(2).channel mustBe GBDepartures
+    timeline(2).eta mustBe empty
+    timeline(3).channel mustBe XIDepartures
+    timeline(3).eta mustBe empty
+  }
+
+  "channelsWithKnownIssuesAndEta should return ETA and Known issues sorted - recent to old" in {
+    val resp = allHealthyResp.copy(
+      webChannelStatus = healthDetailsUnhealthy.copy(statusChangedAt = fiveMinutesAgo),
+      xmlChannelStatus = healthDetailsUnhealthy.copy(statusChangedAt = tenMinutesAgo),
+      ppnStatus = healthDetailsUnhealthy.copy(statusChangedAt = twentyMinutesAgo),
+      timelineEntries = Seq(
+        eta(Web, twoMinutesAgo),
+        eta(XML, fewSecondsAgo),
+        eta(PPN, LocalDateTime.now))
+    )
+    val timeline = resp.channelsWithKnownIssuesAndEta
+    timeline.size mustBe 6
+    timeline.map(_.issueSince) mustBe sorted
+    timeline.head.channel mustBe PPN
+    timeline.head.eta mustBe defined
+    timeline(1).channel mustBe XML
+    timeline(1).eta mustBe defined
+    timeline(2).channel mustBe Web
+    timeline(2).eta mustBe defined
+    timeline(3).channel mustBe Web
+    timeline(3).eta mustBe empty
+    timeline(4).channel mustBe XML
+    timeline(4).eta mustBe empty
+    timeline(5).channel mustBe PPN
+    timeline(5).eta mustBe empty
+  }
+
+  def json(departuresHealthy: Boolean, arrivalsHealthy: Boolean, otherChannelsHealthy: Boolean, timelineEntriesJson: String = "[]"): String = {
     s"""
        |{
        |  "gbDeparturesStatus": {
@@ -167,8 +252,27 @@ class StatusResponseSpec extends AnyWordSpec with Matchers {
        |    "statusChangedAt": "$statusChangedAt",
        |    "lastMessageAccepted": "$lastMessageAccepted"
        |  },
+       |  "timelineEntries": $timelineEntriesJson,
        |  "createdTs": "2022-01-01T10:25:55"
        |}""".stripMargin
+  }
+
+  def timelineEntriesJson(date: LocalDate, time: String): String = {
+    s"""
+       |[
+       |  {
+       |    "channel": "XI Arrivals",
+       |    "time": "$time",
+       |    "date": "$date",
+       |    "createdTs": "2022-01-01T10:25:55"
+       |  },
+       |  {
+       |    "channel": "XML channel",
+       |    "time": "$time",
+       |    "date": "$date",
+       |    "createdTs": "2022-01-01T10:25:55"
+       |  }
+       |]""".stripMargin
   }
 
 }

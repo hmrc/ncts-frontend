@@ -17,7 +17,7 @@
 package models.responses
 
 import models.responses.ErrorResponse.DowntimeResponseError
-import models.{DowntimeChannel, MongoDateTimeFormats}
+import models.{Channel, MongoDateTimeFormats}
 import org.slf4j.LoggerFactory
 import play.api.http.Status.OK
 import play.api.libs.functional.syntax._
@@ -26,13 +26,13 @@ import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 import java.time.LocalDateTime
 
-case class Downtime(affectedChannel: DowntimeChannel, start: LocalDateTime, end: LocalDateTime)
+case class Downtime(affectedChannel: Channel, start: LocalDateTime, end: LocalDateTime)
 
 object Downtime {
 
   implicit val writes: Writes[Downtime] = {
     (
-      (__ \ "affectedChannel").write[DowntimeChannel](DowntimeChannel.format) and
+      (__ \ "affectedChannel").write[Channel](Channel.format) and
         (__ \ "start").write(MongoDateTimeFormats.localDateTimeWrite) and
         (__ \ "end").write(MongoDateTimeFormats.localDateTimeWrite)
       ) (unlift(Downtime.unapply))
@@ -40,7 +40,7 @@ object Downtime {
 
   implicit val reads: Reads[Downtime] = {
     (
-      (__ \ "affectedChannel").read[DowntimeChannel](DowntimeChannel.format) and
+      (__ \ "affectedChannel").read[Channel](Channel.format) and
         (__ \ "start").read(MongoDateTimeFormats.localDateTimeRead) and
         (__ \ "end").read(MongoDateTimeFormats.localDateTimeRead)
       ) (Downtime.apply _)

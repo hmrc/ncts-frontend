@@ -89,6 +89,26 @@ service.availability.issues.ppn=The PPNS channel is experiencing technical issue
 service.availability.issues.xml.channel=XML channel
 service.availability.related.links.planned.downtimes=Planned downtime
 service.availability.issues.channel=channel
+service.availability.eta=ETA
+service.availability.eta.estimate=We estimate the
+service.availability.eta.availability=to be available at
+service.availability.eta.notify.channel=We will notify you here when the channel is available.
+service.availability.eta.notify.component=We will notify you here when the component is available.
+service.availability.timeline.channel.caption.gb.departures=NCTS GB Departures
+service.availability.timeline.channel.caption.xi.departures=NCTS XI Departures
+service.availability.timeline.channel.caption.gb.arrivals=NCTS GB Arrivals
+service.availability.timeline.channel.caption.xi.arrivals=NCTS XI Arrivals
+service.availability.timeline.channel.caption.web.channel=Web
+service.availability.timeline.channel.caption.xml.channel=XML
+service.availability.timeline.channel.caption.ppn=PPNS
+service.availability.timeline.channel.display.gb.departures=NCTS GB Departures component
+service.availability.timeline.channel.display.xi.departures=NCTS XI Departures component
+service.availability.timeline.channel.display.gb.arrivals=NCTS GB Arrivals component
+service.availability.timeline.channel.display.xi.arrivals=NCTS XI Arrivals component
+service.availability.timeline.channel.display.web.channel=Web channel
+service.availability.timeline.channel.display.xml.channel=XML channel
+service.availability.timeline.channel.display.ppn=PPNS
+
 
 service.availability.help.with.channels=Help with channels
 service.availability.help.with.channels.p1=Channels are the route users make submissions to NCTS through.

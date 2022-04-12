@@ -16,17 +16,19 @@
 
 package models.responses
 
+import models._
 import models.responses.ErrorResponse.StatusResponseError
 import models.responses.StatusResponse.dateTimeOrdering
 import org.slf4j.LoggerFactory
 import play.api.http.Status.OK
-import play.api.i18n.Messages
-import play.api.libs.json.{JsError, JsSuccess, Json, OFormat}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
+import utils.DateTimeFormatter
 
-import java.time.LocalDateTime
+import java.time.{LocalDate, LocalDateTime}
 
-case class ChannelKnownIssue(channel: String, issueSince: LocalDateTime)
+case class ChannelKnownIssue(channel: Channel, issueSince: LocalDateTime, eta: Option[String] = None)
 
 case class StatusResponse(
                            gbDeparturesStatus: HealthDetails,
@@ -36,6 +38,7 @@ case class StatusResponse(
                            xmlChannelStatus: HealthDetails,
                            webChannelStatus: HealthDetails,
                            ppnStatus: HealthDetails,
+                           timelineEntries: Seq[ETA] = Nil,
                            createdTs: LocalDateTime
                          ) {
   def xmlAndWebHealthy: Boolean = xmlChannelStatus.healthy && webChannelStatus.healthy
@@ -44,31 +47,40 @@ case class StatusResponse(
 
   def ppnNotHealthy: Boolean = !ppnStatus.healthy
 
-  private def unhealthyChannels(channels: List[(HealthDetails, String)])(implicit messages: Messages): List[ChannelKnownIssue] = {
+  private def knownIssuesAndCorrespondingEtas(knownIssues: List[ChannelKnownIssue]): List[ChannelKnownIssue] = {
+    val filteredEtas = knownIssues.flatMap(
+      issue => timelineEntries.filter(_.channel == issue.channel)
+      .map(_.toChannelWithKnownIssue))
+
+    (knownIssues ++ filteredEtas).sortBy(_.issueSince).reverse
+  }
+
+  private def unhealthyChannels(channels: List[(HealthDetails, Channel)]): List[ChannelKnownIssue] = {
     channels.filter(!_._1.healthy)
-      .map(ch => ChannelKnownIssue(s"${messages(ch._2)}", ch._1.statusChangedAt))
-      .sortBy(_.issueSince)
-      .reverse
+      .map(ch => ChannelKnownIssue(ch._2, ch._1.statusChangedAt))
   }
 
-  def arrivalsWithKnownIssues(implicit messages: Messages): List[ChannelKnownIssue] = {
-    unhealthyChannels(
-      List((gbArrivalsStatus, "service.availability.ncts.gb.arrivals"),
-        (xiArrivalsStatus, "service.availability.ncts.xi.arrivals")))
+  def arrivalsWithKnownIssuesAndEta: List[ChannelKnownIssue] = {
+    val arrivalKnownIssues = unhealthyChannels(
+      List((gbArrivalsStatus, GBArrivals),
+        (xiArrivalsStatus, XIArrivals)))
+
+    knownIssuesAndCorrespondingEtas(arrivalKnownIssues)
   }
 
-  def departuresWithKnownIssues(implicit messages: Messages): List[ChannelKnownIssue] = {
-    unhealthyChannels(
-      List((gbDeparturesStatus, "service.availability.ncts.gb.departures"),
-        (xiDeparturesStatus, "service.availability.ncts.xi.departures")))
+  def departuresWithKnownIssuesAndEta: List[ChannelKnownIssue] = {
+    val departureKnownIssues = unhealthyChannels(
+      List((gbDeparturesStatus, GBDepartures),
+        (xiDeparturesStatus, XIDepartures)))
+    knownIssuesAndCorrespondingEtas(departureKnownIssues)
   }
 
-  def channelsWithKnownIssues(implicit messages: Messages): List[ChannelKnownIssue] = {
-    val issues = unhealthyChannels(
-      List((xmlChannelStatus, "service.availability.submission.channels.status.xml"),
-        (webChannelStatus, "service.availability.submission.channels.status.web"),
-        (ppnStatus, "service.availability.submission.channels.status.ppn")))
-    issues
+  def channelsWithKnownIssuesAndEta: List[ChannelKnownIssue] = {
+    val channelIssues = unhealthyChannels(
+      List((xmlChannelStatus, XML),
+        (webChannelStatus, Web),
+        (ppnStatus, PPN)))
+    knownIssuesAndCorrespondingEtas(channelIssues)
   }
 }
 
@@ -76,7 +88,44 @@ object StatusResponse {
 
   private val logger = LoggerFactory.getLogger(classOf[StatusResponse])
 
-  implicit val format: OFormat[StatusResponse] = Json.format[StatusResponse]
+  implicit val etaReads: Reads[ETA] = ETA.reads
+
+  implicit lazy val reads: Reads[StatusResponse] = {
+
+    implicit val healthDetailsReads: Reads[HealthDetails] = HealthDetails.format
+
+    (
+      (__ \ "gbDeparturesStatus").read[HealthDetails] and
+        (__ \ "xiDeparturesStatus").read[HealthDetails] and
+        (__ \ "gbArrivalsStatus").read[HealthDetails] and
+        (__ \ "xiArrivalsStatus").read[HealthDetails] and
+        (__ \ "xmlChannelStatus").read[HealthDetails] and
+        (__ \ "webChannelStatus").read[HealthDetails] and
+        (__ \ "ppnStatus").read[HealthDetails] and
+        (__ \ "timelineEntries").read[Seq[ETA]] and
+        (__ \ "createdTs").read[LocalDateTime]
+
+      ) (StatusResponse.apply _)
+  }
+
+  implicit lazy val writes: OWrites[StatusResponse] = {
+
+    implicit val healthDetailsWrites: Writes[HealthDetails] = HealthDetails.format
+
+    (
+      (__ \ "gbDeparturesStatus").write[HealthDetails] and
+        (__ \ "xiDeparturesStatus").write[HealthDetails] and
+        (__ \ "gbArrivalsStatus").write[HealthDetails] and
+        (__ \ "xiArrivalsStatus").write[HealthDetails] and
+        (__ \ "xmlChannelStatus").write[HealthDetails] and
+        (__ \ "webChannelStatus").write[HealthDetails] and
+        (__ \ "ppnStatus").write[HealthDetails] and
+        (__ \ "timelineEntries").write[Seq[ETA]] and
+        (__ \ "createdTs").write[LocalDateTime]
+
+      ) (unlift(StatusResponse.unapply))
+
+  }
 
   implicit val dateTimeOrdering: Ordering[LocalDateTime] = _ compareTo _
 
@@ -103,4 +152,30 @@ case class HealthDetails(healthy: Boolean, statusChangedAt: LocalDateTime, lastM
 
 object HealthDetails {
   implicit val format: OFormat[HealthDetails] = Json.format[HealthDetails]
+}
+
+case class ETA(channel: Channel, time: String, date: LocalDate, createdTs: LocalDateTime) {
+  def toChannelWithKnownIssue: ChannelKnownIssue = {
+    val dateTimeStr = s"$time, ${DateTimeFormatter.formatDateWithoutDayOfWeek(date)}"
+    ChannelKnownIssue(channel, createdTs, Some(dateTimeStr))
+  }
+}
+
+object ETA {
+  implicit val writes: Writes[ETA] = {
+    (
+      (__ \ "channel").write[Channel](Channel.format) and
+        (__ \ "time").write[String] and
+        (__ \ "date").write[LocalDate] and
+        (__ \ "createdTs").write(MongoDateTimeFormats.DefaultLocalDateTimeWrites)
+      ) (unlift(ETA.unapply))
+  }
+  implicit val reads: Reads[ETA] = {
+    (
+      (__ \ "channel").read[Channel](Channel.format) and
+        (__ \ "time").read[String] and
+        (__ \ "date").read[LocalDate] and
+        (__ \ "createdTs").read(MongoDateTimeFormats.DefaultLocalDateTimeReads)
+      ) (ETA.apply _)
+  }
 }
