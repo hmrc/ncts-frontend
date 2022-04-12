@@ -33,4 +33,4 @@ trait MongoDateTimeFormats {
   )
 }
 
-object MongoDateTimeFormats extends MongoDateTimeFormats
+object MongoDateTimeFormats extends MongoDateTimeFormats with DefaultReads with DefaultWrites
