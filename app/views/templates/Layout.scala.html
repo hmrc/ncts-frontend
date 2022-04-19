@@ -15,7 +15,6 @@
  *@
 
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcLayout, HmrcReportTechnicalIssueHelper}
-@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 @import views.html.helper.CSPNonce
 @import config.FrontendAppConfig
 @import views.html.helpers.Breadcrumbs
@@ -23,7 +22,6 @@
 @this(
     hmrcLayout: HmrcLayout,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
-    standardBetaBanner: StandardBetaBanner,
     appConfig: FrontendAppConfig
 )
 
@@ -44,7 +42,6 @@
     isWelshTranslationAvailable = appConfig.languageTranslationEnabled,
     serviceUrl  = Some(routes.IndexController.onPageLoad.url),
     signOutUrl  = None,
-    phaseBanner = Some(standardBetaBanner(url = appConfig.feedbackUrl)),
     nonce = CSPNonce.get,
     backLinkUrl = backUrl,
     mainContentLayout = None,
