@@ -28,8 +28,13 @@
             @messages("service.availability.bcp.invoked.p1")
             <a href=@appConfig.govUKTransitManualLink>@messages("service.availability.issues.p5")</a>.
         </p>
-        @if(bcp.eta.isEmpty){
-            <p class="govuk-body">@messages("service.availability.bcp.invoked.eta.unknown")</p>
+        <p class="govuk-body">
+        @{bcp.eta.fold(
+            {messages("service.availability.bcp.invoked.eta.unknown")}
+            ) { eta =>
+                {messages("service.availability.bcp.invoked.eta.known", bcp.channel.caption, eta)}
+            }
         }
+        </p>
     </div>
 </li>

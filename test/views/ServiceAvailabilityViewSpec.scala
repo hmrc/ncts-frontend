@@ -54,9 +54,11 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
   val twoMinutesAgo = LocalDateTime.now.minusMinutes(2)
   val fewSecondsAgo = LocalDateTime.now.minusSeconds(15)
   val etaTime = "10am BST"
+  val etaDate: LocalDate = LocalDate.now()
 
-  def eta(ch: Channel, createdTs: LocalDateTime, isBCP: Boolean = false) = TimelineUpdate(ch, Option(etaTime), Option(LocalDate.now()), businessContinuityFlag = isBCP, createdTs)
+  def eta(ch: Channel, createdTs: LocalDateTime, isBCP: Boolean = false) = TimelineUpdate(ch, Option(etaTime), Option(etaDate), businessContinuityFlag = isBCP, createdTs)
   def bcpWithoutEta(ch: Channel, createdTs: LocalDateTime) = TimelineUpdate(ch, None, None, businessContinuityFlag = true, createdTs)
+  def bcpWithEta(ch: Channel, createdTs: LocalDateTime) = TimelineUpdate(ch, Option(etaTime), Option(etaDate), businessContinuityFlag = true, createdTs)
 
   case class TimeLine(caption: String, time: String, message: String, bcpLink: String)
 
@@ -127,6 +129,15 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
       (s"""${messages("service.availability.bcp.invoked")} - ${messages(s"service.availability.timeline.channel.caption.$channel")}""")
     bcp.message mustBe (s"${messages("service.availability.bcp.invoked.p1")} ${messages("service.availability.issues.p5")}. " +
       s"${messages("service.availability.bcp.invoked.eta.unknown")}")
+    bcp.bcpLink mustBe transitManualLink
+  }
+
+  def checkBcpWithEtaContent(bcp: TimeLine, channel: String, dateTimeStr: String) = {
+
+    bcp.caption mustBe
+      (s"""${messages("service.availability.bcp.invoked")} - ${messages(s"service.availability.timeline.channel.caption.$channel")}""")
+    bcp.message mustBe (s"${messages("service.availability.bcp.invoked.p1")} ${messages("service.availability.issues.p5")}. " +
+      s"""${messages("service.availability.bcp.invoked.eta.known", messages(s"service.availability.timeline.channel.caption.$channel"), dateTimeStr)}""")
     bcp.bcpLink mustBe transitManualLink
   }
 
@@ -759,6 +770,49 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         checkGbOrXiIssueContent(xiArrivalsEvent, "xi.arrivals")
       }
 
+      "when GB and XI Departures are unhealthy and GB has BCP invoked with an ETA" in {
+        val statusResponse = allChannelsHealthyWithoutEtas.copy(
+          gbDeparturesStatus = healthDetailsUnhealthy.copy(statusChangedAt = tenMinutesAgo),
+          xiDeparturesStatus = healthDetailsUnhealthy.copy(statusChangedAt = fiveMinutesAgo),
+          timelineEntries = Seq(bcpWithEta(GBDepartures, twoMinutesAgo))
+        )
+        val unhealthyDeparturesView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
+
+        val gbDeparturesBcpWithEta = timeLineContent(unhealthyDeparturesView, 0)
+        gbDeparturesBcpWithEta.time mustBe DateTimeFormatter.formatDateTime(twoMinutesAgo)
+        val gbDeparturesEtaDateTime = s"$etaTime, ${DateTimeFormatter.formatDateWithoutDayOfWeek(etaDate)}"
+        checkBcpWithEtaContent(gbDeparturesBcpWithEta, "gb.departures", gbDeparturesEtaDateTime)
+
+        val xiDepartureEvent = timeLineContent(unhealthyDeparturesView, 1)
+        xiDepartureEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)
+        checkGbOrXiIssueContent(xiDepartureEvent, "xi.departures")
+
+        val gbDeparturesEvent = timeLineContent(unhealthyDeparturesView, 2)
+        checkGbOrXiIssueContent(gbDeparturesEvent, "gb.departures")
+        gbDeparturesEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)
+      }
+
+      "when GB and XI Arrivals are unhealthy and XI has BCP invoked with an ETA" in {
+        val statusResponse = allChannelsHealthyWithoutEtas.copy(
+          gbArrivalsStatus = healthDetailsUnhealthy.copy(statusChangedAt = fewSecondsAgo),
+          xiArrivalsStatus = healthDetailsUnhealthy.copy(statusChangedAt = fiveMinutesAgo),
+          timelineEntries = Seq(bcpWithEta(XIArrivals, twoMinutesAgo))
+        )
+        val unhealthyArrivalsView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
+
+        val gbArrivalsEvent = timeLineContent(unhealthyArrivalsView, 0)
+        checkGbOrXiIssueContent(gbArrivalsEvent, "gb.arrivals")
+        gbArrivalsEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.gbArrivalsStatus.statusChangedAt)
+
+        val xiArrivalsBcpWithEta = timeLineContent(unhealthyArrivalsView, 1)
+        xiArrivalsBcpWithEta.time mustBe DateTimeFormatter.formatDateTime(twoMinutesAgo)
+        val xiArrivalsEtaDateTime = s"$etaTime, ${DateTimeFormatter.formatDateWithoutDayOfWeek(etaDate)}"
+        checkBcpWithEtaContent(xiArrivalsBcpWithEta, "xi.arrivals", xiArrivalsEtaDateTime)
+
+        val xiArrivalsEvent = timeLineContent(unhealthyArrivalsView, 2)
+        xiArrivalsEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)
+        checkGbOrXiIssueContent(xiArrivalsEvent, "xi.arrivals")
+      }
     }
   }
 
