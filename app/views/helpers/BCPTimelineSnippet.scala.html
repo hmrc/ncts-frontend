@@ -1,0 +1,35 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import utils.DateTimeFormatter._
+@import config.FrontendAppConfig
+@import models.responses.ChannelKnownIssue
+
+@(bcp: ChannelKnownIssue, appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
+<li class="hmrc-timeline__event">
+    <h2 class="hmrc-timeline__event-title govuk-table__caption--s">
+        @messages("service.availability.bcp.invoked") - @bcp.channel.caption</h2>
+    <time class="hmrc-timeline__event-meta">@formatDateTime(bcp.issueSince)</time>
+    <div class="hmrc-timeline__event-content">
+        <p class="govuk-body">
+            @messages("service.availability.bcp.invoked.p1")
+            <a href=@appConfig.govUKTransitManualLink>@messages("service.availability.issues.p5")</a>.
+        </p>
+        @if(bcp.eta.isEmpty){
+            <p class="govuk-body">@messages("service.availability.bcp.invoked.eta.unknown")</p>
+        }
+    </div>
+</li>

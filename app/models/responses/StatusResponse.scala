@@ -28,7 +28,7 @@ import utils.DateTimeFormatter
 
 import java.time.{LocalDate, LocalDateTime}
 
-case class ChannelKnownIssue(channel: Channel, issueSince: LocalDateTime, eta: Option[String] = None)
+case class ChannelKnownIssue(channel: Channel, issueSince: LocalDateTime, isBCP: Boolean = false, eta: Option[String] = None)
 
 case class StatusResponse(
                            gbDeparturesStatus: HealthDetails,
@@ -38,7 +38,7 @@ case class StatusResponse(
                            xmlChannelStatus: HealthDetails,
                            webChannelStatus: HealthDetails,
                            ppnStatus: HealthDetails,
-                           timelineEntries: Seq[ETA] = Nil,
+                           timelineEntries: Seq[TimelineUpdate] = Nil,
                            createdTs: LocalDateTime
                          ) {
   def xmlAndWebHealthy: Boolean = xmlChannelStatus.healthy && webChannelStatus.healthy
@@ -88,7 +88,7 @@ object StatusResponse {
 
   private val logger = LoggerFactory.getLogger(classOf[StatusResponse])
 
-  implicit val etaReads: Reads[ETA] = ETA.reads
+  implicit val etaReads: Reads[TimelineUpdate] = TimelineUpdate.reads
 
   implicit lazy val reads: Reads[StatusResponse] = {
 
@@ -102,7 +102,7 @@ object StatusResponse {
         (__ \ "xmlChannelStatus").read[HealthDetails] and
         (__ \ "webChannelStatus").read[HealthDetails] and
         (__ \ "ppnStatus").read[HealthDetails] and
-        (__ \ "timelineEntries").read[Seq[ETA]] and
+        (__ \ "timelineEntries").read[Seq[TimelineUpdate]] and
         (__ \ "createdTs").read[LocalDateTime]
 
       ) (StatusResponse.apply _)
@@ -120,7 +120,7 @@ object StatusResponse {
         (__ \ "xmlChannelStatus").write[HealthDetails] and
         (__ \ "webChannelStatus").write[HealthDetails] and
         (__ \ "ppnStatus").write[HealthDetails] and
-        (__ \ "timelineEntries").write[Seq[ETA]] and
+        (__ \ "timelineEntries").write[Seq[TimelineUpdate]] and
         (__ \ "createdTs").write[LocalDateTime]
 
       ) (unlift(StatusResponse.unapply))
@@ -154,28 +154,36 @@ object HealthDetails {
   implicit val format: OFormat[HealthDetails] = Json.format[HealthDetails]
 }
 
-case class ETA(channel: Channel, time: String, date: LocalDate, createdTs: LocalDateTime) {
+case class TimelineUpdate(
+                           channel: Channel,
+                           time: Option[String],
+                           date: Option[LocalDate],
+                           businessContinuityFlag: Boolean,
+                           createdTs: LocalDateTime
+                         ) {
   def toChannelWithKnownIssue: ChannelKnownIssue = {
-    val dateTimeStr = s"$time, ${DateTimeFormatter.formatDateWithoutDayOfWeek(date)}"
-    ChannelKnownIssue(channel, createdTs, Some(dateTimeStr))
+    val dateTimeStr = (time ++ date.map(DateTimeFormatter.formatDateWithoutDayOfWeek)).reduceOption(_ + ", " + _)
+    ChannelKnownIssue(channel, createdTs, businessContinuityFlag, dateTimeStr)
   }
 }
 
-object ETA {
-  implicit val writes: Writes[ETA] = {
+object TimelineUpdate {
+  implicit val writes: Writes[TimelineUpdate] = {
     (
       (__ \ "channel").write[Channel](Channel.format) and
-        (__ \ "time").write[String] and
-        (__ \ "date").write[LocalDate] and
+        (__ \ "time").writeNullable[String] and
+        (__ \ "date").writeNullable[LocalDate] and
+        (__ \ "businessContinuityFlag").write[Boolean] and
         (__ \ "createdTs").write(MongoDateTimeFormats.DefaultLocalDateTimeWrites)
-      ) (unlift(ETA.unapply))
+      ) (unlift(TimelineUpdate.unapply))
   }
-  implicit val reads: Reads[ETA] = {
+  implicit val reads: Reads[TimelineUpdate] = {
     (
       (__ \ "channel").read[Channel](Channel.format) and
-        (__ \ "time").read[String] and
-        (__ \ "date").read[LocalDate] and
+        (__ \ "time").readNullable[String] and
+        (__ \ "date").readNullable[LocalDate] and
+        (__ \ "businessContinuityFlag").read[Boolean].orElse(Reads.pure(false)) and
         (__ \ "createdTs").read(MongoDateTimeFormats.DefaultLocalDateTimeReads)
-      ) (ETA.apply _)
+      ) (TimelineUpdate.apply _)
   }
 }

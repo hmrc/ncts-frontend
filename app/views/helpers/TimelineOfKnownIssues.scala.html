@@ -24,48 +24,52 @@
 <div class="update1">
     <ol class="hmrc-timeline">
         @for(ch <- channels) {
-        <li class="hmrc-timeline__event">
-            @{ch.eta.fold(
-                <h2 class="hmrc-timeline__event-title govuk-table__caption--s">
-                    {messages("service.availability.status.issues")} - {ch.channel.caption}</h2>
-                <time class="hmrc-timeline__event-meta">{formatDateTime(ch.issueSince)}</time>
-                <div class="hmrc-timeline__event-content">
-                    <p class="govuk-body">
-                        {if(ch.channel.isPPN){
-                            {messages("service.availability.issues.ppn")}
-                        } else {
-                            {messages("service.availability.issues.p1")} + " " +
-                            {ch.channel.displayName}  + " " +
-                            {messages("service.availability.issues.webXML.channel")}  + " " +
-                            {messages("service.availability.issues.p3")}
-                        }}
-                    </p>
-                    {if(ch.channel.isGbOrXi){
-                    <p class="govuk-body">
-                        {messages("service.availability.issues.p4")}
-                        <a href={appConfig.govUKTransitManualLink}>{messages("service.availability.issues.p5")}</a>.
-                    </p>
-                    }}
-                </div>
-            ) { eta =>
-
-                <h2 class="hmrc-timeline__event-title govuk-table__caption--s">{messages("service.availability.eta")} - {ch.channel.caption}</h2>
-                <time class="hmrc-timeline__event-meta">{formatDateTime(ch.issueSince)}</time>
-                <div class="hmrc-timeline__event-content">
-                    <p class="govuk-body">
-                        {messages("service.availability.eta.estimate")}
-                        {ch.channel.displayName}
-                        {messages("service.availability.eta.availability")} {eta}.
+        @if(ch.isBCP){
+            @BCPTimelineSnippet(ch, appConfig)
+        }else {
+            <li class="hmrc-timeline__event">
+                @{ch.eta.fold(
+                    <h2 class="hmrc-timeline__event-title govuk-table__caption--s">
+                        {messages("service.availability.status.issues")} - {ch.channel.caption}</h2>
+                    <time class="hmrc-timeline__event-meta">{formatDateTime(ch.issueSince)}</time>
+                    <div class="hmrc-timeline__event-content">
+                        <p class="govuk-body">
+                            {if(ch.channel.isPPN){
+                                {messages("service.availability.issues.ppn")}
+                            } else {
+                                {messages("service.availability.issues.p1")} + " " +
+                                {ch.channel.displayName}  + " " +
+                                {messages("service.availability.issues.webXML.channel")}  + " " +
+                                {messages("service.availability.issues.p3")}
+                            }}
+                        </p>
                         {if(ch.channel.isGbOrXi){
-                            {messages("service.availability.eta.notify.component")}
-                        } else {
-                            {messages("service.availability.eta.notify.channel")}
+                        <p class="govuk-body">
+                            {messages("service.availability.issues.p4")}
+                            <a href={appConfig.govUKTransitManualLink}>{messages("service.availability.issues.p5")}</a>.
+                        </p>
                         }}
-                    </p>
-                </div>
-              }
-            }
-        </li>
+                    </div>
+                ) { eta =>
+
+                    <h2 class="hmrc-timeline__event-title govuk-table__caption--s">{messages("service.availability.eta")} - {ch.channel.caption}</h2>
+                    <time class="hmrc-timeline__event-meta">{formatDateTime(ch.issueSince)}</time>
+                    <div class="hmrc-timeline__event-content">
+                        <p class="govuk-body">
+                            {messages("service.availability.eta.estimate")}
+                            {ch.channel.displayName}
+                            {messages("service.availability.eta.availability")} {eta}.
+                            {if(ch.channel.isGbOrXi){
+                                {messages("service.availability.eta.notify.component")}
+                            } else {
+                                {messages("service.availability.eta.notify.channel")}
+                            }}
+                        </p>
+                    </div>
+                  }
+                }
+            </li>
+        }
         }
     </ol>
 </div>
