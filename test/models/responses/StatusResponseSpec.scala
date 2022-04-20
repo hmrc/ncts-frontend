@@ -52,7 +52,8 @@ class StatusResponseSpec extends SpecBase with  Matchers {
 
   implicit val dateTimeReverseSortable: Sortable[GenSeq[LocalDateTime]] = Sortable.sortableNatureOfSeq(dateTimeOrdering.reverse)
 
-  private def eta(ch: Channel, createdTs: LocalDateTime) = ETA(ch, "10am GMT", LocalDate.now(), createdTs)
+  private def eta(ch: Channel, createdTs: LocalDateTime) =
+    TimelineUpdate(ch, Option("10am GMT"), Option(LocalDate.now()), businessContinuityFlag = false, createdTs)
 
   "StatusResponseReads" - {
     "should return a StatusResponse when status is OK and can be parsed for GB/XI departures true, GB/XI arrivals false and ETA for XI arrivals and XML" in {
@@ -60,8 +61,8 @@ class StatusResponseSpec extends SpecBase with  Matchers {
       val depHealthyArrUnhealthyJson = json(true, false, false,
         timelineEntriesJson(etaDate, etaTime))
       val createdTimestamp = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-      val etas = Seq(ETA(XIArrivals, etaTime, etaDate, createdTimestamp),
-        ETA(XML, etaTime, etaDate, createdTimestamp))
+      val etas = Seq(TimelineUpdate(XIArrivals, Option(etaTime), Option(etaDate), businessContinuityFlag = false, createdTimestamp),
+        TimelineUpdate(XML, Option(etaTime), Option(etaDate), businessContinuityFlag = false, createdTimestamp))
       val expectedResult = StatusResponse(
         gbDeparturesStatus = healthDetailsHealthy,
         xiDeparturesStatus = healthDetailsHealthy,
@@ -264,12 +265,14 @@ class StatusResponseSpec extends SpecBase with  Matchers {
        |    "channel": "XI Arrivals",
        |    "time": "$time",
        |    "date": "$date",
+       |    "businessContinuityFlag": false,
        |    "createdTs": "2022-01-01T10:25:55"
        |  },
        |  {
        |    "channel": "XML channel",
        |    "time": "$time",
        |    "date": "$date",
+       |    "businessContinuityFlag": false,
        |    "createdTs": "2022-01-01T10:25:55"
        |  }
        |]""".stripMargin
