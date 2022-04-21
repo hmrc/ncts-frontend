@@ -121,6 +121,7 @@ service.availability.help.with.channels.p4=The Push Pull Notification Service (P
 service.availability.bcp.invoked=Business Continuity Procedure invoked
 service.availability.bcp.invoked.p1=The Business Continuity Procedure has been invoked by HMRC. Information on the Business Continuity Procedure can be found in the
 service.availability.bcp.invoked.eta.unknown=We will notify you here and HMRC will advise you by email when the system core is available. We will notify you here once an estimated time of availability is known.
+service.availability.bcp.invoked.eta.known=We will notify you here and HMRC will advise you by email when the system core is available. We estimate the {0} system core to be available at {1}.
 
 planned-downtime.title=Planned downtime
 planned-downtime.heading=Planned downtime
