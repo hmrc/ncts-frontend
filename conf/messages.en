@@ -108,8 +108,7 @@ service.availability.timeline.channel.display.gb.arrivals=NCTS GB Arrivals compo
 service.availability.timeline.channel.display.xi.arrivals=NCTS XI Arrivals component
 service.availability.timeline.channel.display.web.channel=Web channel
 service.availability.timeline.channel.display.xml.channel=XML channel
-service.availability.timeline.channel.display.ppn=PPNS
-
+service.availability.timeline.channel.display.ppn=PPNS channel
 
 service.availability.help.with.channels=Help with channels
 service.availability.help.with.channels.p1=Channels are the route users make submissions to NCTS through.
@@ -121,8 +120,8 @@ service.availability.help.with.channels.p4=The Push Pull Notification Service (P
 
 service.availability.bcp.invoked=Business Continuity Procedure invoked
 service.availability.bcp.invoked.p1=The Business Continuity Procedure has been invoked by HMRC. Information on the Business Continuity Procedure can be found in the
-service.availability.bcp.invoked.eta.unknown=We will notify you here and HMRC will advise you by email when the system core is available. We will notify you here once an estimated time of availability is known.
-service.availability.bcp.invoked.eta.known=We will notify you here and HMRC will advise you by email when the system core is available. We estimate the {0} system core to be available at {1}.
+service.availability.bcp.invoked.eta.unknown=We will notify you here and HMRC will advise you by email when the component is available. We will notify you here once an estimated time of availability is known.
+service.availability.bcp.invoked.eta.known=We will notify you here and HMRC will advise you by email when the component is available. We estimate the {0} component to be available at {1}.
 
 planned-downtime.title=Planned downtime
 planned-downtime.heading=Planned downtime
