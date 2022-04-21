@@ -75,6 +75,16 @@ class IndexViewSpec extends SpecBase with Injecting {
         .attr("href") mustBe "https://www.gov.uk/government/collections/hm-revenue-and-customs-service-availability-and-issues"
     }
 
+    "should have text about tracking international movements" in {
+      document.body().getElementsByClass("govuk-body").get(1)
+        .text() mustBe "Track international movements using a MRN via the Europa website."
+    }
+
+    "should a link for tracking international movements" in {
+      document.body().select(".govuk-body").get(1).select("a").first()
+        .attr("href") mustBe "https://ec.europa.eu/taxation_customs/dds2/tra/transit_home.jsp"
+    }
+
     "should have a get help link" in {
       document.body().select(".hmrc-report-technical-issue").first()
         .attr("href") mustBe getHelpUrl

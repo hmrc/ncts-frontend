@@ -44,6 +44,10 @@ index.service.track.other.services.1=Track
 index.service.track.other.services.2=availability and issues
 index.service.track.other.services.3= for other services.
 
+index.service.track.international.movements.1=Track
+index.service.track.international.movements.2=international movements
+index.service.track.international.movements.3= using a MRN via the Europa website.
+
 service.availability.title=Service availability
 service.availability.heading=Service availability
 service.availability.status.arrivals=Arrivals component status
