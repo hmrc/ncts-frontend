@@ -24,18 +24,23 @@ import models.{PlannedDowntime, PlannedDowntimes}
 import play.api.Logging
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
+import java.time.{ZoneId, ZonedDateTime}
 import javax.inject.Singleton
 
 @Singleton
 class PlannedDowntimeService @Inject()(appConfig: FrontendAppConfig) extends Logging {
 
-  def getPlannedDowntime: Either[DowntimeConfigParseError, Option[PlannedDowntimes]] = {
+  def getPlannedDowntime(forPlannedDowntime: Boolean): Either[DowntimeConfigParseError, Option[PlannedDowntimes]] = {
     appConfig.plannedDowntimesConfig.fold[Either[DowntimeConfigParseError, Option[PlannedDowntimes]]](Right(None)) {
       downtimeConfig: ConfigList =>
         try {
           Json.parse(downtimeConfig.render(ConfigRenderOptions.concise())).validate[Seq[PlannedDowntime]] match {
             case JsSuccess(downtimes, _) if downtimes.nonEmpty =>
-              Right(Some(PlannedDowntimes(downtimes)))
+              if(forPlannedDowntime) {
+                Right(Some(PlannedDowntimes(filterOldDowntimes(downtimes))))
+              } else {
+                Right(Some(PlannedDowntimes(downtimes)))
+              }
             case JsSuccess(downtimes, _) if downtimes.isEmpty =>
               Right(None)
             case JsError(error) =>
@@ -51,4 +56,10 @@ class PlannedDowntimeService @Inject()(appConfig: FrontendAppConfig) extends Log
         }
     }
   }
+
+  def filterOldDowntimes(downtimes: Seq[PlannedDowntime]): Seq[PlannedDowntime] = {
+    val now = ZonedDateTime.now(ZoneId.of("Europe/London")).toLocalDate
+    downtimes.filterNot(downtime => downtime.endDate.isBefore(now))
+  }
+
 }

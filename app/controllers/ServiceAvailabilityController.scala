@@ -42,7 +42,7 @@ class ServiceAvailabilityController @Inject()(
     healthCheckService.checkStatus().flatMap {
       case Right(statusResponse: StatusResponse) =>
         val plannedDowntimeViewModel: PlannedDowntimeViewModel =
-          PlannedDowntimeViewModel.fromPlannedDowntimes(plannedDowntimeService.getPlannedDowntime)
+          PlannedDowntimeViewModel.fromPlannedDowntimes(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false))
         Future.successful(Ok(view(statusResponse, plannedDowntimeViewModel)))
       case _ => Future.successful(errorHandler.showInternalServerError)
     }
