@@ -66,7 +66,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
     val events = view.getElementsByClass("hmrc-timeline__event")
     val event = events.get(eventIndex)
     val caption = event.getElementsByClass("hmrc-timeline__event-title govuk-table__caption--s").text()
-    val time = event.getElementsByTag("time").text()
+    val time = event.getElementsByTag("span").text()
     val message = event.getElementsByClass("hmrc-timeline__event-content").text()
     val bcpLink = event.select("a").attr("href")
     TimeLine(caption, time, message, bcpLink)

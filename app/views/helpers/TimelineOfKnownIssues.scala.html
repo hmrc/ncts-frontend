@@ -30,8 +30,9 @@
             <li class="hmrc-timeline__event">
                 @{ch.eta.fold(
                     <h2 class="hmrc-timeline__event-title govuk-table__caption--s">
-                        {messages("service.availability.status.issues")} - {ch.channel.caption}</h2>
-                    <time class="hmrc-timeline__event-meta">{formatDateTime(ch.issueSince)}</time>
+                        {messages("service.availability.status.issues")} - {ch.channel.caption}
+                    </h2>
+                    <span class="hmrc-timeline__event-meta">{formatDateTime(ch.issueSince)}</span>
                     <div class="hmrc-timeline__event-content">
                         <p class="govuk-body">
                             {if(ch.channel.isPPN){
@@ -51,9 +52,8 @@
                         }}
                     </div>
                 ) { eta =>
-
                     <h2 class="hmrc-timeline__event-title govuk-table__caption--s">{messages("service.availability.eta")} - {ch.channel.caption}</h2>
-                    <time class="hmrc-timeline__event-meta">{formatDateTime(ch.issueSince)}</time>
+                    <span class="hmrc-timeline__event-meta">{formatDateTime(ch.issueSince)}</span>
                     <div class="hmrc-timeline__event-content">
                         <p class="govuk-body">
                             {messages("service.availability.eta.estimate")}
