@@ -33,7 +33,7 @@ class PlannedDowntimeController @Inject()(
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
 
-    plannedDowntimeService.getPlannedDowntime match {
+    plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = true) match {
       case Right(downtimes) => Ok(view(downtimes))
       case _ => errorHandler.showInternalServerError
     }

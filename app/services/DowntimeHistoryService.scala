@@ -57,7 +57,7 @@ class DowntimeHistoryService @Inject()(nctsConnector: NCTSConnector, plannedDown
 
   def historyWithReasons(downtimes: Seq[Downtime]): Either[ErrorResponse.DowntimeConfigParseError, Seq[DowntimeHistoryRow]] = {
     for {
-      plannedDowntime <- plannedDowntimeService.getPlannedDowntime
+      plannedDowntime <- plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)
       downtimesWithReason = downtimes.foldLeft(Seq[DowntimeHistoryRow]())(
         (downtimes, downtime) => {
           val isPlanned = isPlannedDowntime(downtime, plannedDowntime)

@@ -38,7 +38,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
     "when there is no planned downtime" - {
       "should return a valid status response" in {
 
-        when(plannedDowntimeService.getPlannedDowntime) thenReturn Right(None)
+        when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn Right(None)
 
         when(nctsConnector.getDowntimeHistory()(any())) thenReturn
           Future(Right(
@@ -68,7 +68,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
 
       "should return an error response when error occurs" in {
 
-        when(plannedDowntimeService.getPlannedDowntime) thenReturn Right(None)
+        when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn Right(None)
 
         when(nctsConnector.checkStatus()(any())) thenReturn Future.successful(Left(DowntimeResponseError("something went wrong")))
         val result = service.getDowntimeHistory().futureValue
@@ -121,7 +121,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
     "should correctly identify a planned downtime from config" - {
       "when the downtime period matches the planned downtime period" in {
 
-        when(plannedDowntimeService.getPlannedDowntime) thenReturn Right(Some(
+        when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn Right(Some(
           PlannedDowntimes(Seq(
             PlannedDowntime(
               startDate = middayToday.toLocalDate.minusDays(2),
@@ -203,7 +203,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
           ))
         ))
 
-        when(plannedDowntimeService.getPlannedDowntime) thenReturn plannedDowntime
+        when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn plannedDowntime
 
         when(nctsConnector.getDowntimeHistory()(any())) thenReturn
           Future(Right(
@@ -242,7 +242,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
           ))
         ))
 
-        when(plannedDowntimeService.getPlannedDowntime) thenReturn plannedDowntime
+        when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn plannedDowntime
 
         when(nctsConnector.getDowntimeHistory()(any())) thenReturn
           Future(Right(
@@ -281,7 +281,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
           ))
         ))
 
-        when(plannedDowntimeService.getPlannedDowntime) thenReturn plannedDowntime
+        when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn plannedDowntime
 
         when(nctsConnector.getDowntimeHistory()(any())) thenReturn
           Future(Right(

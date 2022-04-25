@@ -19,8 +19,11 @@ package services
 import base.SpecBase
 import com.typesafe.config.ConfigList
 import config.FrontendAppConfig
+import models.{GBArrivals, PlannedDowntime}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
+
+import java.time.{ZoneId, ZonedDateTime}
 
 class PlannedDowntimeServiceSpec extends SpecBase {
 
@@ -33,7 +36,7 @@ class PlannedDowntimeServiceSpec extends SpecBase {
 
   val service = new PlannedDowntimeService(mockAppConfig)
 
-  "plannedDowntime" - {
+  "getPlannedDowntime" - {
     "return a Left if an exception is thrown when the planned downtime json is invalid" in {
 
       when(mockConfigList.render(ArgumentMatchers.any())).thenReturn(
@@ -41,7 +44,8 @@ class PlannedDowntimeServiceSpec extends SpecBase {
           |]invalid-json]]{}{{}{
           |""".stripMargin)
 
-      service.getPlannedDowntime.left.get.message must (fullyMatch regex "Exception thrown when trying to parse downtime config((.|\n)+)")
+      service.getPlannedDowntime(forPlannedDowntime = true).left.get.message must
+        (fullyMatch regex "Exception thrown when trying to parse downtime config((.|\n)+)")
     }
 
     "return a Left if the planned downtime json is valid but cannot be parsed" in {
@@ -49,18 +53,41 @@ class PlannedDowntimeServiceSpec extends SpecBase {
       when(mockConfigList.render(ArgumentMatchers.any())).thenReturn(
         """
           |"planned-downtime" [
-          |    { "incorrectKey": "2021-03-15", "startTime": "08:15", "endDate": "2021-03-16", "endTime": "17:00", "affectedChannel": "gbArrivals" }
+          |    { "incorrectKey": "2021-03-15", "startTime": "08:15",
+          |     "endDate": "2021-03-16", "endTime": "17:00", "affectedChannel": "gbArrivals"
+          |     }
           |]
           |""".stripMargin)
 
-      service.getPlannedDowntime.left.get.message must (fullyMatch regex "Error parsing downtime config((.|\n)+)")
+      service.getPlannedDowntime(forPlannedDowntime = true).left.get.message must
+        (fullyMatch regex "Error parsing downtime config((.|\n)+)")
     }
 
     "return a Right(None) if there is no config for planned-downtime" in {
       when(mockAppConfig.plannedDowntimesConfig).thenReturn(None)
 
-      service.getPlannedDowntime mustBe Right(None)
+      service.getPlannedDowntime(forPlannedDowntime = true) mustBe Right(None)
 
+    }
+  }
+
+  "filterOldDowntimes" - {
+    "must remove any downtimes which ended before today" in {
+      val now = ZonedDateTime.now(ZoneId.of("Europe/London"))
+      val today = now.toLocalDate
+      val yesterday = today.minusDays(1)
+
+      val oneRelevantDowntime = Seq(
+        PlannedDowntime(startDate = yesterday, startTime = now.toLocalTime, endDate = today,
+          endTime = now.toLocalTime, affectedChannel = GBArrivals),
+        PlannedDowntime(startDate = today.minusWeeks(1), startTime = now.toLocalTime, endDate = yesterday,
+          endTime = now.toLocalTime, affectedChannel = GBArrivals)
+      )
+
+      service.filterOldDowntimes(oneRelevantDowntime) mustBe Seq(
+        PlannedDowntime(startDate = yesterday, startTime = now.toLocalTime, endDate = today,
+          endTime = now.toLocalTime, affectedChannel = GBArrivals)
+      )
     }
   }
 }
