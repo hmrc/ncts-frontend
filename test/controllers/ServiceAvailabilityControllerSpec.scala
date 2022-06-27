@@ -28,7 +28,6 @@ import services.HealthCheckService
 import utils.HealthDetailsExamples._
 
 import java.time.LocalDateTime
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ServiceAvailabilityControllerSpec extends SpecBase {
@@ -54,7 +53,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
             ppnStatus = healthDetailsUnhealthy,
             createdTs = LocalDateTime.now()
           )
-        ))
+        ))(ec)
 
       val application = applicationBuilder().overrides(mocks).build()
 
@@ -79,7 +78,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
           webChannelStatus = healthDetailsHealthy,
           ppnStatus = healthDetailsHealthy,
           createdTs = LocalDateTime.now()
-        )))
+        )))(ec)
 
       val application = applicationBuilder().overrides(mocks).build()
 
@@ -94,7 +93,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
     }
 
     "must return INTERNAL_SERVER_ERROR when backend returns an error response" in {
-      when(healthCheckService.checkStatus()(any())) thenReturn Future(Left(StatusResponseError("something went wrong")))
+      when(healthCheckService.checkStatus()(any())) thenReturn Future(Left(StatusResponseError("something went wrong")))(ec)
 
       val application = applicationBuilder().overrides(mocks).build()
 

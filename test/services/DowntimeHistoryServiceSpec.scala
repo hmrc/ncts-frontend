@@ -25,14 +25,13 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 
 import java.time.{LocalDateTime, ZoneId, ZonedDateTime}
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DowntimeHistoryServiceSpec extends SpecBase {
 
   val nctsConnector: NCTSConnector = mock[NCTSConnector]
   val plannedDowntimeService: PlannedDowntimeService = mock[PlannedDowntimeService]
-  val service: DowntimeHistoryService = new DowntimeHistoryService(nctsConnector, plannedDowntimeService)
+  val service: DowntimeHistoryService = new DowntimeHistoryService(nctsConnector, plannedDowntimeService)(ec)
 
   "getDowntimeHistory" - {
     "when there is no planned downtime" - {
@@ -49,7 +48,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
                   LocalDateTime.of(2022, 1, 1, 10, 25, 55),
                   LocalDateTime.of(2022, 1, 1, 10, 25, 55)
                 )),
-              LocalDateTime.of(2022, 1, 1, 10, 25, 55))))
+              LocalDateTime.of(2022, 1, 1, 10, 25, 55))))(ec)
 
         val result = service.getDowntimeHistory().futureValue
 
@@ -157,7 +156,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
                   middayToday.minusDays(5),
                   middayToday.minusDays(2)
                 )),
-              middayToday.minusDays(1))))
+              middayToday.minusDays(1))))(ec)
 
         val result = service.getDowntimeHistory().futureValue
 
@@ -214,7 +213,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
                   middayToday.minusDays(2).minusHours(1),
                   middayToday.minusDays(1).minusHours(2)
                 )),
-              middayToday.minusDays(1))))
+              middayToday.minusDays(1))))(ec)
 
         val result = service.getDowntimeHistory().futureValue
 
@@ -253,7 +252,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
                   middayToday.minusDays(2).minusHours(1),
                   middayToday.minusDays(1).plusHours(1)
                 )),
-              middayToday.minusDays(1))))
+              middayToday.minusDays(1))))(ec)
 
         val result = service.getDowntimeHistory().futureValue
 
@@ -292,7 +291,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
                   middayToday.minusDays(2).plusMinutes(10),
                   middayToday.minusDays(1).minusMinutes(10)
                 )),
-              middayToday.minusDays(1))))
+              middayToday.minusDays(1))))(ec)
 
         val result = service.getDowntimeHistory().futureValue
 

@@ -36,7 +36,7 @@ class NCTSConnectorSpec extends SpecBase {
 
   private val mockHttp = mock[HttpClient]
 
-  private val nctsConnector = new NCTSConnector(mockHttp, appConfig)
+  private val nctsConnector = new NCTSConnector(mockHttp, appConfig)(ec)
 
   "NCTS Connector" - {
     "checkStatus" - {

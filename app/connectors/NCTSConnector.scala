@@ -22,14 +22,13 @@ import models.responses.{DowntimeResponse, ErrorResponse, StatusResponse}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import javax.inject.Singleton
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class NCTSConnector @Inject()(
                                httpClient: HttpClient,
                                config: FrontendAppConfig
-                             ) {
+                             )(implicit ec: ExecutionContext) {
 
   def checkStatus()(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, StatusResponse]] =
     httpClient.GET[Either[ErrorResponse, StatusResponse]](s"${config.nctsUrl}/status-check")
