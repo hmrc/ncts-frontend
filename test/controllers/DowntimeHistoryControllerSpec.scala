@@ -28,7 +28,6 @@ import play.api.test.Helpers._
 import services.DowntimeHistoryService
 
 import java.time.LocalDateTime
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DowntimeHistoryControllerSpec extends SpecBase {
@@ -44,7 +43,7 @@ class DowntimeHistoryControllerSpec extends SpecBase {
 
       when(downtimeHistoryService.getDowntimeHistory()(any())) thenReturn
         Future(Right(
-          Seq(DowntimeHistoryRow(Downtime(GBDepartures, LocalDateTime.now(), LocalDateTime.now()), planned = false))))
+          Seq(DowntimeHistoryRow(Downtime(GBDepartures, LocalDateTime.now(), LocalDateTime.now()), planned = false))))(ec)
 
       val application = applicationBuilder().overrides(mocks).build()
 
@@ -59,7 +58,7 @@ class DowntimeHistoryControllerSpec extends SpecBase {
     }
 
     "must return INTERNAL_SERVER_ERROR when backend returns an error response" in {
-      when(downtimeHistoryService.getDowntimeHistory()(any())) thenReturn Future(Left(DowntimeResponseError("something went wrong")))
+      when(downtimeHistoryService.getDowntimeHistory()(any())) thenReturn Future(Left(DowntimeResponseError("something went wrong")))(ec)
 
       val application = applicationBuilder().overrides(mocks).build()
 

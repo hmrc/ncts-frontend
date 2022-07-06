@@ -30,6 +30,8 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.http.HeaderCarrier
 
+import scala.concurrent.ExecutionContext
+
 trait SpecBase
   extends AnyFreeSpec
     with Matchers
@@ -48,6 +50,8 @@ trait SpecBase
 
   lazy val messagesApi: MessagesApi = inject[MessagesApi]
   implicit lazy val messages: MessagesImpl = MessagesImpl(Lang("en-GB"), messagesApi)
+
+  val ec: ExecutionContext = ExecutionContext.global
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 

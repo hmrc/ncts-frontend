@@ -24,11 +24,12 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDateTime
 import javax.inject.Singleton
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DowntimeHistoryService @Inject()(nctsConnector: NCTSConnector, plannedDowntimeService: PlannedDowntimeService) {
+class DowntimeHistoryService @Inject()(
+                                        nctsConnector: NCTSConnector, plannedDowntimeService: PlannedDowntimeService
+                                      )(implicit ec: ExecutionContext) {
 
   def getDowntimeHistory()(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, Seq[DowntimeHistoryRow]]] = {
     nctsConnector.getDowntimeHistory.map { response =>
