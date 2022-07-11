@@ -25,8 +25,7 @@ import services.DowntimeHistoryService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.DowntimeHistoryView
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 
 class DowntimeHistoryController @Inject()(
@@ -34,11 +33,11 @@ class DowntimeHistoryController @Inject()(
                                            outageHistoryService: DowntimeHistoryService,
                                            errorHandler: ErrorHandler,
                                            view: DowntimeHistoryView
-                                         ) extends FrontendBaseController with I18nSupport {
+                                         )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     outageHistoryService.getDowntimeHistory.flatMap {
-      case Right(downtimeHistory: Seq[DowntimeHistoryRow]) =>
+      case Some(downtimeHistory: Seq[DowntimeHistoryRow]) =>
         Future.successful(Ok(view(downtimeHistory)))
       case _ =>
         Future.successful(errorHandler.showInternalServerError)

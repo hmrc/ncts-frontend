@@ -19,20 +19,23 @@ package services
 import base.SpecBase
 import connectors.NCTSConnector
 import models._
-import models.responses.ErrorResponse.DowntimeResponseError
+import models.responses.ErrorResponse.DowntimeConfigParseError
 import models.responses.{Downtime, DowntimeResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import play.api.http.Status.INTERNAL_SERVER_ERROR
+import uk.gov.hmrc.http.UpstreamErrorResponse
 
 import java.time.{LocalDateTime, ZoneId, ZonedDateTime}
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 class DowntimeHistoryServiceSpec extends SpecBase {
 
   val nctsConnector: NCTSConnector = mock[NCTSConnector]
   val plannedDowntimeService: PlannedDowntimeService = mock[PlannedDowntimeService]
-  val service: DowntimeHistoryService = new DowntimeHistoryService(nctsConnector, plannedDowntimeService)
+  val ec: ExecutionContext = ExecutionContext.global
+  val service: DowntimeHistoryService = new DowntimeHistoryService(nctsConnector, plannedDowntimeService)(ec)
 
   "getDowntimeHistory" - {
     "when there is no planned downtime" - {
@@ -41,7 +44,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
         when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn Right(None)
 
         when(nctsConnector.getDowntimeHistory()(any())) thenReturn
-          Future(Right(
+          Future(Some(
             DowntimeResponse(
               Seq(
                 Downtime(
@@ -49,34 +52,64 @@ class DowntimeHistoryServiceSpec extends SpecBase {
                   LocalDateTime.of(2022, 1, 1, 10, 25, 55),
                   LocalDateTime.of(2022, 1, 1, 10, 25, 55)
                 )),
-              LocalDateTime.of(2022, 1, 1, 10, 25, 55))))
+              LocalDateTime.of(2022, 1, 1, 10, 25, 55))))(ec)
 
         val result = service.getDowntimeHistory().futureValue
 
-        result.fold(
-          _ => "should not return an error response",
-          response => response mustBe
-            Seq(DowntimeHistoryRow(
-              Downtime(
-                GBDepartures,
-                LocalDateTime.of(2022, 1, 1, 10, 25, 55),
-                LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-              ), planned = false)
+        result mustBe
+          Some(
+            Seq(
+              DowntimeHistoryRow(
+                Downtime(
+                  GBDepartures,
+                  LocalDateTime.of(2022, 1, 1, 10, 25, 55),
+                  LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+                ),
+                planned = false
+              )
             )
-        )
+          )
       }
 
-      "should return an error response when error occurs" in {
+      "should return None when" - {
+
+        "getPlannedDowntime returns a DowntimeConfigParseError" in {
+
+          when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)
+          ) thenReturn Left(DowntimeConfigParseError("There was a problem"))
+
+          when(nctsConnector.getDowntimeHistory()(any())) thenReturn
+            Future(Some(
+              DowntimeResponse(
+                Seq(
+                  Downtime(
+                    GBDepartures,
+                    LocalDateTime.of(2022, 1, 1, 10, 25, 55),
+                    LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+                  )),
+                LocalDateTime.of(2022, 1, 1, 10, 25, 55))))(ec)
+
+          service.getDowntimeHistory().futureValue mustBe None
+        }
+
+        "getDowntimeHistory returns None" in {
+
+          when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn Right(None)
+
+          when(nctsConnector.getDowntimeHistory()(any())) thenReturn Future.successful(None)
+
+          service.getDowntimeHistory().futureValue mustBe None
+        }
+      }
+
+      "should throw when getDowntimeHistory throws an UpstreamErrorResponse" in {
 
         when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn Right(None)
 
-        when(nctsConnector.checkStatus()(any())) thenReturn Future.successful(Left(DowntimeResponseError("something went wrong")))
-        val result = service.getDowntimeHistory().futureValue
+        when(nctsConnector.getDowntimeHistory()(any())) thenReturn
+          Future.failed(UpstreamErrorResponse("Something went wrong", INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR))
 
-        result.fold(
-          errorResponse => errorResponse mustBe DowntimeResponseError("something went wrong"),
-          _ => "should not succeed"
-        )
+        service.getDowntimeHistory().failed.futureValue mustBe an[UpstreamErrorResponse]
       }
     }
   }
@@ -134,7 +167,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
         ))
 
         when(nctsConnector.getDowntimeHistory()(any())) thenReturn
-          Future(Right(
+          Future(Some(
             DowntimeResponse(
               Seq(
                 Downtime(
@@ -157,11 +190,11 @@ class DowntimeHistoryServiceSpec extends SpecBase {
                   middayToday.minusDays(5),
                   middayToday.minusDays(2)
                 )),
-              middayToday.minusDays(1))))
+              middayToday.minusDays(1))))(ec)
 
         val result = service.getDowntimeHistory().futureValue
 
-        result.right.get mustBe
+        result.get mustBe
           Seq(DowntimeHistoryRow(
             Downtime(
               GBArrivals,
@@ -206,7 +239,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
         when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn plannedDowntime
 
         when(nctsConnector.getDowntimeHistory()(any())) thenReturn
-          Future(Right(
+          Future(Some(
             DowntimeResponse(
               Seq(
                 Downtime(
@@ -214,11 +247,11 @@ class DowntimeHistoryServiceSpec extends SpecBase {
                   middayToday.minusDays(2).minusHours(1),
                   middayToday.minusDays(1).minusHours(2)
                 )),
-              middayToday.minusDays(1))))
+              middayToday.minusDays(1))))(ec)
 
         val result = service.getDowntimeHistory().futureValue
 
-        result.right.get mustBe
+        result.get mustBe
           Seq(DowntimeHistoryRow(
             Downtime(
               GBArrivals,
@@ -245,7 +278,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
         when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn plannedDowntime
 
         when(nctsConnector.getDowntimeHistory()(any())) thenReturn
-          Future(Right(
+          Future(Some(
             DowntimeResponse(
               Seq(
                 Downtime(
@@ -253,11 +286,11 @@ class DowntimeHistoryServiceSpec extends SpecBase {
                   middayToday.minusDays(2).minusHours(1),
                   middayToday.minusDays(1).plusHours(1)
                 )),
-              middayToday.minusDays(1))))
+              middayToday.minusDays(1))))(ec)
 
         val result = service.getDowntimeHistory().futureValue
 
-        result.right.get mustBe
+        result.get mustBe
           Seq(DowntimeHistoryRow(
             Downtime(
               GBArrivals,
@@ -284,7 +317,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
         when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn plannedDowntime
 
         when(nctsConnector.getDowntimeHistory()(any())) thenReturn
-          Future(Right(
+          Future(Some(
             DowntimeResponse(
               Seq(
                 Downtime(
@@ -292,11 +325,11 @@ class DowntimeHistoryServiceSpec extends SpecBase {
                   middayToday.minusDays(2).plusMinutes(10),
                   middayToday.minusDays(1).minusMinutes(10)
                 )),
-              middayToday.minusDays(1))))
+              middayToday.minusDays(1))))(ec)
 
         val result = service.getDowntimeHistory().futureValue
 
-        result.right.get mustBe
+        result.get mustBe
           Seq(DowntimeHistoryRow(
             Downtime(
               GBArrivals,

@@ -17,7 +17,6 @@
 package controllers
 
 import base.SpecBase
-import models.responses.ErrorResponse.StatusResponseError
 import models.responses.StatusResponse
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -28,8 +27,7 @@ import services.HealthCheckService
 import utils.HealthDetailsExamples._
 
 import java.time.LocalDateTime
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class ServiceAvailabilityControllerSpec extends SpecBase {
 
@@ -39,11 +37,13 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
     bind[HealthCheckService].to(healthCheckService)
   )
 
+  val ec: ExecutionContext = ExecutionContext.global
+
   "Service Status Check Controller" - {
 
     "must return OK and the correct view for a GET with GB/XI departures true and GB/XI arrivals false" in {
       when(healthCheckService.checkStatus()(any())) thenReturn
-        Future(Right(
+        Future(Some(
           StatusResponse(
             gbDeparturesStatus = healthDetailsHealthy,
             xiDeparturesStatus = healthDetailsHealthy,
@@ -54,7 +54,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
             ppnStatus = healthDetailsUnhealthy,
             createdTs = LocalDateTime.now()
           )
-        ))
+        ))(ec)
 
       val application = applicationBuilder().overrides(mocks).build()
 
@@ -70,7 +70,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
 
     "must return OK and the correct view for a GET with GB/XI departures false and GB/XI arrivals true" in {
       when(healthCheckService.checkStatus()(any())) thenReturn
-        Future(Right(StatusResponse(
+        Future(Some(StatusResponse(
           gbDeparturesStatus = healthDetailsUnhealthy,
           xiDeparturesStatus = healthDetailsUnhealthy,
           gbArrivalsStatus = healthDetailsHealthy,
@@ -79,7 +79,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
           webChannelStatus = healthDetailsHealthy,
           ppnStatus = healthDetailsHealthy,
           createdTs = LocalDateTime.now()
-        )))
+        )))(ec)
 
       val application = applicationBuilder().overrides(mocks).build()
 
@@ -94,7 +94,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
     }
 
     "must return INTERNAL_SERVER_ERROR when backend returns an error response" in {
-      when(healthCheckService.checkStatus()(any())) thenReturn Future(Left(StatusResponseError("something went wrong")))
+      when(healthCheckService.checkStatus()(any())) thenReturn Future(None)(ec)
 
       val application = applicationBuilder().overrides(mocks).build()
 

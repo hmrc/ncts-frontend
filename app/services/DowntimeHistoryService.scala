@@ -18,26 +18,22 @@ package services
 
 import com.google.inject.Inject
 import connectors.NCTSConnector
-import models.responses.{Downtime, ErrorResponse}
+import models.responses.Downtime
 import models.{DowntimeHistoryRow, PlannedDowntime, PlannedDowntimes}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDateTime
 import javax.inject.Singleton
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DowntimeHistoryService @Inject()(nctsConnector: NCTSConnector, plannedDowntimeService: PlannedDowntimeService) {
+class DowntimeHistoryService @Inject()(nctsConnector: NCTSConnector, plannedDowntimeService: PlannedDowntimeService)(implicit ec: ExecutionContext) {
 
-  def getDowntimeHistory()(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, Seq[DowntimeHistoryRow]]] = {
-    nctsConnector.getDowntimeHistory.map { response =>
-      for {
-        history <- response
-        historyWithoutBlips = filterInvalidDowntimes(history.downtimes)
-        historyForDisplay <- historyWithReasons(historyWithoutBlips)
-      } yield {
-        historyForDisplay
+  def getDowntimeHistory()(implicit hc: HeaderCarrier): Future[Option[Seq[DowntimeHistoryRow]]] = {
+
+    nctsConnector.getDowntimeHistory map { response =>
+      response flatMap { history =>
+        historyWithReasons(filterInvalidDowntimes(history.downtimes))
       }
     }
   }
@@ -55,17 +51,16 @@ class DowntimeHistoryService @Inject()(nctsConnector: NCTSConnector, plannedDown
     )
   }
 
-  def historyWithReasons(downtimes: Seq[Downtime]): Either[ErrorResponse.DowntimeConfigParseError, Seq[DowntimeHistoryRow]] = {
-    for {
-      plannedDowntime <- plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)
-      downtimesWithReason = downtimes.foldLeft(Seq[DowntimeHistoryRow]())(
-        (downtimes, downtime) => {
-          val isPlanned = isPlannedDowntime(downtime, plannedDowntime)
-          downtimes :+ DowntimeHistoryRow(downtime, planned = isPlanned)
-        }
-      )
-    } yield {
-      downtimesWithReason
+  def historyWithReasons(downtimes: Seq[Downtime]): Option[Seq[DowntimeHistoryRow]] = {
+
+    plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false) match {
+      case Left(_) => None
+      case Right(plannedDowntime) => Some(
+        downtimes.foldLeft(Seq[DowntimeHistoryRow]()) {
+          (downtimes, downtime) =>
+            val isPlanned = isPlannedDowntime(downtime, plannedDowntime)
+            downtimes :+ DowntimeHistoryRow(downtime, planned = isPlanned)
+        })
     }
   }
 

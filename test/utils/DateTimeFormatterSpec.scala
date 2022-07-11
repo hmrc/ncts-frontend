@@ -53,4 +53,42 @@ class DateTimeFormatterSpec extends SpecBase {
       ) mustBe "BST"
     }
   }
+
+  "formatTimePlannedDowntime" - {
+
+    "should return the correct format when" - {
+
+      "minutes are more than zero" in {
+
+        DateTimeFormatter.formatTimePlannedDowntime(
+          LocalDateTime.of(2022, 4, 6, 12, 1)
+        ) mustBe "12:01pm BST"
+      }
+
+      "minutes are zero" in {
+        DateTimeFormatter.formatTimePlannedDowntime(
+          LocalDateTime.of(2022, 4, 6, 12, 0)
+        ) mustBe "12pm BST"
+      }
+    }
+  }
+
+  "formatTimeDowntimeHistory" - {
+
+    "should return the correct format when" - {
+
+      "minutes are more than zero" in {
+
+        DateTimeFormatter.formatTimeDowntimeHistory(
+          LocalDateTime.of(2022, 4, 6, 12, 1)
+        ) mustBe "12:01pm BST"
+      }
+
+      "minutes are zero" in {
+        DateTimeFormatter.formatTimeDowntimeHistory(
+          LocalDateTime.of(2022, 4, 6, 12, 0)
+        ) mustBe "12pm BST"
+      }
+    }
+  }
 }

@@ -18,7 +18,6 @@ package services
 
 import base.SpecBase
 import connectors.NCTSConnector
-import models.responses.ErrorResponse.StatusResponseError
 import models.responses.StatusResponse
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -29,30 +28,14 @@ import scala.concurrent.Future
 
 class NctsServiceSpec extends SpecBase {
 
-  val nctsConnector = mock[NCTSConnector]
+  val nctsConnector: NCTSConnector = mock[NCTSConnector]
   val service = new HealthCheckService(nctsConnector)
 
   "checkStatus" - {
     "return a valid status response" in {
-      when(nctsConnector.checkStatus()(any())) thenReturn
-        Future.successful(Right(
-          StatusResponse(
-            gbDeparturesStatus = healthDetailsHealthy,
-            xiDeparturesStatus = healthDetailsUnhealthy,
-            gbArrivalsStatus = healthDetailsHealthy,
-            xiArrivalsStatus = healthDetailsUnhealthy,
-            xmlChannelStatus = healthDetailsHealthy,
-            webChannelStatus = healthDetailsHealthy,
-            ppnStatus = healthDetailsHealthy,
-            createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-          )))
 
-      val result = service.checkStatus().futureValue
-
-
-      result.fold(
-        _ => "should not return an error response",
-        response => response mustBe StatusResponse(
+      val response = Some(
+        StatusResponse(
           gbDeparturesStatus = healthDetailsHealthy,
           xiDeparturesStatus = healthDetailsUnhealthy,
           gbArrivalsStatus = healthDetailsHealthy,
@@ -61,18 +44,17 @@ class NctsServiceSpec extends SpecBase {
           webChannelStatus = healthDetailsHealthy,
           ppnStatus = healthDetailsHealthy,
           createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-        )
-      )
+        ))
+
+      when(nctsConnector.checkStatus()(any())) thenReturn Future.successful(response)
+
+      service.checkStatus().futureValue mustBe response
     }
 
     "return an error response when error occurs" in {
-      when(nctsConnector.checkStatus()(any())) thenReturn Future.successful(Left(StatusResponseError("something went wrong")))
-      val result = service.checkStatus().futureValue
+      when(nctsConnector.checkStatus()(any())) thenReturn Future.successful(None)
 
-      result.fold(
-        errorResponse => errorResponse mustBe StatusResponseError("something went wrong"),
-        _ => "should not succeed"
-      )
+      service.checkStatus().futureValue mustBe None
     }
   }
 }
