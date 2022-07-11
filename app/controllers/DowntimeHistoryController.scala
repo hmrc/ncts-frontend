@@ -33,7 +33,9 @@ class DowntimeHistoryController @Inject()(
                                            outageHistoryService: DowntimeHistoryService,
                                            errorHandler: ErrorHandler,
                                            view: DowntimeHistoryView
-                                         )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+                                         )(
+                                           implicit ec: ExecutionContext
+                                         ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     outageHistoryService.getDowntimeHistory.flatMap {

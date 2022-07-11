@@ -26,15 +26,12 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.ws.WSClient
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.ExecutionContext
-
 trait SpecCommonHelper extends PlaySpec
   with ScalaFutures with IntegrationPatience
   with WiremockHelper
   with GuiceOneServerPerSuite
   with BeforeAndAfterEach with BeforeAndAfterAll {
 
-  implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()

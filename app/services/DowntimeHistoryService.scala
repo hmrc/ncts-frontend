@@ -27,7 +27,9 @@ import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DowntimeHistoryService @Inject()(nctsConnector: NCTSConnector, plannedDowntimeService: PlannedDowntimeService)(implicit ec: ExecutionContext) {
+class DowntimeHistoryService @Inject()(
+                                        nctsConnector: NCTSConnector, plannedDowntimeService: PlannedDowntimeService
+                                      )(implicit ec: ExecutionContext) {
 
   def getDowntimeHistory()(implicit hc: HeaderCarrier): Future[Option[Seq[DowntimeHistoryRow]]] = {
 

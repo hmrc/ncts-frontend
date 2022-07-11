@@ -27,14 +27,12 @@ import play.api.http.Status.INTERNAL_SERVER_ERROR
 import uk.gov.hmrc.http.UpstreamErrorResponse
 
 import java.time.{LocalDateTime, ZoneId, ZonedDateTime}
-import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 class DowntimeHistoryServiceSpec extends SpecBase {
 
   val nctsConnector: NCTSConnector = mock[NCTSConnector]
   val plannedDowntimeService: PlannedDowntimeService = mock[PlannedDowntimeService]
-  val ec: ExecutionContext = ExecutionContext.global
   val service: DowntimeHistoryService = new DowntimeHistoryService(nctsConnector, plannedDowntimeService)(ec)
 
   "getDowntimeHistory" - {

@@ -31,9 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class NCTSConnector @Inject()(
                                httpClient: HttpClient,
                                config: FrontendAppConfig
-                             )(
-                               implicit ec: ExecutionContext
-                             ) {
+                             )(implicit ec: ExecutionContext) {
 
   def checkStatus()(implicit hc: HeaderCarrier): Future[Option[StatusResponse]] =
     makeGetCall[StatusResponse]("/status-check")

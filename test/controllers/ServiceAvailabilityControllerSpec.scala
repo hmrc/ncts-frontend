@@ -27,7 +27,8 @@ import services.HealthCheckService
 import utils.HealthDetailsExamples._
 
 import java.time.LocalDateTime
-import scala.concurrent.{ExecutionContext, Future}
+
+import scala.concurrent.Future
 
 class ServiceAvailabilityControllerSpec extends SpecBase {
 
@@ -36,8 +37,6 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
   val mocks = Seq(
     bind[HealthCheckService].to(healthCheckService)
   )
-
-  val ec: ExecutionContext = ExecutionContext.global
 
   "Service Status Check Controller" - {
 
@@ -94,6 +93,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
     }
 
     "must return INTERNAL_SERVER_ERROR when backend returns an error response" in {
+
       when(healthCheckService.checkStatus()(any())) thenReturn Future(None)(ec)
 
       val application = applicationBuilder().overrides(mocks).build()
