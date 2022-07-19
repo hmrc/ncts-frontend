@@ -16,30 +16,43 @@
 
 package connectors
 
-import base.SpecBase
-import config.FrontendAppConfig
+import com.github.tomakehurst.wiremock.client.WireMock._
 import models.GBDepartures
-import models.responses.ErrorResponse.{DowntimeResponseError, StatusResponseError}
-import models.responses.{Downtime, DowntimeResponse, ErrorResponse, StatusResponse}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
-import uk.gov.hmrc.http.HttpClient
+import models.responses.{Downtime, DowntimeResponse, StatusResponse}
+import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
+import org.scalatestplus.play.WsScalaTestClient
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import utils.HealthDetailsExamples._
+import utils.WireMockHelper
 
 import java.time.LocalDateTime
-import scala.concurrent.Future
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 
-class NCTSConnectorSpec extends SpecBase {
+class NCTSConnectorSpec extends AnyFreeSpec with Matchers with WsScalaTestClient with GuiceOneAppPerSuite with WireMockHelper with ScalaFutures {
 
-  private implicit val appConfig = app.injector.instanceOf[FrontendAppConfig]
+  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+    .configure("microservice.services.ncts.port" -> server.port())
+    .build()
 
-  private val mockHttp = mock[HttpClient]
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  private val nctsConnector = new NCTSConnector(mockHttp, appConfig)(ec)
+  private lazy val nctsConnector: NCTSConnector = app.injector.instanceOf[NCTSConnector]
+
+  val baseUrl = "/ncts"
 
   "NCTS Connector" - {
     "checkStatus" - {
+
+      val urlUnderTest = s"$baseUrl/status-check"
+
       "should return a valid response with GB/XI departures true and GB/XI arrivals false" in {
         val response = StatusResponse(
           gbDeparturesStatus = healthDetailsHealthy,
@@ -52,12 +65,14 @@ class NCTSConnectorSpec extends SpecBase {
           createdTs = LocalDateTime.now()
         )
 
-        when(mockHttp.GET[Either[ErrorResponse, StatusResponse]](any(), any(), any())(any(), any(), any()))
-          .thenReturn(Future.successful(Right(response)))
+        server.stubFor(
+          get(urlEqualTo(urlUnderTest))
+            .willReturn(ok(Json.toJson(response).toString()))
+        )
 
-        val result = nctsConnector.checkStatus().futureValue
+        val result = Await.result(nctsConnector.checkStatus(), Duration.Inf)
 
-        result mustBe Right(response)
+        result mustBe Some(response)
       }
 
       "should return a valid response with GB/XI departures false and GB/XI arrivals true" in {
@@ -72,25 +87,85 @@ class NCTSConnectorSpec extends SpecBase {
           createdTs = LocalDateTime.now()
         )
 
-        when(mockHttp.GET[Either[ErrorResponse, StatusResponse]](any(), any(), any())(any(), any(), any()))
-          .thenReturn(Future.successful(Right(response)))
+        server.stubFor(
+          get(urlEqualTo(urlUnderTest))
+            .willReturn(ok(Json.toJson(response).toString()))
+        )
 
         val result = nctsConnector.checkStatus().futureValue
 
-        result mustBe Right(response)
+        result mustBe Some(response)
       }
 
-      "should return an error response when an error occurs" in {
-        when(mockHttp.GET[Either[ErrorResponse, StatusResponse]](any(), any(), any())(any(), any(), any()))
-          .thenReturn(Future.successful(Left(StatusResponseError("something went wrong"))))
+      "should return None when NCTS returns a Not Found" in {
+
+        server.stubFor(
+          get(urlEqualTo(urlUnderTest))
+            .willReturn(notFound())
+        )
 
         val result = nctsConnector.checkStatus().futureValue
 
-        result mustBe Left(StatusResponseError("something went wrong"))
+        result mustBe None
+      }
+
+      "should throw an UpstreamErrorResponse when NCTS" - {
+
+        "returns 200 but with an invalid payload" in {
+
+          server.stubFor(
+            get(urlEqualTo(urlUnderTest))
+              .willReturn(ok("""{"foo": "bar", "id": 123}"""))
+          )
+
+          nctsConnector.checkStatus().failed.futureValue mustBe a[RuntimeException]
+        }
+      }
+
+        "should throw an UpstreamErrorResponse when NCTS" - {
+
+        "returns Bad request" in {
+
+          val errorMessage = "Please try again"
+
+          server.stubFor(
+            get(urlEqualTo(urlUnderTest))
+              .willReturn(badRequest().withBody(errorMessage))
+          )
+
+          nctsConnector.checkStatus().failed.futureValue mustBe an[UpstreamErrorResponse]
+        }
+
+        "returns Internal server error" in {
+
+          val errorMessage = "Something went wrong"
+
+          server.stubFor(
+            get(urlEqualTo(urlUnderTest))
+              .willReturn(serverError().withBody(errorMessage))
+          )
+
+          nctsConnector.checkStatus().failed.futureValue mustBe an[UpstreamErrorResponse]
+        }
+
+        "returns Service unavailable" in {
+
+          val errorMessage = "Could not reach service"
+
+          server.stubFor(
+            get(urlEqualTo(urlUnderTest))
+              .willReturn(serviceUnavailable().withBody(errorMessage))
+          )
+
+          nctsConnector.checkStatus().failed.futureValue mustBe an[UpstreamErrorResponse]
+        }
       }
     }
 
     "checkOutageHistory" - {
+
+      val urlUnderTest = s"$baseUrl/downtime-history"
+
       "should return a valid response with GB/XI departures true and GB/XI arrivals false" in {
         val response = DowntimeResponse(
           Seq(
@@ -100,12 +175,14 @@ class NCTSConnectorSpec extends SpecBase {
               LocalDateTime.of(2022, 1, 1, 10, 25, 55)
             )), LocalDateTime.of(2022, 1, 1, 10, 25, 55))
 
-        when(mockHttp.GET[Either[ErrorResponse, DowntimeResponse]](any(), any(), any())(any(), any(), any()))
-          .thenReturn(Future.successful(Right(response)))
+        server.stubFor(
+          get(urlEqualTo(urlUnderTest))
+            .willReturn(ok(Json.toJson(response).toString()))
+        )
 
         val result = nctsConnector.getDowntimeHistory().futureValue
 
-        result mustBe Right(response)
+        result mustBe Some(response)
       }
 
       "should return a valid response with GB/XI departures false and GB/XI arrivals true" in {
@@ -117,21 +194,78 @@ class NCTSConnectorSpec extends SpecBase {
               LocalDateTime.of(2022, 1, 1, 10, 25, 55)
             )), LocalDateTime.of(2022, 1, 1, 10, 25, 55))
 
-        when(mockHttp.GET[Either[ErrorResponse, DowntimeResponse]](any(), any(), any())(any(), any(), any()))
-          .thenReturn(Future.successful(Right(response)))
+        server.stubFor(
+          get(urlEqualTo(urlUnderTest))
+            .willReturn(ok(Json.toJson(response).toString()))
+        )
 
         val result = nctsConnector.getDowntimeHistory().futureValue
 
-        result mustBe Right(response)
+        result mustBe Some(response)
       }
 
-      "should return an error response when an error occurs" in {
-        when(mockHttp.GET[Either[ErrorResponse, DowntimeResponse]](any(), any(), any())(any(), any(), any()))
-          .thenReturn(Future.successful(Left(DowntimeResponseError("something went wrong"))))
+      "should throw an UpstreamErrorResponse when NCTS" - {
+
+        "returns 200 but with an invalid payload" in {
+
+          server.stubFor(
+            get(urlEqualTo(urlUnderTest))
+              .willReturn(ok("""{"foo": "bar", "id": 123}"""))
+          )
+
+          nctsConnector.getDowntimeHistory().failed.futureValue mustBe a[RuntimeException]
+        }
+      }
+
+      "should return None when NCTS returns a Not Found" in {
+
+        server.stubFor(
+          get(urlEqualTo(urlUnderTest))
+            .willReturn(notFound())
+        )
 
         val result = nctsConnector.getDowntimeHistory().futureValue
 
-        result mustBe Left(DowntimeResponseError("something went wrong"))
+        result mustBe None
+      }
+
+      "should throw an UpstreamErrorResponse when NCTS" - {
+
+        "returns Bad request" in {
+
+          val errorMessage = "Please try again"
+
+          server.stubFor(
+            get(urlEqualTo(urlUnderTest))
+              .willReturn(badRequest().withBody(errorMessage))
+          )
+
+          nctsConnector.getDowntimeHistory().failed.futureValue mustBe an[UpstreamErrorResponse]
+        }
+
+        "returns Internal server error" in {
+
+          val errorMessage = "Something went wrong"
+
+          server.stubFor(
+            get(urlEqualTo(urlUnderTest))
+              .willReturn(badRequest().withBody(errorMessage))
+          )
+
+          nctsConnector.getDowntimeHistory().failed.futureValue mustBe an[UpstreamErrorResponse]
+        }
+
+        "returns Service unavailable" in {
+
+          val errorMessage = "Could not reach service"
+
+          server.stubFor(
+            get(urlEqualTo(urlUnderTest))
+              .willReturn(badRequest().withBody(errorMessage))
+          )
+
+          nctsConnector.getDowntimeHistory().failed.futureValue mustBe an[UpstreamErrorResponse]
+        }
       }
     }
   }

@@ -18,7 +18,7 @@ package services
 
 import com.google.inject.Inject
 import connectors.NCTSConnector
-import models.responses.{ErrorResponse, StatusResponse}
+import models.responses.StatusResponse
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Singleton
@@ -27,6 +27,6 @@ import scala.concurrent.Future
 @Singleton
 class HealthCheckService @Inject()(nctsConnector: NCTSConnector) {
 
-  def checkStatus()(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, StatusResponse]] =
+  def checkStatus()(implicit hc: HeaderCarrier): Future[Option[StatusResponse]] =
     nctsConnector.checkStatus
 }

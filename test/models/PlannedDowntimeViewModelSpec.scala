@@ -73,6 +73,17 @@ class PlannedDowntimeViewModelSpec extends AnyWordSpec with Matchers {
       )
     }
 
+    "return default PlannedDowntimeViewModel when given None" in {
+
+      val result = PlannedDowntimeViewModel.fromPlannedDowntimes(Right(None))
+      result mustBe PlannedDowntimeViewModel(
+        None,
+        None,
+        None,
+        None
+      )
+    }
+
     "return default PlannedDowntimeViewModel when there are errors" in {
       val downtimes = Left(DowntimeConfigParseError("something went wrong"))
 

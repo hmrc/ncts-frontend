@@ -18,7 +18,6 @@ package controllers
 
 import handlers.ErrorHandler
 import models.PlannedDowntimeViewModel
-import models.responses.StatusResponse
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{HealthCheckService, PlannedDowntimeService}
@@ -41,7 +40,7 @@ class ServiceAvailabilityController @Inject()(
 
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     healthCheckService.checkStatus().flatMap {
-      case Right(statusResponse: StatusResponse) =>
+      case Some(statusResponse) =>
         val plannedDowntimeViewModel: PlannedDowntimeViewModel =
           PlannedDowntimeViewModel.fromPlannedDowntimes(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false))
         Future.successful(Ok(view(statusResponse, plannedDowntimeViewModel)))

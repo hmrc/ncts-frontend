@@ -18,7 +18,7 @@ package services
 
 import com.google.inject.Inject
 import connectors.NCTSConnector
-import models.responses.{Downtime, ErrorResponse}
+import models.responses.Downtime
 import models.{DowntimeHistoryRow, PlannedDowntime, PlannedDowntimes}
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -31,14 +31,11 @@ class DowntimeHistoryService @Inject()(
                                         nctsConnector: NCTSConnector, plannedDowntimeService: PlannedDowntimeService
                                       )(implicit ec: ExecutionContext) {
 
-  def getDowntimeHistory()(implicit hc: HeaderCarrier): Future[Either[ErrorResponse, Seq[DowntimeHistoryRow]]] = {
-    nctsConnector.getDowntimeHistory.map { response =>
-      for {
-        history <- response
-        historyWithoutBlips = filterInvalidDowntimes(history.downtimes)
-        historyForDisplay <- historyWithReasons(historyWithoutBlips)
-      } yield {
-        historyForDisplay
+  def getDowntimeHistory()(implicit hc: HeaderCarrier): Future[Option[Seq[DowntimeHistoryRow]]] = {
+
+    nctsConnector.getDowntimeHistory map { response =>
+      response flatMap { history =>
+        historyWithReasons(filterInvalidDowntimes(history.downtimes))
       }
     }
   }
@@ -56,17 +53,16 @@ class DowntimeHistoryService @Inject()(
     )
   }
 
-  def historyWithReasons(downtimes: Seq[Downtime]): Either[ErrorResponse.DowntimeConfigParseError, Seq[DowntimeHistoryRow]] = {
-    for {
-      plannedDowntime <- plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)
-      downtimesWithReason = downtimes.foldLeft(Seq[DowntimeHistoryRow]())(
-        (downtimes, downtime) => {
-          val isPlanned = isPlannedDowntime(downtime, plannedDowntime)
-          downtimes :+ DowntimeHistoryRow(downtime, planned = isPlanned)
-        }
-      )
-    } yield {
-      downtimesWithReason
+  def historyWithReasons(downtimes: Seq[Downtime]): Option[Seq[DowntimeHistoryRow]] = {
+
+    plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false) match {
+      case Left(_) => None
+      case Right(plannedDowntime) => Some(
+        downtimes.foldLeft(Seq[DowntimeHistoryRow]()) {
+          (downtimes, downtime) =>
+            val isPlanned = isPlannedDowntime(downtime, plannedDowntime)
+            downtimes :+ DowntimeHistoryRow(downtime, planned = isPlanned)
+        })
     }
   }
 

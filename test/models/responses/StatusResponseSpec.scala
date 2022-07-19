@@ -23,6 +23,7 @@ import models._
 import org.scalatest.enablers.Sortable
 import org.scalatest.matchers.must.Matchers
 import play.api.http.Status
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 
 import java.time.{LocalDate, LocalDateTime}
@@ -213,6 +214,24 @@ class StatusResponseSpec extends SpecBase with  Matchers {
     timeline(4).eta mustBe empty
     timeline(5).channel mustBe PPN
     timeline(5).eta mustBe empty
+  }
+
+  "TimelineUpdate" - {
+
+    "should serialise and de-serialise correctly" in {
+
+      val obj = TimelineUpdate(
+        XML,
+        Some("fake time"),
+        Some(LocalDate.now()),
+        businessContinuityFlag = true,
+        LocalDateTime.now()
+      )
+
+      val json = Json.toJson(obj)
+
+      json.as[TimelineUpdate] mustBe obj
+    }
   }
 
   def json(departuresHealthy: Boolean, arrivalsHealthy: Boolean, otherChannelsHealthy: Boolean, timelineEntriesJson: String = "[]"): String = {

@@ -39,7 +39,7 @@ class DowntimeHistoryController @Inject()(
 
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     outageHistoryService.getDowntimeHistory.flatMap {
-      case Right(downtimeHistory: Seq[DowntimeHistoryRow]) =>
+      case Some(downtimeHistory: Seq[DowntimeHistoryRow]) =>
         Future.successful(Ok(view(downtimeHistory)))
       case _ =>
         Future.successful(errorHandler.showInternalServerError)
