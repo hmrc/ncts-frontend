@@ -43,6 +43,8 @@ class PlannedDowntimeService @Inject()(appConfig: FrontendAppConfig) extends Log
               }
             case JsSuccess(downtimes, _) if downtimes.isEmpty =>
               Right(None)
+            case JsSuccess(_, _) =>
+              Right(None)
             case JsError(error) =>
               val errorMessage = error.flatMap(_._2.map(_.message)).mkString("\n")
               logger.error(s"Error parsing downtime config: $errorMessage")

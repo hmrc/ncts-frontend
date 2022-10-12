@@ -33,7 +33,7 @@ class DowntimeHistoryService @Inject()(
 
   def getDowntimeHistory()(implicit hc: HeaderCarrier): Future[Option[Seq[DowntimeHistoryRow]]] = {
 
-    nctsConnector.getDowntimeHistory map { response =>
+    nctsConnector.getDowntimeHistory() map { response =>
       response flatMap { history =>
         historyWithReasons(filterInvalidDowntimes(history.downtimes))
       }

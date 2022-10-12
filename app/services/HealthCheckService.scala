@@ -28,5 +28,5 @@ import scala.concurrent.Future
 class HealthCheckService @Inject()(nctsConnector: NCTSConnector) {
 
   def checkStatus()(implicit hc: HeaderCarrier): Future[Option[StatusResponse]] =
-    nctsConnector.checkStatus
+    nctsConnector.checkStatus()
 }
