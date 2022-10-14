@@ -19,7 +19,7 @@
 @import config.FrontendAppConfig
 @import models.responses.ChannelKnownIssue
 
-@(channels: List[ChannelKnownIssue], appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
+@(channels: List[ChannelKnownIssue], appConfig: FrontendAppConfig)(implicit messages: Messages)
 @if(channels.nonEmpty){
 <div class="update1">
     <ol class="hmrc-timeline">

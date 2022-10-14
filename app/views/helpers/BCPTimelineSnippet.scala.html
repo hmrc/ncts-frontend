@@ -18,7 +18,7 @@
 @import config.FrontendAppConfig
 @import models.responses.ChannelKnownIssue
 
-@(bcp: ChannelKnownIssue, appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
+@(bcp: ChannelKnownIssue, appConfig: FrontendAppConfig)(implicit messages: Messages)
 <li class="hmrc-timeline__event">
     <h2 class="hmrc-timeline__event-title govuk-table__caption--s">
         @messages("service.availability.bcp.invoked") - @bcp.channel.caption</h2>

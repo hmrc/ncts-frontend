@@ -38,7 +38,7 @@ class DowntimeHistoryController @Inject()(
                                          ) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
-    outageHistoryService.getDowntimeHistory.flatMap {
+    outageHistoryService.getDowntimeHistory().flatMap {
       case Some(downtimeHistory: Seq[DowntimeHistoryRow]) =>
         Future.successful(Ok(view(downtimeHistory)))
       case _ =>
