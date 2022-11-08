@@ -28,7 +28,7 @@ import java.time.{ZoneId, ZonedDateTime}
 class PlannedDowntimeServiceSpec extends SpecBase {
 
   val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  val mockConfigList: ConfigList = mock[ConfigList]
+  val mockConfigList: ConfigList       = mock[ConfigList]
 
   when(mockAppConfig.plannedDowntimesConfig).thenReturn(
     Some(mockConfigList)
@@ -39,8 +39,7 @@ class PlannedDowntimeServiceSpec extends SpecBase {
   "getPlannedDowntime" - {
     "return a Left if an exception is thrown when the planned downtime json is invalid" in {
 
-      when(mockConfigList.render(ArgumentMatchers.any())).thenReturn(
-        """
+      when(mockConfigList.render(ArgumentMatchers.any())).thenReturn("""
           |]invalid-json]]{}{{}{
           |""".stripMargin)
 
@@ -50,8 +49,7 @@ class PlannedDowntimeServiceSpec extends SpecBase {
 
     "return a Left if the planned downtime json is valid but cannot be parsed" in {
 
-      when(mockConfigList.render(ArgumentMatchers.any())).thenReturn(
-        """
+      when(mockConfigList.render(ArgumentMatchers.any())).thenReturn("""
           |"planned-downtime" [
           |    { "incorrectKey": "2021-03-15", "startTime": "08:15",
           |     "endDate": "2021-03-16", "endTime": "17:00", "affectedChannel": "gbArrivals"
@@ -73,20 +71,35 @@ class PlannedDowntimeServiceSpec extends SpecBase {
 
   "filterOldDowntimes" - {
     "must remove any downtimes which ended before today" in {
-      val now = ZonedDateTime.now(ZoneId.of("Europe/London"))
-      val today = now.toLocalDate
+      val now       = ZonedDateTime.now(ZoneId.of("Europe/London"))
+      val today     = now.toLocalDate
       val yesterday = today.minusDays(1)
 
       val oneRelevantDowntime = Seq(
-        PlannedDowntime(startDate = yesterday, startTime = now.toLocalTime, endDate = today,
-          endTime = now.toLocalTime, affectedChannel = GBArrivals),
-        PlannedDowntime(startDate = today.minusWeeks(1), startTime = now.toLocalTime, endDate = yesterday,
-          endTime = now.toLocalTime, affectedChannel = GBArrivals)
+        PlannedDowntime(
+          startDate = yesterday,
+          startTime = now.toLocalTime,
+          endDate = today,
+          endTime = now.toLocalTime,
+          affectedChannel = GBArrivals
+        ),
+        PlannedDowntime(
+          startDate = today.minusWeeks(1),
+          startTime = now.toLocalTime,
+          endDate = yesterday,
+          endTime = now.toLocalTime,
+          affectedChannel = GBArrivals
+        )
       )
 
       service.filterOldDowntimes(oneRelevantDowntime) mustBe Seq(
-        PlannedDowntime(startDate = yesterday, startTime = now.toLocalTime, endDate = today,
-          endTime = now.toLocalTime, affectedChannel = GBArrivals)
+        PlannedDowntime(
+          startDate = yesterday,
+          startTime = now.toLocalTime,
+          endDate = today,
+          endTime = now.toLocalTime,
+          affectedChannel = GBArrivals
+        )
       )
     }
   }

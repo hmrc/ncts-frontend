@@ -27,18 +27,17 @@ import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DowntimeHistoryService @Inject()(
-                                        nctsConnector: NCTSConnector, plannedDowntimeService: PlannedDowntimeService
-                                      )(implicit ec: ExecutionContext) {
+class DowntimeHistoryService @Inject() (
+  nctsConnector: NCTSConnector,
+  plannedDowntimeService: PlannedDowntimeService
+)(implicit ec: ExecutionContext) {
 
-  def getDowntimeHistory()(implicit hc: HeaderCarrier): Future[Option[Seq[DowntimeHistoryRow]]] = {
-
+  def getDowntimeHistory()(implicit hc: HeaderCarrier): Future[Option[Seq[DowntimeHistoryRow]]] =
     nctsConnector.getDowntimeHistory() map { response =>
       response flatMap { history =>
         historyWithReasons(filterInvalidDowntimes(history.downtimes))
       }
     }
-  }
 
   def filterInvalidDowntimes(downtimes: Seq[Downtime]): Seq[Downtime] = {
     val invalidDowntimeTimestamps = Seq(
@@ -48,46 +47,40 @@ class DowntimeHistoryService @Inject()(
       LocalDateTime.of(2022, 3, 23, 13, 51)
     )
 
-    downtimes.filterNot(downtime =>
-      invalidDowntimeTimestamps.exists(_.equals(downtime.end.withSecond(0).withNano(0)))
-    )
+    downtimes.filterNot(downtime => invalidDowntimeTimestamps.exists(_.equals(downtime.end.withSecond(0).withNano(0))))
   }
 
-  def historyWithReasons(downtimes: Seq[Downtime]): Option[Seq[DowntimeHistoryRow]] = {
-
+  def historyWithReasons(downtimes: Seq[Downtime]): Option[Seq[DowntimeHistoryRow]] =
     plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false) match {
-      case Left(_) => None
-      case Right(plannedDowntime) => Some(
-        downtimes.foldLeft(Seq[DowntimeHistoryRow]()) {
-          (downtimes, downtime) =>
-            val isPlanned = isPlannedDowntime(downtime, plannedDowntime)
-            downtimes :+ DowntimeHistoryRow(downtime, planned = isPlanned)
+      case Left(_)                => None
+      case Right(plannedDowntime) =>
+        Some(downtimes.foldLeft(Seq[DowntimeHistoryRow]()) { (downtimes, downtime) =>
+          val isPlanned = isPlannedDowntime(downtime, plannedDowntime)
+          downtimes :+ DowntimeHistoryRow(downtime, planned = isPlanned)
         })
     }
-  }
 
   def isPlannedDowntime(downtime: Downtime, plannedDowntimes: Option[PlannedDowntimes]): Boolean = {
 
-    def onOrAfter(downtime: LocalDateTime, plannedDowntime: LocalDateTime): Boolean = {
+    def onOrAfter(downtime: LocalDateTime, plannedDowntime: LocalDateTime): Boolean =
       downtime.isAfter(plannedDowntime) || downtime.isEqual(plannedDowntime)
-    }
 
-    def onOrBefore(downtime: LocalDateTime, plannedDowntime: LocalDateTime): Boolean = {
+    def onOrBefore(downtime: LocalDateTime, plannedDowntime: LocalDateTime): Boolean =
       downtime.isBefore(plannedDowntime) || downtime.isEqual(plannedDowntime)
-    }
 
     if (plannedDowntimes.isDefined) {
-      plannedDowntimes.get.plannedDowntimes.collect {
-        case PlannedDowntime(startDate, startTime, endDate, endTime, affectedChannel) =>
+      plannedDowntimes.get.plannedDowntimes
+        .collect { case PlannedDowntime(startDate, startTime, endDate, endTime, affectedChannel) =>
           val plannedDowntimeStartWithBuffer = LocalDateTime.of(startDate, startTime).minusHours(1)
-          val plannedDowntimeEndWithBuffer = LocalDateTime.of(endDate, endTime).plusHours(1)
-          val downtimeStart = downtime.start
-          val downtimeEnd = downtime.end
+          val plannedDowntimeEndWithBuffer   = LocalDateTime.of(endDate, endTime).plusHours(1)
+          val downtimeStart                  = downtime.start
+          val downtimeEnd                    = downtime.end
 
           onOrAfter(downtimeStart, plannedDowntimeStartWithBuffer) &&
-            onOrBefore(downtimeEnd, plannedDowntimeEndWithBuffer) &&
-            downtime.affectedChannel.toString.toLowerCase == affectedChannel.toString.toLowerCase
-      }.contains(true)
+          onOrBefore(downtimeEnd, plannedDowntimeEndWithBuffer) &&
+          downtime.affectedChannel.toString.toLowerCase == affectedChannel.toString.toLowerCase
+        }
+        .contains(true)
     } else {
       false
     }

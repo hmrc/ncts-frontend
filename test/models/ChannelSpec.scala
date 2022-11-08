@@ -37,7 +37,6 @@ class ChannelSpec extends AnyWordSpec with Matchers {
     "serialise" when {
 
       testElements.foreach { elem =>
-
         s"${elem._1} is applied" in {
 
           Channel(JsString(elem._1)) mustBe JsSuccess(elem._2)
@@ -48,7 +47,6 @@ class ChannelSpec extends AnyWordSpec with Matchers {
     "de-serialise" when {
 
       testElements.foreach { elem =>
-
         s"${elem._1} is un-applied" in {
 
           Channel.unapply(elem._2) mustBe JsString(elem._1)
@@ -59,7 +57,7 @@ class ChannelSpec extends AnyWordSpec with Matchers {
     "return a JsError if the channel cannot be parsed from Json" in {
 
       val fakeChannel: JsValue = JsString("fakeChannelName")
-      val expectedResult = JsError(s"Failed to construct Channel from value fakeChannelName")
+      val expectedResult       = JsError(s"Failed to construct Channel from value fakeChannelName")
 
       Channel(fakeChannel) mustBe expectedResult
     }

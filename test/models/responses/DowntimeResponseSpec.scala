@@ -30,14 +30,20 @@ import java.time.LocalDateTime
 class DowntimeResponseSpec extends AnyWordSpec with Matchers {
 
   val dateStart = LocalDateTime.of(2018, 2, 1, 0, 0)
-  val dateEnd = LocalDateTime.of(2018, 2, 1, 5, 33, 20)
+  val dateEnd   = LocalDateTime.of(2018, 2, 1, 5, 33, 20)
 
   val jsonStartFromMongo: JsObject = Json.obj("$date" -> 1517443200000L)
-  val jsonEndFromMongo: JsObject = Json.obj("$date" -> 1517463200000L)
+  val jsonEndFromMongo: JsObject   = Json.obj("$date" -> 1517463200000L)
 
-  val channels = Seq(GBDepartures, XIDepartures, GBArrivals, XIArrivals, Web, XML)
-  val channelsJson = Seq(JsString("GB Departures"), JsString("XI Departures"), JsString("GB Arrivals"),
-    JsString("XI Arrivals"), JsString("Web channel"), JsString("XML channel"))
+  val channels     = Seq(GBDepartures, XIDepartures, GBArrivals, XIArrivals, Web, XML)
+  val channelsJson = Seq(
+    JsString("GB Departures"),
+    JsString("XI Departures"),
+    JsString("GB Arrivals"),
+    JsString("XI Arrivals"),
+    JsString("Web channel"),
+    JsString("XML channel")
+  )
 
   "DowntimeResponseReads" should {
     "return a DowntimeResponse when status is OK and can be parsed" in {
@@ -48,7 +54,7 @@ class DowntimeResponseSpec extends AnyWordSpec with Matchers {
           LocalDateTime.of(2022, 1, 1, 10, 25, 55)
         )
 
-        val httpResponse = HttpResponse(Status.OK, json(channel))
+        val httpResponse  = HttpResponse(Status.OK, json(channel))
         val Right(result) = DowntimeResponseReads.read("GET", "url", httpResponse)
 
         result mustBe expectedResult
@@ -72,7 +78,8 @@ class DowntimeResponseSpec extends AnyWordSpec with Matchers {
       }
 
       "the response has an unexpected error" in {
-        val expectedResult = DowntimeResponseError("Unexpected error occurred when checking service status: something went wrong")
+        val expectedResult =
+          DowntimeResponseError("Unexpected error occurred when checking service status: something went wrong")
 
         val httpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, "something went wrong")
 
@@ -83,7 +90,7 @@ class DowntimeResponseSpec extends AnyWordSpec with Matchers {
     }
   }
 
-  def json(channel: JsString): String = {
+  def json(channel: JsString): String =
     s"""
        |{"downtimes":[
        |  { "affectedChannel":$channel,
@@ -93,5 +100,4 @@ class DowntimeResponseSpec extends AnyWordSpec with Matchers {
        |],
        |"createdTs":"2022-01-01T10:25:55"
        |}""".stripMargin
-  }
 }

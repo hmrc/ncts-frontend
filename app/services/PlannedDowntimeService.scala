@@ -28,36 +28,37 @@ import java.time.{ZoneId, ZonedDateTime}
 import javax.inject.Singleton
 
 @Singleton
-class PlannedDowntimeService @Inject()(appConfig: FrontendAppConfig) extends Logging {
+class PlannedDowntimeService @Inject() (appConfig: FrontendAppConfig) extends Logging {
 
-  def getPlannedDowntime(forPlannedDowntime: Boolean): Either[DowntimeConfigParseError, Option[PlannedDowntimes]] = {
+  def getPlannedDowntime(forPlannedDowntime: Boolean): Either[DowntimeConfigParseError, Option[PlannedDowntimes]] =
     appConfig.plannedDowntimesConfig.fold[Either[DowntimeConfigParseError, Option[PlannedDowntimes]]](Right(None)) {
       downtimeConfig: ConfigList =>
-        try {
+        try
           Json.parse(downtimeConfig.render(ConfigRenderOptions.concise())).validate[Seq[PlannedDowntime]] match {
             case JsSuccess(downtimes, _) if downtimes.nonEmpty =>
-              if(forPlannedDowntime) {
+              if (forPlannedDowntime) {
                 Right(Some(PlannedDowntimes(filterOldDowntimes(downtimes))))
               } else {
                 Right(Some(PlannedDowntimes(downtimes)))
               }
-            case JsSuccess(downtimes, _) if downtimes.isEmpty =>
+            case JsSuccess(downtimes, _) if downtimes.isEmpty  =>
               Right(None)
-            case JsSuccess(_, _) =>
+            case JsSuccess(_, _)                               =>
               Right(None)
-            case JsError(error) =>
+            case JsError(error)                                =>
               val errorMessage = error.flatMap(_._2.map(_.message)).mkString("\n")
               logger.error(s"Error parsing downtime config: $errorMessage")
               Left(DowntimeConfigParseError(s"Error parsing downtime config: $errorMessage"))
           }
-        } catch {
+        catch {
           case ex: Throwable =>
-            logger.error(s"[PlannedDowntimeService][getPlannedDowntime]" +
-              s" Failed to parse planned downtime with message ${ex.getMessage}")
+            logger.error(
+              s"[PlannedDowntimeService][getPlannedDowntime]" +
+                s" Failed to parse planned downtime with message ${ex.getMessage}"
+            )
             Left(DowntimeConfigParseError(s"Exception thrown when trying to parse downtime config: ${ex.getMessage}"))
         }
     }
-  }
 
   def filterOldDowntimes(downtimes: Seq[PlannedDowntime]): Seq[PlannedDowntime] = {
     val now = ZonedDateTime.now(ZoneId.of("Europe/London")).toLocalDate

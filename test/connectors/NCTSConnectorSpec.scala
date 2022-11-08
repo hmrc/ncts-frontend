@@ -35,8 +35,13 @@ import java.time.LocalDateTime
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
-
-class NCTSConnectorSpec extends AnyFreeSpec with Matchers with WsScalaTestClient with GuiceOneAppPerSuite with WireMockHelper with ScalaFutures {
+class NCTSConnectorSpec
+    extends AnyFreeSpec
+    with Matchers
+    with WsScalaTestClient
+    with GuiceOneAppPerSuite
+    with WireMockHelper
+    with ScalaFutures {
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .configure("microservice.services.ncts.port" -> server.port())
@@ -122,7 +127,7 @@ class NCTSConnectorSpec extends AnyFreeSpec with Matchers with WsScalaTestClient
         }
       }
 
-        "should throw an UpstreamErrorResponse when NCTS" - {
+      "should throw an UpstreamErrorResponse when NCTS" - {
 
         "returns Bad request" in {
 
@@ -173,7 +178,10 @@ class NCTSConnectorSpec extends AnyFreeSpec with Matchers with WsScalaTestClient
               GBDepartures,
               LocalDateTime.of(2022, 1, 1, 10, 25, 55),
               LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-            )), LocalDateTime.of(2022, 1, 1, 10, 25, 55))
+            )
+          ),
+          LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+        )
 
         server.stubFor(
           get(urlEqualTo(urlUnderTest))
@@ -192,7 +200,10 @@ class NCTSConnectorSpec extends AnyFreeSpec with Matchers with WsScalaTestClient
               GBDepartures,
               LocalDateTime.of(2022, 1, 1, 10, 25, 55),
               LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-            )), LocalDateTime.of(2022, 1, 1, 10, 25, 55))
+            )
+          ),
+          LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+        )
 
         server.stubFor(
           get(urlEqualTo(urlUnderTest))

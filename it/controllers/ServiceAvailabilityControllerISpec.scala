@@ -28,7 +28,7 @@ import scala.concurrent.duration.Duration
 
 class ServiceAvailabilityControllerISpec extends SpecCommonHelper {
 
-  val healthDetailsHealthy =
+  val healthDetailsHealthy   =
     HealthDetails(healthy = true, statusChangedAt = LocalDateTime.now, lastMessageAccepted = Some(LocalDateTime.now))
   val healthDetailsUnhealthy =
     HealthDetails(healthy = false, statusChangedAt = LocalDateTime.now, lastMessageAccepted = Some(LocalDateTime.now))
@@ -36,16 +36,23 @@ class ServiceAvailabilityControllerISpec extends SpecCommonHelper {
   "check status" should {
 
     "return OK with the correct view for a successful response when service is healthy" in {
-      stubGet("/ncts/status-check", OK,
-        Json.toJson(StatusResponse(
-          gbDeparturesStatus = healthDetailsHealthy,
-          xiDeparturesStatus = healthDetailsHealthy,
-          gbArrivalsStatus = healthDetailsHealthy,
-          xiArrivalsStatus = healthDetailsHealthy,
-          xmlChannelStatus = healthDetailsHealthy,
-          webChannelStatus = healthDetailsHealthy,
-          ppnStatus = healthDetailsHealthy,
-          createdTs = LocalDateTime.now())).toString
+      stubGet(
+        "/ncts/status-check",
+        OK,
+        Json
+          .toJson(
+            StatusResponse(
+              gbDeparturesStatus = healthDetailsHealthy,
+              xiDeparturesStatus = healthDetailsHealthy,
+              gbArrivalsStatus = healthDetailsHealthy,
+              xiArrivalsStatus = healthDetailsHealthy,
+              xmlChannelStatus = healthDetailsHealthy,
+              webChannelStatus = healthDetailsHealthy,
+              ppnStatus = healthDetailsHealthy,
+              createdTs = LocalDateTime.now()
+            )
+          )
+          .toString
       )
 
       val response = Await.result(ws.url(s"$baseUrl/service-availability").get(), Duration.Inf)
@@ -57,16 +64,23 @@ class ServiceAvailabilityControllerISpec extends SpecCommonHelper {
     }
 
     "return OK with the correct view for a successful response when service is not healthy" in {
-      stubGet("/ncts/status-check", OK,
-        Json.toJson(StatusResponse(
-          gbDeparturesStatus = healthDetailsUnhealthy,
-          xiDeparturesStatus = healthDetailsUnhealthy,
-          gbArrivalsStatus = healthDetailsUnhealthy,
-          xiArrivalsStatus = healthDetailsUnhealthy,
-          xmlChannelStatus = healthDetailsUnhealthy,
-          webChannelStatus = healthDetailsUnhealthy,
-          ppnStatus = healthDetailsUnhealthy,
-          createdTs = LocalDateTime.now())).toString
+      stubGet(
+        "/ncts/status-check",
+        OK,
+        Json
+          .toJson(
+            StatusResponse(
+              gbDeparturesStatus = healthDetailsUnhealthy,
+              xiDeparturesStatus = healthDetailsUnhealthy,
+              gbArrivalsStatus = healthDetailsUnhealthy,
+              xiArrivalsStatus = healthDetailsUnhealthy,
+              xmlChannelStatus = healthDetailsUnhealthy,
+              webChannelStatus = healthDetailsUnhealthy,
+              ppnStatus = healthDetailsUnhealthy,
+              createdTs = LocalDateTime.now()
+            )
+          )
+          .toString
       )
 
       val response = Await.result(ws.url(s"$baseUrl/service-availability").get(), Duration.Inf)
@@ -90,16 +104,23 @@ class ServiceAvailabilityControllerISpec extends SpecCommonHelper {
     }
 
     "return INTERNAL_SERVER_ERROR when there is an error" in {
-      stubGet("/ncts/status-check", SERVICE_UNAVAILABLE,
-        Json.toJson(StatusResponse(
-          gbDeparturesStatus = healthDetailsUnhealthy,
-          xiDeparturesStatus = healthDetailsUnhealthy,
-          gbArrivalsStatus = healthDetailsHealthy,
-          xiArrivalsStatus = healthDetailsHealthy,
-          xmlChannelStatus = healthDetailsHealthy,
-          webChannelStatus = healthDetailsHealthy,
-          ppnStatus = healthDetailsHealthy,
-          createdTs = LocalDateTime.now())).toString
+      stubGet(
+        "/ncts/status-check",
+        SERVICE_UNAVAILABLE,
+        Json
+          .toJson(
+            StatusResponse(
+              gbDeparturesStatus = healthDetailsUnhealthy,
+              xiDeparturesStatus = healthDetailsUnhealthy,
+              gbArrivalsStatus = healthDetailsHealthy,
+              xiArrivalsStatus = healthDetailsHealthy,
+              xmlChannelStatus = healthDetailsHealthy,
+              webChannelStatus = healthDetailsHealthy,
+              ppnStatus = healthDetailsHealthy,
+              createdTs = LocalDateTime.now()
+            )
+          )
+          .toString
       )
 
       val response = Await.result(ws.url(s"$baseUrl/service-availability").get(), Duration.Inf)

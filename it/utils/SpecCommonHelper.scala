@@ -26,11 +26,14 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.ws.WSClient
 import uk.gov.hmrc.http.HeaderCarrier
 
-trait SpecCommonHelper extends PlaySpec
-  with ScalaFutures with IntegrationPatience
-  with WiremockHelper
-  with GuiceOneServerPerSuite
-  with BeforeAndAfterEach with BeforeAndAfterAll {
+trait SpecCommonHelper
+    extends PlaySpec
+    with ScalaFutures
+    with IntegrationPatience
+    with WiremockHelper
+    with GuiceOneServerPerSuite
+    with BeforeAndAfterEach
+    with BeforeAndAfterAll {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -40,27 +43,25 @@ trait SpecCommonHelper extends PlaySpec
 
   val mockHost = WiremockHelper.wiremockHost
   val mockPort = WiremockHelper.wiremockPort.toString
-  val mockUrl = s"http://$mockHost:$mockPort"
+  val mockUrl  = s"http://$mockHost:$mockPort"
 
-  val config: Map[String, Any] = {
+  val config: Map[String, Any] =
     Map[String, Any](
-      "metrics.enabled" -> false,
-      "auditing.consumer.baseUri.host" -> mockHost,
-      "auditing.consumer.baseUri.port" -> mockPort,
+      "metrics.enabled"                 -> false,
+      "auditing.consumer.baseUri.host"  -> mockHost,
+      "auditing.consumer.baseUri.port"  -> mockPort,
       "microservice.services.ncts.host" -> mockHost,
       "microservice.services.ncts.port" -> mockPort
     )
-  }
 
   implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(Lang.defaultLang))
 
   protected val ws: WSClient = app.injector.instanceOf[WSClient]
 
-  protected val baseUrl = s"http://localhost:${port}/new-computerised-transit-system-service-availability"
+  protected val baseUrl = s"http://localhost:$port/new-computerised-transit-system-service-availability"
 
-  override def beforeEach(): Unit = {
+  override def beforeEach(): Unit =
     resetWiremock()
-  }
 
   override def beforeAll(): Unit = {
     super.beforeAll()

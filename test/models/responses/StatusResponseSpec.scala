@@ -29,7 +29,7 @@ import uk.gov.hmrc.http.HttpResponse
 import java.time.{LocalDate, LocalDateTime}
 import scala.collection.GenSeq
 
-class StatusResponseSpec extends SpecBase with  Matchers {
+class StatusResponseSpec extends SpecBase with Matchers {
 
   private val statusChangedAt =
     LocalDateTime.of(2022, 1, 1, 10, 25, 55)
@@ -37,21 +37,31 @@ class StatusResponseSpec extends SpecBase with  Matchers {
   private val lastMessageAccepted =
     LocalDateTime.of(2022, 1, 1, 10, 25, 55)
 
-  private val etaDate = LocalDate.of(2022, 3, 23)
-  private val etaTime = "10am BST"
-  private val healthDetailsHealthy =
+  private val etaDate                = LocalDate.of(2022, 3, 23)
+  private val etaTime                = "10am BST"
+  private val healthDetailsHealthy   =
     HealthDetails(healthy = true, statusChangedAt = statusChangedAt, lastMessageAccepted = Some(lastMessageAccepted))
   private val healthDetailsUnhealthy =
     HealthDetails(healthy = false, statusChangedAt = statusChangedAt, lastMessageAccepted = Some(lastMessageAccepted))
-  lazy val allHealthyResp = StatusResponse(healthDetailsHealthy, healthDetailsHealthy, healthDetailsHealthy, healthDetailsHealthy,
-    healthDetailsHealthy,healthDetailsHealthy, healthDetailsHealthy, Nil, LocalDateTime.now)
-  private val twentyMinutesAgo = LocalDateTime.now.minusMinutes(20)
-  private val tenMinutesAgo = LocalDateTime.now.minusMinutes(10)
-  private val fiveMinutesAgo = LocalDateTime.now.minusMinutes(5)
-  private val twoMinutesAgo = LocalDateTime.now.minusMinutes(2)
-  private val fewSecondsAgo = LocalDateTime.now.minusSeconds(15)
+  lazy val allHealthyResp            = StatusResponse(
+    healthDetailsHealthy,
+    healthDetailsHealthy,
+    healthDetailsHealthy,
+    healthDetailsHealthy,
+    healthDetailsHealthy,
+    healthDetailsHealthy,
+    healthDetailsHealthy,
+    Nil,
+    LocalDateTime.now
+  )
+  private val twentyMinutesAgo       = LocalDateTime.now.minusMinutes(20)
+  private val tenMinutesAgo          = LocalDateTime.now.minusMinutes(10)
+  private val fiveMinutesAgo         = LocalDateTime.now.minusMinutes(5)
+  private val twoMinutesAgo          = LocalDateTime.now.minusMinutes(2)
+  private val fewSecondsAgo          = LocalDateTime.now.minusSeconds(15)
 
-  implicit val dateTimeReverseSortable: Sortable[GenSeq[LocalDateTime]] = Sortable.sortableNatureOfSeq(dateTimeOrdering.reverse)
+  implicit val dateTimeReverseSortable: Sortable[GenSeq[LocalDateTime]] =
+    Sortable.sortableNatureOfSeq(dateTimeOrdering.reverse)
 
   private def eta(ch: Channel, createdTs: LocalDateTime) =
     TimelineUpdate(ch, Option("10am GMT"), Option(LocalDate.now()), businessContinuityFlag = false, createdTs)
@@ -59,12 +69,13 @@ class StatusResponseSpec extends SpecBase with  Matchers {
   "StatusResponseReads" - {
     "should return a StatusResponse when status is OK and can be parsed for GB/XI departures true, GB/XI arrivals false and ETA for XI arrivals and XML" in {
 
-      val depHealthyArrUnhealthyJson = json(true, false, false,
-        timelineEntriesJson(etaDate, etaTime))
-      val createdTimestamp = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-      val etas = Seq(TimelineUpdate(XIArrivals, Option(etaTime), Option(etaDate), businessContinuityFlag = false, createdTimestamp),
-        TimelineUpdate(XML, Option(etaTime), Option(etaDate), businessContinuityFlag = false, createdTimestamp))
-      val expectedResult = StatusResponse(
+      val depHealthyArrUnhealthyJson = json(true, false, false, timelineEntriesJson(etaDate, etaTime))
+      val createdTimestamp           = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+      val etas                       = Seq(
+        TimelineUpdate(XIArrivals, Option(etaTime), Option(etaDate), businessContinuityFlag = false, createdTimestamp),
+        TimelineUpdate(XML, Option(etaTime), Option(etaDate), businessContinuityFlag = false, createdTimestamp)
+      )
+      val expectedResult             = StatusResponse(
         gbDeparturesStatus = healthDetailsHealthy,
         xiDeparturesStatus = healthDetailsHealthy,
         gbArrivalsStatus = healthDetailsUnhealthy,
@@ -122,7 +133,8 @@ class StatusResponseSpec extends SpecBase with  Matchers {
       }
 
       "the response has an unexpected error" in {
-        val expectedResult = StatusResponseError("Unexpected error occurred when checking service status: something went wrong")
+        val expectedResult =
+          StatusResponseError("Unexpected error occurred when checking service status: something went wrong")
 
         val httpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, "something went wrong")
 
@@ -135,8 +147,17 @@ class StatusResponseSpec extends SpecBase with  Matchers {
 
   "xmlAndWebHealthy" - {
 
-    lazy val resp = StatusResponse(healthDetailsHealthy, healthDetailsHealthy, healthDetailsHealthy, healthDetailsHealthy,
-      healthDetailsHealthy,healthDetailsHealthy, healthDetailsHealthy, Nil, LocalDateTime.now)
+    lazy val resp = StatusResponse(
+      healthDetailsHealthy,
+      healthDetailsHealthy,
+      healthDetailsHealthy,
+      healthDetailsHealthy,
+      healthDetailsHealthy,
+      healthDetailsHealthy,
+      healthDetailsHealthy,
+      Nil,
+      LocalDateTime.now
+    )
 
     "should return true if both xml and web are healthy in the response" in {
       resp.xmlAndWebHealthy mustBe true
@@ -152,7 +173,7 @@ class StatusResponseSpec extends SpecBase with  Matchers {
   }
 
   "arrivalsWithKnownIssuesAndEta should return ETA and Known issues sorted - recent to old" in {
-    val resp = allHealthyResp.copy(
+    val resp     = allHealthyResp.copy(
       gbArrivalsStatus = healthDetailsUnhealthy.copy(statusChangedAt = twoMinutesAgo),
       xiArrivalsStatus = healthDetailsUnhealthy.copy(statusChangedAt = tenMinutesAgo),
       timelineEntries = Seq(eta(XIArrivals, fiveMinutesAgo), eta(GBArrivals, LocalDateTime.now))
@@ -171,7 +192,7 @@ class StatusResponseSpec extends SpecBase with  Matchers {
   }
 
   "departureWithKnownIssuesAndEta should return ETA and Known issues sorted - recent to old" in {
-    val resp = allHealthyResp.copy(
+    val resp     = allHealthyResp.copy(
       gbDeparturesStatus = healthDetailsUnhealthy.copy(statusChangedAt = fiveMinutesAgo),
       xiDeparturesStatus = healthDetailsUnhealthy.copy(statusChangedAt = tenMinutesAgo),
       timelineEntries = Seq(eta(GBDepartures, twoMinutesAgo), eta(XIDepartures, LocalDateTime.now))
@@ -190,14 +211,11 @@ class StatusResponseSpec extends SpecBase with  Matchers {
   }
 
   "channelsWithKnownIssuesAndEta should return ETA and Known issues sorted - recent to old" in {
-    val resp = allHealthyResp.copy(
+    val resp     = allHealthyResp.copy(
       webChannelStatus = healthDetailsUnhealthy.copy(statusChangedAt = fiveMinutesAgo),
       xmlChannelStatus = healthDetailsUnhealthy.copy(statusChangedAt = tenMinutesAgo),
       ppnStatus = healthDetailsUnhealthy.copy(statusChangedAt = twentyMinutesAgo),
-      timelineEntries = Seq(
-        eta(Web, twoMinutesAgo),
-        eta(XML, fewSecondsAgo),
-        eta(PPN, LocalDateTime.now))
+      timelineEntries = Seq(eta(Web, twoMinutesAgo), eta(XML, fewSecondsAgo), eta(PPN, LocalDateTime.now))
     )
     val timeline = resp.channelsWithKnownIssuesAndEta
     timeline.size mustBe 6
@@ -234,7 +252,12 @@ class StatusResponseSpec extends SpecBase with  Matchers {
     }
   }
 
-  def json(departuresHealthy: Boolean, arrivalsHealthy: Boolean, otherChannelsHealthy: Boolean, timelineEntriesJson: String = "[]"): String = {
+  def json(
+    departuresHealthy: Boolean,
+    arrivalsHealthy: Boolean,
+    otherChannelsHealthy: Boolean,
+    timelineEntriesJson: String = "[]"
+  ): String =
     s"""
        |{
        |  "gbDeparturesStatus": {
@@ -275,9 +298,8 @@ class StatusResponseSpec extends SpecBase with  Matchers {
        |  "timelineEntries": $timelineEntriesJson,
        |  "createdTs": "2022-01-01T10:25:55"
        |}""".stripMargin
-  }
 
-  def timelineEntriesJson(date: LocalDate, time: String): String = {
+  def timelineEntriesJson(date: LocalDate, time: String): String =
     s"""
        |[
        |  {
@@ -295,6 +317,5 @@ class StatusResponseSpec extends SpecBase with  Matchers {
        |    "createdTs": "2022-01-01T10:25:55"
        |  }
        |]""".stripMargin
-  }
 
 }

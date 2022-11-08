@@ -32,7 +32,7 @@ trait WiremockHelper {
   self: BaseOneServerPerSuite =>
 
   import WiremockHelper._
-  lazy val wmConfig = wireMockConfig().port(wiremockPort)
+  lazy val wmConfig  = wireMockConfig().port(wiremockPort)
   val wireMockServer = new WireMockServer(wmConfig)
 
   def startWiremock(): Unit = {
@@ -45,11 +45,10 @@ trait WiremockHelper {
   def resetWiremock(): Unit = WireMock.reset()
 
   def stubGet(url: String, status: Integer, body: String = ""): StubMapping =
-    stubFor(get(urlMatching(url))
-      .willReturn(
-        aResponse().
-          withStatus(status).
-          withBody(body)
-      )
+    stubFor(
+      get(urlMatching(url))
+        .willReturn(
+          aResponse().withStatus(status).withBody(body)
+        )
     )
 }

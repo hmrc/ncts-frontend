@@ -30,7 +30,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val host: String    = configuration.get[String]("host")
   val appName: String = configuration.get[String]("appName")
 
-  private val contactHost = configuration.get[String]("contact-frontend.host")
+  private val contactHost                  = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "ncts-frontend"
 
   def feedbackUrl(implicit request: RequestHeader): String =
@@ -42,7 +42,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val languageTranslationEnabled: Boolean = configuration.get[Boolean]("features.welsh-translation")
 
   private val nctsServiceName = "ncts"
-  val nctsUrl: String = s"${servicesConfig.baseUrl(nctsServiceName)}/$nctsServiceName"
+  val nctsUrl: String         = s"${servicesConfig.baseUrl(nctsServiceName)}/$nctsServiceName"
 
   val languageMap: Map[String, Lang] = Map(
     "en" -> Lang("en")

@@ -22,15 +22,13 @@ import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsVal
 sealed trait Channel {
   private val mesgKey = Channel.unapply(this).value.replace(' ', '.').toLowerCase()
 
-  def caption(implicit messages: Messages): String = {
+  def caption(implicit messages: Messages): String =
     messages(s"service.availability.timeline.channel.caption.$mesgKey")
-  }
 
-  def displayName(implicit messages: Messages): String = {
+  def displayName(implicit messages: Messages): String =
     messages(s"service.availability.timeline.channel.display.$mesgKey")
-  }
 
-  def isPPN: Boolean = false
+  def isPPN: Boolean    = false
   def isGbOrXi: Boolean = false
 }
 
@@ -57,26 +55,26 @@ object Channel {
   def apply(Channel: JsValue): JsResult[Channel] = Channel.as[String] match {
     case "GB Departures" => JsSuccess(GBDepartures)
     case "XI Departures" => JsSuccess(XIDepartures)
-    case "GB Arrivals" => JsSuccess(GBArrivals)
-    case "XI Arrivals" => JsSuccess(XIArrivals)
-    case "Web channel" => JsSuccess(Web)
-    case "XML channel" => JsSuccess(XML)
-    case "PPN" => JsSuccess(PPN)
-    case value => JsError(s"Failed to construct Channel from value $value")
+    case "GB Arrivals"   => JsSuccess(GBArrivals)
+    case "XI Arrivals"   => JsSuccess(XIArrivals)
+    case "Web channel"   => JsSuccess(Web)
+    case "XML channel"   => JsSuccess(XML)
+    case "PPN"           => JsSuccess(PPN)
+    case value           => JsError(s"Failed to construct Channel from value $value")
   }
 
   def unapply(Channel: Channel): JsString = Channel match {
     case GBDepartures => JsString("GB Departures")
     case XIDepartures => JsString("XI Departures")
-    case GBArrivals => JsString("GB Arrivals")
-    case XIArrivals => JsString("XI Arrivals")
-    case Web => JsString("Web channel")
-    case XML => JsString("XML channel")
-    case PPN => JsString("PPN")
+    case GBArrivals   => JsString("GB Arrivals")
+    case XIArrivals   => JsString("XI Arrivals")
+    case Web          => JsString("Web channel")
+    case XML          => JsString("XML channel")
+    case PPN          => JsString("PPN")
   }
 
   implicit val format: Format[Channel] = new Format[Channel] {
     def reads(json: JsValue): JsResult[Channel] = apply(json)
-    def writes(Channel: Channel): JsString = unapply(Channel)
+    def writes(Channel: Channel): JsString      = unapply(Channel)
   }
 }
