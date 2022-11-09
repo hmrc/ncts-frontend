@@ -28,19 +28,24 @@ import utils.DateTimeFormatter
 
 import java.time.{LocalDate, LocalDateTime}
 
-case class ChannelKnownIssue(channel: Channel, issueSince: LocalDateTime, isBCP: Boolean = false, eta: Option[String] = None)
+case class ChannelKnownIssue(
+  channel: Channel,
+  issueSince: LocalDateTime,
+  isBCP: Boolean = false,
+  eta: Option[String] = None
+)
 
 case class StatusResponse(
-                           gbDeparturesStatus: HealthDetails,
-                           xiDeparturesStatus: HealthDetails,
-                           gbArrivalsStatus: HealthDetails,
-                           xiArrivalsStatus: HealthDetails,
-                           xmlChannelStatus: HealthDetails,
-                           webChannelStatus: HealthDetails,
-                           ppnStatus: HealthDetails,
-                           timelineEntries: Seq[TimelineUpdate] = Nil,
-                           createdTs: LocalDateTime
-                         ) {
+  gbDeparturesStatus: HealthDetails,
+  xiDeparturesStatus: HealthDetails,
+  gbArrivalsStatus: HealthDetails,
+  xiArrivalsStatus: HealthDetails,
+  xmlChannelStatus: HealthDetails,
+  webChannelStatus: HealthDetails,
+  ppnStatus: HealthDetails,
+  timelineEntries: Seq[TimelineUpdate] = Nil,
+  createdTs: LocalDateTime
+) {
   def xmlAndWebHealthy: Boolean = xmlChannelStatus.healthy && webChannelStatus.healthy
 
   def xmlHealthy: Boolean = xmlChannelStatus.healthy
@@ -48,38 +53,35 @@ case class StatusResponse(
   def ppnNotHealthy: Boolean = !ppnStatus.healthy
 
   private def knownIssuesAndCorrespondingEtas(knownIssues: List[ChannelKnownIssue]): List[ChannelKnownIssue] = {
-    val filteredEtas = knownIssues.flatMap(
-      issue => timelineEntries.filter(_.channel == issue.channel)
-      .map(_.toChannelWithKnownIssue))
+    val filteredEtas = knownIssues.flatMap(issue =>
+      timelineEntries
+        .filter(_.channel == issue.channel)
+        .map(_.toChannelWithKnownIssue)
+    )
 
     (knownIssues ++ filteredEtas).sortBy(_.issueSince).reverse
   }
 
-  private def unhealthyChannels(channels: List[(HealthDetails, Channel)]): List[ChannelKnownIssue] = {
-    channels.filter(!_._1.healthy)
+  private def unhealthyChannels(channels: List[(HealthDetails, Channel)]): List[ChannelKnownIssue] =
+    channels
+      .filter(!_._1.healthy)
       .map(ch => ChannelKnownIssue(ch._2, ch._1.statusChangedAt))
-  }
 
   def arrivalsWithKnownIssuesAndEta: List[ChannelKnownIssue] = {
-    val arrivalKnownIssues = unhealthyChannels(
-      List((gbArrivalsStatus, GBArrivals),
-        (xiArrivalsStatus, XIArrivals)))
+    val arrivalKnownIssues = unhealthyChannels(List((gbArrivalsStatus, GBArrivals), (xiArrivalsStatus, XIArrivals)))
 
     knownIssuesAndCorrespondingEtas(arrivalKnownIssues)
   }
 
   def departuresWithKnownIssuesAndEta: List[ChannelKnownIssue] = {
     val departureKnownIssues = unhealthyChannels(
-      List((gbDeparturesStatus, GBDepartures),
-        (xiDeparturesStatus, XIDepartures)))
+      List((gbDeparturesStatus, GBDepartures), (xiDeparturesStatus, XIDepartures))
+    )
     knownIssuesAndCorrespondingEtas(departureKnownIssues)
   }
 
   def channelsWithKnownIssuesAndEta: List[ChannelKnownIssue] = {
-    val channelIssues = unhealthyChannels(
-      List((xmlChannelStatus, XML),
-        (webChannelStatus, Web),
-        (ppnStatus, PPN)))
+    val channelIssues = unhealthyChannels(List((xmlChannelStatus, XML), (webChannelStatus, Web), (ppnStatus, PPN)))
     knownIssuesAndCorrespondingEtas(channelIssues)
   }
 }
@@ -104,8 +106,7 @@ object StatusResponse {
         (__ \ "ppnStatus").read[HealthDetails] and
         (__ \ "timelineEntries").read[Seq[TimelineUpdate]] and
         (__ \ "createdTs").read[LocalDateTime]
-
-      ) (StatusResponse.apply _)
+    )(StatusResponse.apply _)
   }
 
   implicit lazy val writes: OWrites[StatusResponse] = {
@@ -122,8 +123,7 @@ object StatusResponse {
         (__ \ "ppnStatus").write[HealthDetails] and
         (__ \ "timelineEntries").write[Seq[TimelineUpdate]] and
         (__ \ "createdTs").write[LocalDateTime]
-
-      ) (unlift(StatusResponse.unapply))
+    )(unlift(StatusResponse.unapply))
 
   }
 
@@ -132,11 +132,11 @@ object StatusResponse {
   implicit object StatusResponseReads extends HttpReads[Either[ErrorResponse, StatusResponse]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, StatusResponse] =
       response.status match {
-        case OK =>
+        case OK     =>
           response.json.validate[StatusResponse] match {
             case JsSuccess(model, _) =>
               Right(model)
-            case JsError(error) =>
+            case JsError(error)      =>
               val errorMessage = error.flatMap(_._2.map(_.message)).mkString("\n")
               logger.error(s"Error parsing StatusResponse: $errorMessage")
               Left(StatusResponseError(s"Response in an unexpected format: $errorMessage"))
@@ -155,12 +155,12 @@ object HealthDetails {
 }
 
 case class TimelineUpdate(
-                           channel: Channel,
-                           time: Option[String],
-                           date: Option[LocalDate],
-                           businessContinuityFlag: Boolean,
-                           createdTs: LocalDateTime
-                         ) {
+  channel: Channel,
+  time: Option[String],
+  date: Option[LocalDate],
+  businessContinuityFlag: Boolean,
+  createdTs: LocalDateTime
+) {
   def toChannelWithKnownIssue: ChannelKnownIssue = {
     val dateTimeStr = (time ++ date.map(DateTimeFormatter.formatDateWithoutDayOfWeek)).reduceOption(_ + ", " + _)
     ChannelKnownIssue(channel, createdTs, businessContinuityFlag, dateTimeStr)
@@ -168,22 +168,20 @@ case class TimelineUpdate(
 }
 
 object TimelineUpdate {
-  implicit val writes: Writes[TimelineUpdate] = {
+  implicit val writes: Writes[TimelineUpdate] =
     (
       (__ \ "channel").write[Channel](Channel.format) and
         (__ \ "time").writeNullable[String] and
         (__ \ "date").writeNullable[LocalDate] and
         (__ \ "businessContinuityFlag").write[Boolean] and
         (__ \ "createdTs").write(MongoDateTimeFormats.DefaultLocalDateTimeWrites)
-      ) (unlift(TimelineUpdate.unapply))
-  }
-  implicit val reads: Reads[TimelineUpdate] = {
+    )(unlift(TimelineUpdate.unapply))
+  implicit val reads: Reads[TimelineUpdate]   =
     (
       (__ \ "channel").read[Channel](Channel.format) and
         (__ \ "time").readNullable[String] and
         (__ \ "date").readNullable[LocalDate] and
         (__ \ "businessContinuityFlag").read[Boolean].orElse(Reads.pure(false)) and
         (__ \ "createdTs").read(MongoDateTimeFormats.DefaultLocalDateTimeReads)
-      ) (TimelineUpdate.apply _)
-  }
+    )(TimelineUpdate.apply _)
 }

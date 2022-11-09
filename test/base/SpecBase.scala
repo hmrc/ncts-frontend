@@ -33,7 +33,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext
 
 trait SpecBase
-  extends AnyFreeSpec
+    extends AnyFreeSpec
     with Matchers
     with WsScalaTestClient
     with GuiceOneAppPerSuite
@@ -48,7 +48,7 @@ trait SpecBase
 
   implicit val fakeRequest: FakeRequest[_] = FakeRequest()
 
-  lazy val messagesApi: MessagesApi = inject[MessagesApi]
+  lazy val messagesApi: MessagesApi        = inject[MessagesApi]
   implicit lazy val messages: MessagesImpl = MessagesImpl(Lang("en-GB"), messagesApi)
 
   val ec: ExecutionContext = ExecutionContext.global
@@ -59,15 +59,14 @@ trait SpecBase
     new GuiceApplicationBuilder()
       .overrides()
 
-  def breadcrumb(index: Int, document: Document): Element = {
+  def breadcrumb(index: Int, document: Document): Element =
     document.body().getElementsByClass("govuk-breadcrumbs__link").get(index)
-  }
 
   val homeLink = "/new-computerised-transit-system-service-availability"
 
   val serviceAvailabilityLink = s"$homeLink/service-availability"
-  val plannedDowntimeLink = s"$homeLink/planned-downtime"
-  val downtimeHistoryLink = s"$homeLink/downtime-history"
+  val plannedDowntimeLink     = s"$homeLink/planned-downtime"
+  val downtimeHistoryLink     = s"$homeLink/downtime-history"
 
   val govukHomeLink = "https://www.gov.uk/government/publications" +
     "/new-computerised-transit-system-service-availability-and-issues" +

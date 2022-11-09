@@ -21,24 +21,23 @@ import play.api.libs.json.{Reads, __}
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime}
 
-case class PlannedDowntime(startDate: LocalDate, startTime: LocalTime,
-                           endDate: LocalDate, endTime: LocalTime, affectedChannel: Channel)
+case class PlannedDowntime(
+  startDate: LocalDate,
+  startTime: LocalTime,
+  endDate: LocalDate,
+  endTime: LocalTime,
+  affectedChannel: Channel
+)
 
 object PlannedDowntime {
 
   import play.api.libs.functional.syntax._
 
   implicit val dateFormat: Reads[LocalDate] =
-    Reads[LocalDate](js =>
-      js.validate[String].map(
-        LocalDate.parse(_, DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-    )
+    Reads[LocalDate](js => js.validate[String].map(LocalDate.parse(_, DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
 
   implicit val timeFormat: Reads[LocalTime] =
-    Reads[LocalTime](js =>
-      js.validate[String].map(
-        LocalTime.parse(_, DateTimeFormatter.ofPattern("HH:mm")))
-    )
+    Reads[LocalTime](js => js.validate[String].map(LocalTime.parse(_, DateTimeFormatter.ofPattern("HH:mm"))))
 
   implicit lazy val reads: Reads[PlannedDowntime] = (
     (__ \ "startDate").read[LocalDate] and
@@ -46,5 +45,5 @@ object PlannedDowntime {
       (__ \ "endDate").read[LocalDate] and
       (__ \ "endTime").read[LocalTime] and
       (__ \ "affectedChannel").read[Channel]
-    ) (PlannedDowntime.apply _)
+  )(PlannedDowntime.apply _)
 }

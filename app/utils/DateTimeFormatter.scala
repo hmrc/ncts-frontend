@@ -19,7 +19,7 @@ package utils
 import play.api.i18n.Messages
 
 import java.time.format.{DateTimeFormatter => DateTimeGen}
-import java.time.{LocalDate,LocalTime, LocalDateTime, ZoneId}
+import java.time.{LocalDate, LocalDateTime, LocalTime, ZoneId}
 import java.util.Locale
 
 object DateTimeFormatter {
@@ -35,9 +35,9 @@ object DateTimeFormatter {
 
   def setTimeOffset(dateTime: LocalDateTime): LocalDateTime = {
     val dateTimeWithZone = dateTime.atZone(ZoneId.of("Europe/London"))
-    val isGMT = dateTimeWithZone.getOffset.getTotalSeconds == 0
+    val isGMT            = dateTimeWithZone.getOffset.getTotalSeconds == 0
 
-    if(isGMT){
+    if (isGMT) {
       dateTime
     } else {
       dateTime.plusHours(1)
@@ -83,7 +83,7 @@ object DateTimeFormatter {
 
     val isGMT = dateTimeWithZone.getOffset.getTotalSeconds == 0
 
-    if(isGMT){
+    if (isGMT) {
       messages("service.availability.issues.GMT")
     } else {
       messages("service.availability.issues.BST")
@@ -95,7 +95,7 @@ object DateTimeFormatter {
 
   def formatDateTime(dateTime: LocalDateTime)(implicit messages: Messages): String = {
     val knownIssueSince = dateTime.toLocalDate
-    val now = LocalDate.now
+    val now             = LocalDate.now
 
     val time = formatTime(dateTime)
 
@@ -107,7 +107,6 @@ object DateTimeFormatter {
     }
   }
 
-  def createDateTime(date: LocalDate, time: LocalTime) = {
+  def createDateTime(date: LocalDate, time: LocalTime) =
     LocalDateTime.of(date, time)
-  }
 }

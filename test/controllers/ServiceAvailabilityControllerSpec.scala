@@ -42,18 +42,20 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
 
     "must return OK and the correct view for a GET with GB/XI departures true and GB/XI arrivals false" in {
       when(healthCheckService.checkStatus()(any())) thenReturn
-        Future(Some(
-          StatusResponse(
-            gbDeparturesStatus = healthDetailsHealthy,
-            xiDeparturesStatus = healthDetailsHealthy,
-            gbArrivalsStatus = healthDetailsUnhealthy,
-            xiArrivalsStatus = healthDetailsUnhealthy,
-            xmlChannelStatus = healthDetailsUnhealthy,
-            webChannelStatus = healthDetailsUnhealthy,
-            ppnStatus = healthDetailsUnhealthy,
-            createdTs = LocalDateTime.now()
+        Future(
+          Some(
+            StatusResponse(
+              gbDeparturesStatus = healthDetailsHealthy,
+              xiDeparturesStatus = healthDetailsHealthy,
+              gbArrivalsStatus = healthDetailsUnhealthy,
+              xiArrivalsStatus = healthDetailsUnhealthy,
+              xmlChannelStatus = healthDetailsUnhealthy,
+              webChannelStatus = healthDetailsUnhealthy,
+              ppnStatus = healthDetailsUnhealthy,
+              createdTs = LocalDateTime.now()
+            )
           )
-        ))(ec)
+        )(ec)
 
       val application = applicationBuilder().overrides(mocks).build()
 
@@ -69,16 +71,20 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
 
     "must return OK and the correct view for a GET with GB/XI departures false and GB/XI arrivals true" in {
       when(healthCheckService.checkStatus()(any())) thenReturn
-        Future(Some(StatusResponse(
-          gbDeparturesStatus = healthDetailsUnhealthy,
-          xiDeparturesStatus = healthDetailsUnhealthy,
-          gbArrivalsStatus = healthDetailsHealthy,
-          xiArrivalsStatus = healthDetailsHealthy,
-          xmlChannelStatus = healthDetailsHealthy,
-          webChannelStatus = healthDetailsHealthy,
-          ppnStatus = healthDetailsHealthy,
-          createdTs = LocalDateTime.now()
-        )))(ec)
+        Future(
+          Some(
+            StatusResponse(
+              gbDeparturesStatus = healthDetailsUnhealthy,
+              xiDeparturesStatus = healthDetailsUnhealthy,
+              gbArrivalsStatus = healthDetailsHealthy,
+              xiArrivalsStatus = healthDetailsHealthy,
+              xmlChannelStatus = healthDetailsHealthy,
+              webChannelStatus = healthDetailsHealthy,
+              ppnStatus = healthDetailsHealthy,
+              createdTs = LocalDateTime.now()
+            )
+          )
+        )(ec)
 
       val application = applicationBuilder().overrides(mocks).build()
 

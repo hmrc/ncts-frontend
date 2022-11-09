@@ -24,18 +24,18 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.Inject
 
-class PlannedDowntimeController @Inject()(
-                                              val controllerComponents: MessagesControllerComponents,
-                                              val plannedDowntimeService: PlannedDowntimeService,
-                                              view: views.html.PlannedDowntime,
-                                              errorHandler: ErrorHandler
-                                            ) extends FrontendBaseController with I18nSupport {
+class PlannedDowntimeController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  val plannedDowntimeService: PlannedDowntimeService,
+  view: views.html.PlannedDowntime,
+  errorHandler: ErrorHandler
+) extends FrontendBaseController
+    with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action { implicit request =>
-
     plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = true) match {
       case Right(downtimes) => Ok(view(downtimes))
-      case _ => errorHandler.showInternalServerError
+      case _                => errorHandler.showInternalServerError
     }
   }
 

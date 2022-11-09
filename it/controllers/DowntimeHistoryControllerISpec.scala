@@ -32,18 +32,24 @@ class DowntimeHistoryControllerISpec extends SpecCommonHelper {
   "check status" should {
 
     "return OK with the correct view for a successful response when service is healthy" in {
-      stubGet("/ncts/downtime-history", OK,
-        Json.toJson(DowntimeResponse(
-          Seq(
-            Downtime(GBDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
-            Downtime(XIDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
-            Downtime(GBArrivals, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
-            Downtime(XIArrivals, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
-            Downtime(Web, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
-            Downtime(XML, LocalDateTime.now().minusHours(1), LocalDateTime.now())
-          ),
-          LocalDateTime.now()
-        )).toString
+      stubGet(
+        "/ncts/downtime-history",
+        OK,
+        Json
+          .toJson(
+            DowntimeResponse(
+              Seq(
+                Downtime(GBDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+                Downtime(XIDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+                Downtime(GBArrivals, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+                Downtime(XIArrivals, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+                Downtime(Web, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+                Downtime(XML, LocalDateTime.now().minusHours(1), LocalDateTime.now())
+              ),
+              LocalDateTime.now()
+            )
+          )
+          .toString
       )
 
       val response = Await.result(ws.url(s"$baseUrl/downtime-history").get(), Duration.Inf)
@@ -65,17 +71,24 @@ class DowntimeHistoryControllerISpec extends SpecCommonHelper {
       document.getElementsByTag("h1").first().text() mustBe messages("error.title")
     }
     "return INTERNAL_SERVER_ERROR when there is an error" in {
-      stubGet("/ncts/downtime-history", SERVICE_UNAVAILABLE,
-        Json.toJson(DowntimeResponse(
-          Seq(
-            Downtime(GBDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
-            Downtime(XIDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
-            Downtime(GBArrivals, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
-            Downtime(XIArrivals, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
-            Downtime(Web, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
-            Downtime(XML, LocalDateTime.now().minusHours(1), LocalDateTime.now())
-          ), LocalDateTime.now()
-        )).toString
+      stubGet(
+        "/ncts/downtime-history",
+        SERVICE_UNAVAILABLE,
+        Json
+          .toJson(
+            DowntimeResponse(
+              Seq(
+                Downtime(GBDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+                Downtime(XIDepartures, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+                Downtime(GBArrivals, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+                Downtime(XIArrivals, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+                Downtime(Web, LocalDateTime.now().minusHours(1), LocalDateTime.now()),
+                Downtime(XML, LocalDateTime.now().minusHours(1), LocalDateTime.now())
+              ),
+              LocalDateTime.now()
+            )
+          )
+          .toString
       )
 
       val response = Await.result(ws.url(s"$baseUrl/downtime-history").get(), Duration.Inf)

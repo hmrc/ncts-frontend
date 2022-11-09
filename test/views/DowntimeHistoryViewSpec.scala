@@ -32,7 +32,7 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
 
     def view: DowntimeHistoryView = inject[DowntimeHistoryView]
 
-    lazy val document: Document = Jsoup.parse(view(downtimeHistory).body)
+    lazy val document: Document           = Jsoup.parse(view(downtimeHistory).body)
     lazy val documentNoDowntime: Document = Jsoup.parse(view(Seq.empty).body)
 
     "should have the correct breadcrumbs" in {
@@ -49,7 +49,10 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
     }
 
     "should have a get help link" in {
-      document.body().select(".hmrc-report-technical-issue").first()
+      document
+        .body()
+        .select(".hmrc-report-technical-issue")
+        .first()
         .attr("href") mustBe getHelpUrl
     }
 
@@ -65,7 +68,7 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
     "should have a related links section with a link to planned downtime" in {
       document.getElementsByTag("h2").get(1).text() mustBe messages("service.availability.related.links")
       val link = document.select("#main-content > div:nth-child(3) > div > ul > li > a")
-      
+
       link.get(1).text() mustBe messages("service.downtime.history.related.links.planned.downtime")
       link.get(1).attr("href") mustBe "/new-computerised-transit-system-service-availability" +
         "/planned-downtime"
@@ -78,83 +81,138 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
       }
 
       "should have a table for downtime history with the correct heading" in {
-        document.select("div:nth-child(2) > div > table > thead > tr > th:nth-child(1)").get(0).text() mustBe messages("service.downtime.history.component.name")
-        document.select("div:nth-child(2) > div > table > thead > tr > th:nth-child(2)").get(0).text() mustBe messages("service.downtime.history.event.type")
-        document.select("div:nth-child(2) > div > table > thead > tr > th:nth-child(3)").get(0).text() mustBe messages("service.downtime.history.start")
-        document.select("div:nth-child(2) > div > table > thead > tr > th:nth-child(4)").get(0).text() mustBe messages("service.downtime.history.end")
+        document.select("div:nth-child(2) > div > table > thead > tr > th:nth-child(1)").get(0).text() mustBe messages(
+          "service.downtime.history.component.name"
+        )
+        document.select("div:nth-child(2) > div > table > thead > tr > th:nth-child(2)").get(0).text() mustBe messages(
+          "service.downtime.history.event.type"
+        )
+        document.select("div:nth-child(2) > div > table > thead > tr > th:nth-child(3)").get(0).text() mustBe messages(
+          "service.downtime.history.start"
+        )
+        document.select("div:nth-child(2) > div > table > thead > tr > th:nth-child(4)").get(0).text() mustBe messages(
+          "service.downtime.history.end"
+        )
       }
 
       "should have rows for GB Departures and Arrivals" in {
         val gbDepartureRow = document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(1)")
 
-        gbDepartureRow.select("td:nth-child(1)")
-          .get(0).text() mustBe messages("service.downtime.history.ncts.gb.departures")
-        gbDepartureRow.select("td:nth-child(2)")
-          .get(0).text() mustBe messages("service.downtime.history.unplanned.event")
-        gbDepartureRow.select("td:nth-child(3)")
-          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
-        gbDepartureRow.select("td:nth-child(4)")
-          .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
-
+        gbDepartureRow
+          .select("td:nth-child(1)")
+          .get(0)
+          .text() mustBe messages("service.downtime.history.ncts.gb.departures")
+        gbDepartureRow
+          .select("td:nth-child(2)")
+          .get(0)
+          .text() mustBe messages("service.downtime.history.unplanned.event")
+        gbDepartureRow
+          .select("td:nth-child(3)")
+          .get(0)
+          .text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+        gbDepartureRow
+          .select("td:nth-child(4)")
+          .get(0)
+          .text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
 
         val gbArrivalRow = document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(2)")
 
-        gbArrivalRow.select("td:nth-child(1)")
-          .get(0).text() mustBe messages("service.downtime.history.ncts.gb.arrivals")
-        gbDepartureRow.select("td:nth-child(2)")
-          .get(0).text() mustBe messages("service.downtime.history.unplanned.event")
-        gbArrivalRow.select("td:nth-child(3)")
-          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
-        gbArrivalRow.select("td:nth-child(4)")
-          .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
+        gbArrivalRow
+          .select("td:nth-child(1)")
+          .get(0)
+          .text() mustBe messages("service.downtime.history.ncts.gb.arrivals")
+        gbDepartureRow
+          .select("td:nth-child(2)")
+          .get(0)
+          .text() mustBe messages("service.downtime.history.unplanned.event")
+        gbArrivalRow
+          .select("td:nth-child(3)")
+          .get(0)
+          .text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+        gbArrivalRow
+          .select("td:nth-child(4)")
+          .get(0)
+          .text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
       }
 
       "should have rows for XI Departures and Arrivals" in {
         val xiDepartureRow = document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(3)")
 
-        xiDepartureRow.select("td:nth-child(1)")
-          .get(0).text() mustBe messages("service.downtime.history.ncts.xi.departures")
-        xiDepartureRow.select("td:nth-child(2)")
-          .get(0).text() mustBe messages("service.downtime.history.unplanned.event")
-        xiDepartureRow.select("td:nth-child(3)")
-          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
-        xiDepartureRow.select("td:nth-child(4)")
-          .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
+        xiDepartureRow
+          .select("td:nth-child(1)")
+          .get(0)
+          .text() mustBe messages("service.downtime.history.ncts.xi.departures")
+        xiDepartureRow
+          .select("td:nth-child(2)")
+          .get(0)
+          .text() mustBe messages("service.downtime.history.unplanned.event")
+        xiDepartureRow
+          .select("td:nth-child(3)")
+          .get(0)
+          .text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+        xiDepartureRow
+          .select("td:nth-child(4)")
+          .get(0)
+          .text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
 
         val xiArrivalRow = document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(4)")
 
-        xiArrivalRow.select("td:nth-child(1)")
-          .get(0).text() mustBe messages("service.downtime.history.ncts.xi.arrivals")
-        xiArrivalRow.select("td:nth-child(2)")
-          .get(0).text() mustBe messages("service.downtime.history.unplanned.event")
-        xiArrivalRow.select("td:nth-child(3)")
-          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
-        xiArrivalRow.select("td:nth-child(4)")
-          .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
+        xiArrivalRow
+          .select("td:nth-child(1)")
+          .get(0)
+          .text() mustBe messages("service.downtime.history.ncts.xi.arrivals")
+        xiArrivalRow
+          .select("td:nth-child(2)")
+          .get(0)
+          .text() mustBe messages("service.downtime.history.unplanned.event")
+        xiArrivalRow
+          .select("td:nth-child(3)")
+          .get(0)
+          .text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+        xiArrivalRow
+          .select("td:nth-child(4)")
+          .get(0)
+          .text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
       }
 
       "should have rows for Web and XML channels" in {
         val webChannelRow = document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(5)")
 
-        webChannelRow.select("td:nth-child(1)")
-          .get(0).text() mustBe messages("service.downtime.history.ncts.web.channel")
-        webChannelRow.select("td:nth-child(2)")
-          .get(0).text() mustBe messages("service.downtime.history.unplanned.event")
-        webChannelRow.select("td:nth-child(3)")
-          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
-        webChannelRow.select(" td:nth-child(4)")
-          .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
+        webChannelRow
+          .select("td:nth-child(1)")
+          .get(0)
+          .text() mustBe messages("service.downtime.history.ncts.web.channel")
+        webChannelRow
+          .select("td:nth-child(2)")
+          .get(0)
+          .text() mustBe messages("service.downtime.history.unplanned.event")
+        webChannelRow
+          .select("td:nth-child(3)")
+          .get(0)
+          .text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+        webChannelRow
+          .select(" td:nth-child(4)")
+          .get(0)
+          .text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
 
         val xmlChannelRow = document.select("div:nth-child(2) > div > table > tbody > tr:nth-child(6)")
 
-        xmlChannelRow.select("td:nth-child(1)")
-          .get(0).text() mustBe messages("service.downtime.history.ncts.xml.channel")
-        xmlChannelRow.select("td:nth-child(2)")
-          .get(0).text() mustBe messages("service.downtime.history.unplanned.event")
-        xmlChannelRow.select("td:nth-child(3)")
-          .get(0).text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
-        xmlChannelRow.select("td:nth-child(4)")
-          .get(0).text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
+        xmlChannelRow
+          .select("td:nth-child(1)")
+          .get(0)
+          .text() mustBe messages("service.downtime.history.ncts.xml.channel")
+        xmlChannelRow
+          .select("td:nth-child(2)")
+          .get(0)
+          .text() mustBe messages("service.downtime.history.unplanned.event")
+        xmlChannelRow
+          .select("td:nth-child(3)")
+          .get(0)
+          .text() mustBe "Date: 1 January 2022 Time: 10:25am GMT"
+        xmlChannelRow
+          .select("td:nth-child(4)")
+          .get(0)
+          .text() mustBe "Date: 2 January 2022 Time: 10:25am GMT"
       }
     }
 
@@ -169,13 +227,15 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
       }
 
       "should have text about there being no downtime" in {
-        documentNoDowntime.getElementsByClass("govuk-body").first().text() mustBe messages("service.downtime.history.no.downtime.history")
+        documentNoDowntime.getElementsByClass("govuk-body").first().text() mustBe messages(
+          "service.downtime.history.no.downtime.history"
+        )
       }
     }
   }
 
   val downtimeStartDate: LocalDateTime = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-  val downtimeEndDate: LocalDateTime = LocalDateTime.of(2022, 1, 2, 10, 25, 55)
+  val downtimeEndDate: LocalDateTime   = LocalDateTime.of(2022, 1, 2, 10, 25, 55)
 
   val downtime: Downtime = Downtime(
     GBDepartures,

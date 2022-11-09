@@ -31,9 +31,9 @@ import scala.concurrent.Future
 
 class DowntimeHistoryServiceSpec extends SpecBase {
 
-  val nctsConnector: NCTSConnector = mock[NCTSConnector]
+  val nctsConnector: NCTSConnector                   = mock[NCTSConnector]
   val plannedDowntimeService: PlannedDowntimeService = mock[PlannedDowntimeService]
-  val service: DowntimeHistoryService = new DowntimeHistoryService(nctsConnector, plannedDowntimeService)(ec)
+  val service: DowntimeHistoryService                = new DowntimeHistoryService(nctsConnector, plannedDowntimeService)(ec)
 
   "getDowntimeHistory" - {
     "when there is no planned downtime" - {
@@ -42,15 +42,20 @@ class DowntimeHistoryServiceSpec extends SpecBase {
         when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn Right(None)
 
         when(nctsConnector.getDowntimeHistory()(any())) thenReturn
-          Future(Some(
-            DowntimeResponse(
-              Seq(
-                Downtime(
-                  GBDepartures,
-                  LocalDateTime.of(2022, 1, 1, 10, 25, 55),
-                  LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-                )),
-              LocalDateTime.of(2022, 1, 1, 10, 25, 55))))(ec)
+          Future(
+            Some(
+              DowntimeResponse(
+                Seq(
+                  Downtime(
+                    GBDepartures,
+                    LocalDateTime.of(2022, 1, 1, 10, 25, 55),
+                    LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+                  )
+                ),
+                LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+              )
+            )
+          )(ec)
 
         val result = service.getDowntimeHistory().futureValue
 
@@ -73,19 +78,25 @@ class DowntimeHistoryServiceSpec extends SpecBase {
 
         "getPlannedDowntime returns a DowntimeConfigParseError" in {
 
-          when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)
-          ) thenReturn Left(DowntimeConfigParseError("There was a problem"))
+          when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn Left(
+            DowntimeConfigParseError("There was a problem")
+          )
 
           when(nctsConnector.getDowntimeHistory()(any())) thenReturn
-            Future(Some(
-              DowntimeResponse(
-                Seq(
-                  Downtime(
-                    GBDepartures,
-                    LocalDateTime.of(2022, 1, 1, 10, 25, 55),
-                    LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-                  )),
-                LocalDateTime.of(2022, 1, 1, 10, 25, 55))))(ec)
+            Future(
+              Some(
+                DowntimeResponse(
+                  Seq(
+                    Downtime(
+                      GBDepartures,
+                      LocalDateTime.of(2022, 1, 1, 10, 25, 55),
+                      LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+                    )
+                  ),
+                  LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+                )
+              )
+            )(ec)
 
           service.getDowntimeHistory().futureValue mustBe None
         }
@@ -142,7 +153,8 @@ class DowntimeHistoryServiceSpec extends SpecBase {
 
   "isPlannedDowntime" - {
 
-    val middayToday = ZonedDateTime.now(ZoneId.of("UTC"))
+    val middayToday = ZonedDateTime
+      .now(ZoneId.of("UTC"))
       .withHour(12)
       .withMinute(0)
       .withSecond(0)
@@ -152,188 +164,242 @@ class DowntimeHistoryServiceSpec extends SpecBase {
     "should correctly identify a planned downtime from config" - {
       "when the downtime period matches the planned downtime period" in {
 
-        when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn Right(Some(
-          PlannedDowntimes(Seq(
-            PlannedDowntime(
-              startDate = middayToday.toLocalDate.minusDays(2),
-              middayToday.toLocalTime,
-              middayToday.toLocalDate.minusDays(1),
-              middayToday.toLocalTime,
-              affectedChannel = GBArrivals,
+        when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn Right(
+          Some(
+            PlannedDowntimes(
+              Seq(
+                PlannedDowntime(
+                  startDate = middayToday.toLocalDate.minusDays(2),
+                  middayToday.toLocalTime,
+                  middayToday.toLocalDate.minusDays(1),
+                  middayToday.toLocalTime,
+                  affectedChannel = GBArrivals
+                )
+              )
             )
-          ))
-        ))
+          )
+        )
 
         when(nctsConnector.getDowntimeHistory()(any())) thenReturn
-          Future(Some(
-            DowntimeResponse(
-              Seq(
-                Downtime(
-                  GBArrivals,
-                  middayToday.minusDays(2),
-                  middayToday.minusDays(1)
+          Future(
+            Some(
+              DowntimeResponse(
+                Seq(
+                  Downtime(
+                    GBArrivals,
+                    middayToday.minusDays(2),
+                    middayToday.minusDays(1)
+                  ),
+                  Downtime(
+                    GBDepartures,
+                    middayToday.minusDays(3),
+                    middayToday.minusDays(2)
+                  ),
+                  Downtime(
+                    XIDepartures,
+                    middayToday.minusDays(4),
+                    middayToday.minusDays(2)
+                  ),
+                  Downtime(
+                    XIArrivals,
+                    middayToday.minusDays(5),
+                    middayToday.minusDays(2)
+                  )
                 ),
-                Downtime(
-                  GBDepartures,
-                  middayToday.minusDays(3),
-                  middayToday.minusDays(2)
-                ),
-                Downtime(
-                  XIDepartures,
-                  middayToday.minusDays(4),
-                  middayToday.minusDays(2)
-                ),
-                Downtime(
-                  XIArrivals,
-                  middayToday.minusDays(5),
-                  middayToday.minusDays(2)
-                )),
-              middayToday.minusDays(1))))(ec)
+                middayToday.minusDays(1)
+              )
+            )
+          )(ec)
 
         val result = service.getDowntimeHistory().futureValue
 
         result.get mustBe
-          Seq(DowntimeHistoryRow(
-            Downtime(
-              GBArrivals,
-              middayToday.minusDays(2),
-              middayToday.minusDays(1)
-            ), planned = true),
+          Seq(
+            DowntimeHistoryRow(
+              Downtime(
+                GBArrivals,
+                middayToday.minusDays(2),
+                middayToday.minusDays(1)
+              ),
+              planned = true
+            ),
             DowntimeHistoryRow(
               Downtime(
                 GBDepartures,
                 middayToday.minusDays(3),
                 middayToday.minusDays(2)
-              ), planned = false),
+              ),
+              planned = false
+            ),
             DowntimeHistoryRow(
               Downtime(
                 XIDepartures,
                 middayToday.minusDays(4),
                 middayToday.minusDays(2)
-              ), planned = false),
+              ),
+              planned = false
+            ),
             DowntimeHistoryRow(
               Downtime(
                 XIArrivals,
                 middayToday.minusDays(5),
                 middayToday.minusDays(2)
-              ), planned = false)
+              ),
+              planned = false
+            )
           )
       }
 
       "when the downtime period starts 1 hour before the start of planned downtime period and ends during the planned downtime period" in {
 
-        val plannedDowntime = Right(Some(
-          PlannedDowntimes(Seq(
-            PlannedDowntime(
-              startDate = middayToday.toLocalDate.minusDays(2),
-              middayToday.toLocalTime,
-              middayToday.toLocalDate.minusDays(1),
-              middayToday.toLocalTime,
-              affectedChannel = GBArrivals,
+        val plannedDowntime = Right(
+          Some(
+            PlannedDowntimes(
+              Seq(
+                PlannedDowntime(
+                  startDate = middayToday.toLocalDate.minusDays(2),
+                  middayToday.toLocalTime,
+                  middayToday.toLocalDate.minusDays(1),
+                  middayToday.toLocalTime,
+                  affectedChannel = GBArrivals
+                )
+              )
             )
-          ))
-        ))
+          )
+        )
 
         when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn plannedDowntime
 
         when(nctsConnector.getDowntimeHistory()(any())) thenReturn
-          Future(Some(
-            DowntimeResponse(
-              Seq(
-                Downtime(
-                  GBArrivals,
-                  middayToday.minusDays(2).minusHours(1),
-                  middayToday.minusDays(1).minusHours(2)
-                )),
-              middayToday.minusDays(1))))(ec)
+          Future(
+            Some(
+              DowntimeResponse(
+                Seq(
+                  Downtime(
+                    GBArrivals,
+                    middayToday.minusDays(2).minusHours(1),
+                    middayToday.minusDays(1).minusHours(2)
+                  )
+                ),
+                middayToday.minusDays(1)
+              )
+            )
+          )(ec)
 
         val result = service.getDowntimeHistory().futureValue
 
         result.get mustBe
-          Seq(DowntimeHistoryRow(
-            Downtime(
-              GBArrivals,
-              middayToday.minusDays(2).minusHours(1),
-              middayToday.minusDays(1).minusHours(2)
-            ), planned = true)
+          Seq(
+            DowntimeHistoryRow(
+              Downtime(
+                GBArrivals,
+                middayToday.minusDays(2).minusHours(1),
+                middayToday.minusDays(1).minusHours(2)
+              ),
+              planned = true
+            )
           )
       }
 
       "when the downtime period starts 1 hour before the start of planned downtime period and ends 1 hour after the planned downtime period" in {
 
-        val plannedDowntime = Right(Some(
-          PlannedDowntimes(Seq(
-            PlannedDowntime(
-              startDate = middayToday.toLocalDate.minusDays(2),
-              middayToday.toLocalTime,
-              middayToday.toLocalDate.minusDays(1),
-              middayToday.toLocalTime,
-              affectedChannel = GBArrivals,
+        val plannedDowntime = Right(
+          Some(
+            PlannedDowntimes(
+              Seq(
+                PlannedDowntime(
+                  startDate = middayToday.toLocalDate.minusDays(2),
+                  middayToday.toLocalTime,
+                  middayToday.toLocalDate.minusDays(1),
+                  middayToday.toLocalTime,
+                  affectedChannel = GBArrivals
+                )
+              )
             )
-          ))
-        ))
+          )
+        )
 
         when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn plannedDowntime
 
         when(nctsConnector.getDowntimeHistory()(any())) thenReturn
-          Future(Some(
-            DowntimeResponse(
-              Seq(
-                Downtime(
-                  GBArrivals,
-                  middayToday.minusDays(2).minusHours(1),
-                  middayToday.minusDays(1).plusHours(1)
-                )),
-              middayToday.minusDays(1))))(ec)
+          Future(
+            Some(
+              DowntimeResponse(
+                Seq(
+                  Downtime(
+                    GBArrivals,
+                    middayToday.minusDays(2).minusHours(1),
+                    middayToday.minusDays(1).plusHours(1)
+                  )
+                ),
+                middayToday.minusDays(1)
+              )
+            )
+          )(ec)
 
         val result = service.getDowntimeHistory().futureValue
 
         result.get mustBe
-          Seq(DowntimeHistoryRow(
-            Downtime(
-              GBArrivals,
-              middayToday.minusDays(2).minusHours(1),
-              middayToday.minusDays(1).plusHours(1)
-            ), planned = true)
+          Seq(
+            DowntimeHistoryRow(
+              Downtime(
+                GBArrivals,
+                middayToday.minusDays(2).minusHours(1),
+                middayToday.minusDays(1).plusHours(1)
+              ),
+              planned = true
+            )
           )
       }
 
       "when the downtime period starts 10 mins after the start of planned downtime period and ends 10 mins before the end of the planned downtime period" in {
 
-        val plannedDowntime = Right(Some(
-          PlannedDowntimes(Seq(
-            PlannedDowntime(
-              startDate = middayToday.toLocalDate.minusDays(2),
-              middayToday.toLocalTime,
-              middayToday.toLocalDate.minusDays(1),
-              middayToday.toLocalTime,
-              affectedChannel = GBArrivals,
+        val plannedDowntime = Right(
+          Some(
+            PlannedDowntimes(
+              Seq(
+                PlannedDowntime(
+                  startDate = middayToday.toLocalDate.minusDays(2),
+                  middayToday.toLocalTime,
+                  middayToday.toLocalDate.minusDays(1),
+                  middayToday.toLocalTime,
+                  affectedChannel = GBArrivals
+                )
+              )
             )
-          ))
-        ))
+          )
+        )
 
         when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)) thenReturn plannedDowntime
 
         when(nctsConnector.getDowntimeHistory()(any())) thenReturn
-          Future(Some(
-            DowntimeResponse(
-              Seq(
-                Downtime(
-                  GBArrivals,
-                  middayToday.minusDays(2).plusMinutes(10),
-                  middayToday.minusDays(1).minusMinutes(10)
-                )),
-              middayToday.minusDays(1))))(ec)
+          Future(
+            Some(
+              DowntimeResponse(
+                Seq(
+                  Downtime(
+                    GBArrivals,
+                    middayToday.minusDays(2).plusMinutes(10),
+                    middayToday.minusDays(1).minusMinutes(10)
+                  )
+                ),
+                middayToday.minusDays(1)
+              )
+            )
+          )(ec)
 
         val result = service.getDowntimeHistory().futureValue
 
         result.get mustBe
-          Seq(DowntimeHistoryRow(
-            Downtime(
-              GBArrivals,
-              middayToday.minusDays(2).plusMinutes(10),
-              middayToday.minusDays(1).minusMinutes(10)
-            ), planned = true)
+          Seq(
+            DowntimeHistoryRow(
+              Downtime(
+                GBArrivals,
+                middayToday.minusDays(2).plusMinutes(10),
+                middayToday.minusDays(1).minusMinutes(10)
+              ),
+              planned = true
+            )
           )
       }
     }

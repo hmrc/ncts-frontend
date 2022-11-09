@@ -23,7 +23,9 @@ import java.time.LocalDateTime
 object HealthDetailsExamples {
 
   val healthDetailsHealthy: HealthDetails = HealthDetails(
-    healthy = true, statusChangedAt = LocalDateTime.now, lastMessageAccepted = Some(LocalDateTime.now)
+    healthy = true,
+    statusChangedAt = LocalDateTime.now,
+    lastMessageAccepted = Some(LocalDateTime.now)
   )
 
   val healthDetailsUnhealthy: HealthDetails = healthDetailsHealthy.copy(healthy = false)

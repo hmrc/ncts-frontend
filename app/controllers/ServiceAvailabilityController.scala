@@ -27,24 +27,25 @@ import views.html.ServiceAvailability
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class ServiceAvailabilityController @Inject()(
-                                               val controllerComponents: MessagesControllerComponents,
-                                               healthCheckService: HealthCheckService,
-                                               plannedDowntimeService: PlannedDowntimeService,
-                                               errorHandler: ErrorHandler,
-                                               view: ServiceAvailability
-                                             )(
-                                               implicit ec: ExecutionContext
-                                             ) extends FrontendBaseController with I18nSupport {
-
+class ServiceAvailabilityController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  healthCheckService: HealthCheckService,
+  plannedDowntimeService: PlannedDowntimeService,
+  errorHandler: ErrorHandler,
+  view: ServiceAvailability
+)(implicit
+  ec: ExecutionContext
+) extends FrontendBaseController
+    with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     healthCheckService.checkStatus().flatMap {
       case Some(statusResponse) =>
         val plannedDowntimeViewModel: PlannedDowntimeViewModel =
-          PlannedDowntimeViewModel.fromPlannedDowntimes(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false))
+          PlannedDowntimeViewModel
+            .fromPlannedDowntimes(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false))
         Future.successful(Ok(view(statusResponse, plannedDowntimeViewModel)))
-      case _ => Future.successful(errorHandler.showInternalServerError)
+      case _                    => Future.successful(errorHandler.showInternalServerError)
     }
   }
 }

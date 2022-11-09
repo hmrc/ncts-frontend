@@ -29,8 +29,8 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
 
   "PlannedDowntimeView" - {
 
-    def view: PlannedDowntimeView = inject[PlannedDowntimeView]
-    lazy val document: Document = Jsoup.parse(view(Some(plannedDowntimes)).body)
+    def view: PlannedDowntimeView         = inject[PlannedDowntimeView]
+    lazy val document: Document           = Jsoup.parse(view(Some(plannedDowntimes)).body)
     lazy val documentNoDowntime: Document = Jsoup.parse(view(None).body)
 
     "should have the correct breadcrumbs" in {
@@ -47,7 +47,10 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
     }
 
     "should have a get help link" in {
-      document.body().select(".hmrc-report-technical-issue").first()
+      document
+        .body()
+        .select(".hmrc-report-technical-issue")
+        .first()
         .attr("href") mustBe getHelpUrl
     }
 
@@ -58,31 +61,49 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
       }
 
       "should have a table for arrivals with the correct heading" in {
-        document.select("table:nth-child(2) > thead > tr > th:nth-child(1)").get(0).text() mustBe messages("planned-downtime.system.core.name")
-        document.select("table:nth-child(2) > thead > tr > th:nth-child(2)").get(0).text() mustBe messages("planned-downtime.start")
-        document.select("table:nth-child(2) > thead > tr > th:nth-child(3)").get(0).text() mustBe messages("planned-downtime.end")
+        document.select("table:nth-child(2) > thead > tr > th:nth-child(1)").get(0).text() mustBe messages(
+          "planned-downtime.system.core.name"
+        )
+        document.select("table:nth-child(2) > thead > tr > th:nth-child(2)").get(0).text() mustBe messages(
+          "planned-downtime.start"
+        )
+        document.select("table:nth-child(2) > thead > tr > th:nth-child(3)").get(0).text() mustBe messages(
+          "planned-downtime.end"
+        )
       }
 
       "should have a table for arrivals with a row for GB" in {
-        document.select("table:nth-child(2) > tbody > tr:nth-child(1) > td:nth-child(1)")
-          .get(0).text() mustBe messages("planned-downtime.ncts.gb.arrivals")
+        document
+          .select("table:nth-child(2) > tbody > tr:nth-child(1) > td:nth-child(1)")
+          .get(0)
+          .text() mustBe messages("planned-downtime.ncts.gb.arrivals")
 
-        document.select("table:nth-child(2) > tbody > tr:nth-child(1) > td:nth-child(2)")
-          .get(0).text() mustBe "Saturday 1 January 2022 8am GMT"
+        document
+          .select("table:nth-child(2) > tbody > tr:nth-child(1) > td:nth-child(2)")
+          .get(0)
+          .text() mustBe "Saturday 1 January 2022 8am GMT"
 
-        document.select("table:nth-child(2) > tbody > tr:nth-child(1) > td:nth-child(3)")
-          .get(0).text() mustBe "Wednesday 1 June 2022 8pm BST"
+        document
+          .select("table:nth-child(2) > tbody > tr:nth-child(1) > td:nth-child(3)")
+          .get(0)
+          .text() mustBe "Wednesday 1 June 2022 8pm BST"
       }
 
       "should have a table for arrivals with a row for XI" in {
-        document.select("table:nth-child(2) > tbody > tr:nth-child(2) > td:nth-child(1)")
-          .get(0).text() mustBe messages("planned-downtime.ncts.xi.arrivals")
+        document
+          .select("table:nth-child(2) > tbody > tr:nth-child(2) > td:nth-child(1)")
+          .get(0)
+          .text() mustBe messages("planned-downtime.ncts.xi.arrivals")
 
-        document.select("table:nth-child(2) > tbody > tr:nth-child(2) > td:nth-child(2)")
-          .get(0).text() mustBe "Saturday 1 January 2022 8am GMT"
+        document
+          .select("table:nth-child(2) > tbody > tr:nth-child(2) > td:nth-child(2)")
+          .get(0)
+          .text() mustBe "Saturday 1 January 2022 8am GMT"
 
-        document.select("table:nth-child(2) > tbody > tr:nth-child(2) > td:nth-child(3)")
-          .get(0).text() mustBe "Wednesday 1 June 2022 8pm BST"
+        document
+          .select("table:nth-child(2) > tbody > tr:nth-child(2) > td:nth-child(3)")
+          .get(0)
+          .text() mustBe "Wednesday 1 June 2022 8pm BST"
       }
 
       "should have some content about submissions when the service is down and an apology for arrivals" in {
@@ -126,28 +147,40 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
 
         val tableRow = document.select("table:nth-child(5) > tbody > tr:nth-child(1)")
 
-        tableRow.select("td:nth-child(1)")
-          .get(0).text() mustBe messages("planned-downtime.ncts.gb.departures")
+        tableRow
+          .select("td:nth-child(1)")
+          .get(0)
+          .text() mustBe messages("planned-downtime.ncts.gb.departures")
 
-        tableRow.select("td:nth-child(2)")
-          .get(0).text() mustBe "Saturday 1 January 2022 8am GMT"
+        tableRow
+          .select("td:nth-child(2)")
+          .get(0)
+          .text() mustBe "Saturday 1 January 2022 8am GMT"
 
-        tableRow.select("td:nth-child(3)")
-          .get(0).text() mustBe "Wednesday 1 June 2022 8pm BST"
+        tableRow
+          .select("td:nth-child(3)")
+          .get(0)
+          .text() mustBe "Wednesday 1 June 2022 8pm BST"
       }
 
       "should have a table for departures with a row for XI" in {
 
         val tableRow = document.select("table:nth-child(5) > tbody > tr:nth-child(2)")
 
-        tableRow.select("td:nth-child(1)")
-          .get(0).text() mustBe messages("planned-downtime.ncts.xi.departures")
+        tableRow
+          .select("td:nth-child(1)")
+          .get(0)
+          .text() mustBe messages("planned-downtime.ncts.xi.departures")
 
-        tableRow.select("td:nth-child(2)")
-          .get(0).text() mustBe "Saturday 1 January 2022 8am GMT"
+        tableRow
+          .select("td:nth-child(2)")
+          .get(0)
+          .text() mustBe "Saturday 1 January 2022 8am GMT"
 
-        tableRow.select("td:nth-child(3)")
-          .get(0).text() mustBe "Wednesday 1 June 2022 8pm BST"
+        tableRow
+          .select("td:nth-child(3)")
+          .get(0)
+          .text() mustBe "Wednesday 1 June 2022 8pm BST"
       }
 
       "should have some content about submissions when the service is down and an apology for departures" in {
@@ -167,7 +200,9 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
       }
 
       "should have text about there being no downtime for arrivals" in {
-        documentNoDowntime.getElementsByClass("govuk-body").first().text() mustBe messages("planned-downtime.no.downtime.planned.arrivals")
+        documentNoDowntime.getElementsByClass("govuk-body").first().text() mustBe messages(
+          "planned-downtime.no.downtime.planned.arrivals"
+        )
       }
 
       "should have the departures subheading" in {
@@ -175,15 +210,17 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
       }
 
       "should have text about there being no downtime for departures" in {
-        documentNoDowntime.getElementsByClass("govuk-body").get(1).text() mustBe messages("planned-downtime.no.downtime.planned.departures")
+        documentNoDowntime.getElementsByClass("govuk-body").get(1).text() mustBe messages(
+          "planned-downtime.no.downtime.planned.departures"
+        )
       }
     }
   }
 
   val downtimeStartDate: LocalDate = LocalDate.of(2022, 1, 1)
-  val downtimeEndDate: LocalDate = LocalDate.of(2022, 6, 1)
-  val downtimeStartTime: LocalTime = LocalTime.of(8,0)
-  val downtimeEndTime: LocalTime = LocalTime.of(20,0)
+  val downtimeEndDate: LocalDate   = LocalDate.of(2022, 6, 1)
+  val downtimeStartTime: LocalTime = LocalTime.of(8, 0)
+  val downtimeEndTime: LocalTime   = LocalTime.of(20, 0)
 
   val gbDeparturesPlannedDowntime: models.PlannedDowntime = PlannedDowntime(
     downtimeStartDate,
@@ -193,11 +230,13 @@ class PlannedDowntimeViewSpec extends SpecBase with Injecting {
     GBDepartures
   )
 
-  val plannedDowntimes: PlannedDowntimes = PlannedDowntimes(Seq(
-    gbDeparturesPlannedDowntime,
-    gbDeparturesPlannedDowntime.copy(affectedChannel = GBArrivals),
-    gbDeparturesPlannedDowntime.copy(affectedChannel = XIDepartures),
-    gbDeparturesPlannedDowntime.copy(affectedChannel = XIArrivals)
-  ))
+  val plannedDowntimes: PlannedDowntimes = PlannedDowntimes(
+    Seq(
+      gbDeparturesPlannedDowntime,
+      gbDeparturesPlannedDowntime.copy(affectedChannel = GBArrivals),
+      gbDeparturesPlannedDowntime.copy(affectedChannel = XIDepartures),
+      gbDeparturesPlannedDowntime.copy(affectedChannel = XIArrivals)
+    )
+  )
 
 }

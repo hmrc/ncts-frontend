@@ -39,7 +39,7 @@ class PlannedDowntimeControllerISpec extends SpecCommonHelper {
 
   "planned-downtime" should {
 
-    val response = ws.url(s"${baseUrl}/planned-downtime").get()
+    val response = ws.url(s"$baseUrl/planned-downtime").get()
 
     val result = Await.result(response, 2.seconds)
 

@@ -29,7 +29,7 @@ import scala.concurrent.Future
 class NctsServiceSpec extends SpecBase {
 
   val nctsConnector: NCTSConnector = mock[NCTSConnector]
-  val service = new HealthCheckService(nctsConnector)
+  val service                      = new HealthCheckService(nctsConnector)
 
   "checkStatus" - {
     "return a valid status response" in {
@@ -44,7 +44,8 @@ class NctsServiceSpec extends SpecBase {
           webChannelStatus = healthDetailsHealthy,
           ppnStatus = healthDetailsHealthy,
           createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-        ))
+        )
+      )
 
       when(nctsConnector.checkStatus()(any())) thenReturn Future.successful(response)
 

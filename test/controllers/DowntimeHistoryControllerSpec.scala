@@ -42,8 +42,11 @@ class DowntimeHistoryControllerSpec extends SpecBase {
     "must return OK for a GET with downtime history" in {
 
       when(downtimeHistoryService.getDowntimeHistory()(any())) thenReturn
-        Future(Some(
-          Seq(DowntimeHistoryRow(Downtime(GBDepartures, LocalDateTime.now(), LocalDateTime.now()), planned = false))))(ec)
+        Future(
+          Some(
+            Seq(DowntimeHistoryRow(Downtime(GBDepartures, LocalDateTime.now(), LocalDateTime.now()), planned = false))
+          )
+        )(ec)
 
       val application = applicationBuilder().overrides(mocks).build()
 

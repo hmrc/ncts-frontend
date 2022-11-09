@@ -28,10 +28,10 @@ import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class NCTSConnector @Inject()(
-                               httpClient: HttpClient,
-                               config: FrontendAppConfig
-                             )(implicit ec: ExecutionContext) {
+class NCTSConnector @Inject() (
+  httpClient: HttpClient,
+  config: FrontendAppConfig
+)(implicit ec: ExecutionContext) {
 
   def checkStatus()(implicit hc: HeaderCarrier): Future[Option[StatusResponse]] =
     makeGetCall[StatusResponse]("/status-check")
@@ -42,19 +42,18 @@ class NCTSConnector @Inject()(
   private def makeGetCall[A](requestUrl: String)(implicit hc: HeaderCarrier, reads: Reads[A]): Future[Option[A]] =
     httpClient.GET[HttpResponse](s"${config.nctsUrl}$requestUrl") map { response =>
       response.status match {
-        case OK => validateJsonResponse[A](response.json, requestUrl)
+        case OK        => validateJsonResponse[A](response.json, requestUrl)
         case NOT_FOUND => None
-        case _ => throwError(response, requestUrl)
+        case _         => throwError(response, requestUrl)
       }
     }
 
-  private def validateJsonResponse[A](json: JsValue, requestUrl: String)(implicit reads: Reads[A]): Option[A] = {
+  private def validateJsonResponse[A](json: JsValue, requestUrl: String)(implicit reads: Reads[A]): Option[A] =
     json.validateOpt[A] match {
       case JsSuccess(value, _) => value
-      case JsError(errors) =>
+      case JsError(errors)     =>
         throw new RuntimeException(s"[NCTSConnector] - Could not parse json for $requestUrl: $errors")
     }
-  }
 
   private def throwError(response: HttpResponse, requestUrl: String) =
     throw UpstreamErrorResponse(

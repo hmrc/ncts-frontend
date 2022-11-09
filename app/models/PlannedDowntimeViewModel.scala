@@ -21,46 +21,49 @@ import models.responses.ErrorResponse.DowntimeConfigParseError
 import scala.annotation.tailrec
 
 case class PlannedDowntimeViewModel(
-                                     gbArrivals: Option[PlannedDowntime],
-                                     xiArrivals: Option[PlannedDowntime],
-                                     gbDepartures: Option[PlannedDowntime],
-                                     xiDepartures: Option[PlannedDowntime]
-                                   )
+  gbArrivals: Option[PlannedDowntime],
+  xiArrivals: Option[PlannedDowntime],
+  gbDepartures: Option[PlannedDowntime],
+  xiDepartures: Option[PlannedDowntime]
+)
 
 object PlannedDowntimeViewModel {
 
-  def default: PlannedDowntimeViewModel = {
+  def default: PlannedDowntimeViewModel =
     PlannedDowntimeViewModel(
       gbArrivals = None,
       xiArrivals = None,
       gbDepartures = None,
       xiDepartures = None
     )
-  }
 
-  def fromPlannedDowntimes(downtimes: Either[DowntimeConfigParseError, Option[PlannedDowntimes]]): PlannedDowntimeViewModel = {
+  def fromPlannedDowntimes(
+    downtimes: Either[DowntimeConfigParseError, Option[PlannedDowntimes]]
+  ): PlannedDowntimeViewModel =
     downtimes match {
       case Right(downtimes) =>
         val plannedDowntimes: Seq[PlannedDowntime] = downtimes.getOrElse(PlannedDowntimes(Seq.empty)).plannedDowntimes
-        val defaultPlannedDowntime = PlannedDowntimeViewModel.default
+        val defaultPlannedDowntime                 = PlannedDowntimeViewModel.default
 
         @tailrec
-        def loop(plannedDowntimes: Seq[PlannedDowntime], index: Int, result: PlannedDowntimeViewModel): PlannedDowntimeViewModel = {
+        def loop(
+          plannedDowntimes: Seq[PlannedDowntime],
+          index: Int,
+          result: PlannedDowntimeViewModel
+        ): PlannedDowntimeViewModel =
           if (index >= plannedDowntimes.size) result
           else {
             val newResult = plannedDowntimes(index).affectedChannel.toString match {
-              case "GBArrivals" => result.copy(gbArrivals = Some(plannedDowntimes(index)))
-              case "XIArrivals" => result.copy(xiArrivals = Some(plannedDowntimes(index)))
+              case "GBArrivals"   => result.copy(gbArrivals = Some(plannedDowntimes(index)))
+              case "XIArrivals"   => result.copy(xiArrivals = Some(plannedDowntimes(index)))
               case "GBDepartures" => result.copy(gbDepartures = Some(plannedDowntimes(index)))
               case "XIDepartures" => result.copy(xiDepartures = Some(plannedDowntimes(index)))
             }
             loop(plannedDowntimes, index + 1, newResult)
           }
-        }
 
         loop(plannedDowntimes, 0, defaultPlannedDowntime)
-      case Left(_) =>
+      case Left(_)          =>
         PlannedDowntimeViewModel.default
     }
-  }
 }

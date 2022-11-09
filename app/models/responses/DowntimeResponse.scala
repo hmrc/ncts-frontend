@@ -30,21 +30,19 @@ case class Downtime(affectedChannel: Channel, start: LocalDateTime, end: LocalDa
 
 object Downtime {
 
-  implicit val writes: Writes[Downtime] = {
+  implicit val writes: Writes[Downtime] =
     (
       (__ \ "affectedChannel").write[Channel](Channel.format) and
         (__ \ "start").write(MongoDateTimeFormats.localDateTimeWrite) and
         (__ \ "end").write(MongoDateTimeFormats.localDateTimeWrite)
-      ) (unlift(Downtime.unapply))
-  }
+    )(unlift(Downtime.unapply))
 
-  implicit val reads: Reads[Downtime] = {
+  implicit val reads: Reads[Downtime] =
     (
       (__ \ "affectedChannel").read[Channel](Channel.format) and
         (__ \ "start").read(MongoDateTimeFormats.localDateTimeRead) and
         (__ \ "end").read(MongoDateTimeFormats.localDateTimeRead)
-      ) (Downtime.apply _)
-  }
+    )(Downtime.apply _)
 }
 
 case class DowntimeResponse(downtimes: Seq[Downtime], createdTs: LocalDateTime)
@@ -57,11 +55,11 @@ object DowntimeResponse {
   implicit object DowntimeResponseReads extends HttpReads[Either[ErrorResponse, DowntimeResponse]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, DowntimeResponse] =
       response.status match {
-        case OK =>
+        case OK     =>
           response.json.validate[DowntimeResponse] match {
             case JsSuccess(model, _) =>
               Right(model)
-            case JsError(error) =>
+            case JsError(error)      =>
               val errorMessage = error.flatMap(_._2.map(_.message)).mkString("\n")
               logger.error(s"Error parsing DowntimeResponse: $errorMessage")
               Left(DowntimeResponseError(s"Response in an unexpected format: $errorMessage"))
@@ -72,4 +70,3 @@ object DowntimeResponse {
       }
   }
 }
-
