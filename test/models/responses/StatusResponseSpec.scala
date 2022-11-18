@@ -27,7 +27,6 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpResponse
 
 import java.time.{LocalDate, LocalDateTime}
-import scala.collection.GenSeq
 
 class StatusResponseSpec extends SpecBase with Matchers {
 
@@ -60,7 +59,7 @@ class StatusResponseSpec extends SpecBase with Matchers {
   private val twoMinutesAgo          = LocalDateTime.now.minusMinutes(2)
   private val fewSecondsAgo          = LocalDateTime.now.minusSeconds(15)
 
-  implicit val dateTimeReverseSortable: Sortable[GenSeq[LocalDateTime]] =
+  implicit val dateTimeReverseSortable: Sortable[Seq[LocalDateTime]] =
     Sortable.sortableNatureOfSeq(dateTimeOrdering.reverse)
 
   private def eta(ch: Channel, createdTs: LocalDateTime) =
@@ -75,21 +74,24 @@ class StatusResponseSpec extends SpecBase with Matchers {
         TimelineUpdate(XIArrivals, Option(etaTime), Option(etaDate), businessContinuityFlag = false, createdTimestamp),
         TimelineUpdate(XML, Option(etaTime), Option(etaDate), businessContinuityFlag = false, createdTimestamp)
       )
-      val expectedResult             = StatusResponse(
-        gbDeparturesStatus = healthDetailsHealthy,
-        xiDeparturesStatus = healthDetailsHealthy,
-        gbArrivalsStatus = healthDetailsUnhealthy,
-        xiArrivalsStatus = healthDetailsUnhealthy,
-        xmlChannelStatus = healthDetailsUnhealthy,
-        webChannelStatus = healthDetailsUnhealthy,
-        ppnStatus = healthDetailsUnhealthy,
-        timelineEntries = etas,
-        createdTs = createdTimestamp
-      )
+      val expectedResult =
+        Right(
+          StatusResponse(
+            gbDeparturesStatus = healthDetailsHealthy,
+            xiDeparturesStatus = healthDetailsHealthy,
+            gbArrivalsStatus = healthDetailsUnhealthy,
+            xiArrivalsStatus = healthDetailsUnhealthy,
+            xmlChannelStatus = healthDetailsUnhealthy,
+            webChannelStatus = healthDetailsUnhealthy,
+            ppnStatus = healthDetailsUnhealthy,
+            timelineEntries = etas,
+            createdTs = createdTimestamp
+          )
+        )
 
       val httpResponse = HttpResponse(Status.OK, depHealthyArrUnhealthyJson)
 
-      val Right(result) = StatusResponseReads.read("GET", "url", httpResponse)
+      val result = StatusResponseReads.read("GET", "url", httpResponse)
 
       result mustBe expectedResult
     }
@@ -98,7 +100,7 @@ class StatusResponseSpec extends SpecBase with Matchers {
 
       val depUnhealthyArrHealthy = json(false, true, true)
 
-      val expectedResult = StatusResponse(
+      val expectedResult = Right(StatusResponse(
         gbDeparturesStatus = healthDetailsUnhealthy,
         xiDeparturesStatus = healthDetailsUnhealthy,
         gbArrivalsStatus = healthDetailsHealthy,
@@ -107,11 +109,11 @@ class StatusResponseSpec extends SpecBase with Matchers {
         webChannelStatus = healthDetailsHealthy,
         ppnStatus = healthDetailsHealthy,
         createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-      )
+      ))
 
       val httpResponse = HttpResponse(Status.OK, depUnhealthyArrHealthy)
 
-      val Right(result) = StatusResponseReads.read("GET", "url", httpResponse)
+      val result = StatusResponseReads.read("GET", "url", httpResponse)
 
       result mustBe expectedResult
     }
@@ -129,16 +131,16 @@ class StatusResponseSpec extends SpecBase with Matchers {
 
         val result = StatusResponseReads.read("GET", "url", httpResponse)
 
-        result mustBe 'left
+        result mustBe Symbol("left")
       }
 
       "the response has an unexpected error" in {
         val expectedResult =
-          StatusResponseError("Unexpected error occurred when checking service status: something went wrong")
+          Left(StatusResponseError("Unexpected error occurred when checking service status: something went wrong"))
 
         val httpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, "something went wrong")
 
-        val Left(result) = StatusResponseReads.read("GET", "url", httpResponse)
+        val result = StatusResponseReads.read("GET", "url", httpResponse)
 
         result mustBe expectedResult
       }

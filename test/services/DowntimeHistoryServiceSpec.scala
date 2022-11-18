@@ -22,7 +22,6 @@ import models._
 import models.responses.ErrorResponse.DowntimeConfigParseError
 import models.responses.{Downtime, DowntimeResponse}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import uk.gov.hmrc.http.UpstreamErrorResponse
 

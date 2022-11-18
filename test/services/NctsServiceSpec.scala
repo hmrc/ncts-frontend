@@ -20,7 +20,6 @@ import base.SpecBase
 import connectors.NCTSConnector
 import models.responses.StatusResponse
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
 import utils.HealthDetailsExamples._
 
 import java.time.LocalDateTime
