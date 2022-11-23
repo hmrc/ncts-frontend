@@ -74,7 +74,7 @@ class StatusResponseSpec extends SpecBase with Matchers {
         TimelineUpdate(XIArrivals, Option(etaTime), Option(etaDate), businessContinuityFlag = false, createdTimestamp),
         TimelineUpdate(XML, Option(etaTime), Option(etaDate), businessContinuityFlag = false, createdTimestamp)
       )
-      val expectedResult =
+      val expectedResult             =
         Right(
           StatusResponse(
             gbDeparturesStatus = healthDetailsHealthy,
@@ -100,16 +100,18 @@ class StatusResponseSpec extends SpecBase with Matchers {
 
       val depUnhealthyArrHealthy = json(false, true, true)
 
-      val expectedResult = Right(StatusResponse(
-        gbDeparturesStatus = healthDetailsUnhealthy,
-        xiDeparturesStatus = healthDetailsUnhealthy,
-        gbArrivalsStatus = healthDetailsHealthy,
-        xiArrivalsStatus = healthDetailsHealthy,
-        xmlChannelStatus = healthDetailsHealthy,
-        webChannelStatus = healthDetailsHealthy,
-        ppnStatus = healthDetailsHealthy,
-        createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-      ))
+      val expectedResult = Right(
+        StatusResponse(
+          gbDeparturesStatus = healthDetailsUnhealthy,
+          xiDeparturesStatus = healthDetailsUnhealthy,
+          gbArrivalsStatus = healthDetailsHealthy,
+          xiArrivalsStatus = healthDetailsHealthy,
+          xmlChannelStatus = healthDetailsHealthy,
+          webChannelStatus = healthDetailsHealthy,
+          ppnStatus = healthDetailsHealthy,
+          createdTs = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+        )
+      )
 
       val httpResponse = HttpResponse(Status.OK, depUnhealthyArrHealthy)
 

@@ -49,13 +49,15 @@ class DowntimeResponseSpec extends AnyWordSpec with Matchers {
     "return a DowntimeResponse when status is OK and can be parsed" in {
 
       for ((channel, index) <- channelsJson.zipWithIndex) {
-        val expectedResult = Right(DowntimeResponse(
-          Seq(Downtime(channels(index), dateStart, dateEnd)),
-          LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-        ))
+        val expectedResult = Right(
+          DowntimeResponse(
+            Seq(Downtime(channels(index), dateStart, dateEnd)),
+            LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+          )
+        )
 
-        val httpResponse  = HttpResponse(Status.OK, json(channel))
-        val result = DowntimeResponseReads.read("GET", "url", httpResponse)
+        val httpResponse = HttpResponse(Status.OK, json(channel))
+        val result       = DowntimeResponseReads.read("GET", "url", httpResponse)
 
         result mustBe expectedResult
       }

@@ -42,7 +42,11 @@ class PlannedDowntimeServiceSpec extends SpecBase {
           |]invalid-json]]{}{{}{
           |""".stripMargin)
 
-      service.getPlannedDowntime(forPlannedDowntime = true).left.getOrElse(throw new Exception("No value found")).message must
+      service
+        .getPlannedDowntime(forPlannedDowntime = true)
+        .left
+        .getOrElse(throw new Exception("No value found"))
+        .message must
         (fullyMatch regex "Exception thrown when trying to parse downtime config((.|\n)+)")
     }
 
@@ -56,7 +60,11 @@ class PlannedDowntimeServiceSpec extends SpecBase {
           |]
           |""".stripMargin)
 
-      service.getPlannedDowntime(forPlannedDowntime = true).left.getOrElse(throw new Exception("No value found")).message must
+      service
+        .getPlannedDowntime(forPlannedDowntime = true)
+        .left
+        .getOrElse(throw new Exception("No value found"))
+        .message must
         (fullyMatch regex "Error parsing downtime config((.|\n)+)")
     }
 
