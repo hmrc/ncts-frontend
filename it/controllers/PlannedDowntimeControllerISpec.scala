@@ -34,7 +34,7 @@ class PlannedDowntimeControllerISpec extends SpecCommonHelper {
 
     new GuiceApplicationBuilder()
       .configure(Configuration(downtimeConfig))
-      .build
+      .build()
   }
 
   "planned-downtime" should {

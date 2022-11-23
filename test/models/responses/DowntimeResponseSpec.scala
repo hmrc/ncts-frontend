@@ -49,13 +49,15 @@ class DowntimeResponseSpec extends AnyWordSpec with Matchers {
     "return a DowntimeResponse when status is OK and can be parsed" in {
 
       for ((channel, index) <- channelsJson.zipWithIndex) {
-        val expectedResult = DowntimeResponse(
-          Seq(Downtime(channels(index), dateStart, dateEnd)),
-          LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+        val expectedResult = Right(
+          DowntimeResponse(
+            Seq(Downtime(channels(index), dateStart, dateEnd)),
+            LocalDateTime.of(2022, 1, 1, 10, 25, 55)
+          )
         )
 
-        val httpResponse  = HttpResponse(Status.OK, json(channel))
-        val Right(result) = DowntimeResponseReads.read("GET", "url", httpResponse)
+        val httpResponse = HttpResponse(Status.OK, json(channel))
+        val result       = DowntimeResponseReads.read("GET", "url", httpResponse)
 
         result mustBe expectedResult
       }
@@ -74,16 +76,16 @@ class DowntimeResponseSpec extends AnyWordSpec with Matchers {
 
         val result = DowntimeResponseReads.read("GET", "url", httpResponse)
 
-        result mustBe 'left
+        result mustBe Symbol("left")
       }
 
       "the response has an unexpected error" in {
         val expectedResult =
-          DowntimeResponseError("Unexpected error occurred when checking service status: something went wrong")
+          Left(DowntimeResponseError("Unexpected error occurred when checking service status: something went wrong"))
 
         val httpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, "something went wrong")
 
-        val Left(result) = DowntimeResponseReads.read("GET", "url", httpResponse)
+        val result = DowntimeResponseReads.read("GET", "url", httpResponse)
 
         result mustBe expectedResult
       }

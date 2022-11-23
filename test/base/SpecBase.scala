@@ -21,7 +21,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
-import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.MockitoSugar
 import org.scalatestplus.play.WsScalaTestClient
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application

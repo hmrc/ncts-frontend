@@ -39,7 +39,7 @@ trait SpecCommonHelper
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .configure(config)
-    .build
+    .build()
 
   val mockHost = WiremockHelper.wiremockHost
   val mockPort = WiremockHelper.wiremockPort.toString
