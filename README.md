@@ -1,7 +1,7 @@
 
 # ncts-frontend
 
-The _New Computerised Transit System Monitoring_ service provides the capability to monitor the platform microservices involved with the receipt and processing of goods transit notifications for goods departing from and arriving in the UK
+The New Computerised Transit System Monitoring_ service provides the capability to monitor the platform microservices involved with the receipt and processing of goods transit notifications for goods departing from and arriving in the UK
 
 The service can be seen in production at the following url https://www.tax.service.gov.uk/new-computerised-transit-system-service-availability
 
