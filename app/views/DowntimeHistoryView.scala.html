@@ -26,7 +26,8 @@
 
 @layout(
     pageTitle = title(messages("service.downtime.history.title")),
-    backUrl = Some(controllers.routes.IndexController.onPageLoad.url)
+    backUrl = Some(controllers.routes.IndexController.onPageLoad.url),
+    useFullWidth = true
 ) {
 
     <h1 class="govuk-heading-l">@messages("service.downtime.history.heading")</h1>
