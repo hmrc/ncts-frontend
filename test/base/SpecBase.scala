@@ -74,4 +74,6 @@ trait SpecBase
 
   val getHelpUrl = "http://localhost:9250/contact/report-technical-problem?newTab=true&" +
     "service=ncts-frontend&referrerUrl=%2F"
+
+  val exitSurveyUrl = "http://localhost:9514/feedback/ncts"
 }

@@ -302,6 +302,14 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         .text() mustBe lastUpdatedText
     }
 
+    "should have an exit survey link" in {
+      document
+        .body()
+        .select("#main-content > div > div > div:nth-child(3) > div > p > a")
+        .first()
+        .attr("href") mustBe exitSurveyUrl
+    }
+
     "should have a get help link" in {
       document
         .body()
@@ -408,7 +416,10 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           s"${messages("service.availability.issues.p6")} ${messages("service.availability.issues.xml.channel")}" +
             s" ${messages("service.availability.issues.p7")}"
 
-        document.getElementsByClass("govuk-body").last().text() mustBe thirdPartyMessage
+        document
+          .select("#main-content > div > div > div:nth-child(2) > div > p")
+          .first()
+          .text() mustBe thirdPartyMessage
       }
     }
 
