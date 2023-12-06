@@ -170,3 +170,7 @@ service.downtime.history.p1=During downtime, we held any submitted data and proc
 service.downtime.history.p2=We apologise for any inconvenience this may have caused.
 service.downtime.history.related.links.service.availability=Service availability
 service.downtime.history.related.links.planned.downtime=Planned downtime
+
+
+exitSurvey.p1 = What do you think of this service?
+exitSurvey.p2 = (takes 30 seconds)

@@ -17,9 +17,11 @@
 @import models.DowntimeHistoryRow
 @import models.responses.Downtime
 @import helpers.DowntimeHistoryTable
+@import config.FrontendAppConfig
 
 @this(
-    layout: templates.Layout
+    layout: templates.Layout,
+    appConfig: FrontendAppConfig
 )
 
 @(downtimes: Seq[DowntimeHistoryRow])(implicit request: Request[_], messages: Messages)
@@ -69,6 +71,12 @@
                     </a>
                 </li>
             </ul>
+
+            <p class="govuk-body">
+                <a class="govuk-link" href="@appConfig.exitSurveyUrl">@messages("exitSurvey.p1")</a>
+                @messages("exitSurvey.p2")
+            </p>
+
         </div>
     </div>
 }

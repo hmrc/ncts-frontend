@@ -48,6 +48,14 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
       document.select("h1").first().text() mustBe messages("service.downtime.history.heading")
     }
 
+    "should have an exit survey link" in {
+      document
+        .body()
+        .select("#main-content > div:nth-child(3) > div > p > a")
+        .first()
+        .attr("href") mustBe exitSurveyUrl
+    }
+
     "should have a get help link" in {
       document
         .body()

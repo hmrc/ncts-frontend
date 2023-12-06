@@ -18,9 +18,11 @@
 @import models.PlannedDowntimes
 @import helpers.PlannedDowntimeTable
 @import helpers.PlannedDowntimeTableMobile
+@import config.FrontendAppConfig
 
 @this(
-    layout: templates.Layout
+    layout: templates.Layout,
+    appConfig: FrontendAppConfig
 )
 
 @(plannedDowntimes: Option[PlannedDowntimes])(implicit request: Request[_], messages: Messages)
@@ -90,6 +92,12 @@
                     </a>
                 </li>
             </ul>
+
+            <p class="govuk-body">
+                <a class="govuk-link" href="@appConfig.exitSurveyUrl">@messages("exitSurvey.p1")</a>
+                @messages("exitSurvey.p2")
+            </p>
+
         </div>
     </div>
 }
