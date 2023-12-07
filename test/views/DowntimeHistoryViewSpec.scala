@@ -53,7 +53,7 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
         .body()
         .select("#main-content > div:nth-child(3) > div > p > a")
         .first()
-        .attr("href") mustBe exitSurveyUrl
+        .attr("href") mustBe feedbackFrontendUrl
     }
 
     "should have a get help link" in {

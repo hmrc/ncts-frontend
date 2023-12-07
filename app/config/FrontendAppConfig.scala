@@ -36,8 +36,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def feedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${SafeRedirectUrl(host + request.uri).encodedUrl}"
 
-  private val exitSurveyBaseUrl: String = configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
-  val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/ncts"
+  val feedbackFrontendUrl: String = configuration.get[String]("feedback-frontend.url")
 
   val languageTranslationEnabled: Boolean = configuration.get[Boolean]("features.welsh-translation")
 
