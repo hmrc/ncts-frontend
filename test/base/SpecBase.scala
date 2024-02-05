@@ -21,7 +21,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
-import org.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.WsScalaTestClient
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -68,11 +68,11 @@ trait SpecBase
   val plannedDowntimeLink     = s"$homeLink/planned-downtime"
   val downtimeHistoryLink     = s"$homeLink/downtime-history"
 
-  val govukHomeLink = "https://www.gov.uk/government/publications" +
+  val govukHomeLink: String = "https://www.gov.uk/government/publications" +
     "/new-computerised-transit-system-service-availability-and-issues" +
     "/new-computerised-transit-system-service-availability-and-issues"
 
-  val getHelpUrl = "http://localhost:9250/contact/report-technical-problem?newTab=true&" +
+  val getHelpUrl: String = "http://localhost:9250/contact/report-technical-problem?newTab=true&" +
     "service=ncts-frontend&referrerUrl=%2F"
 
   val feedbackFrontendUrl = "http://localhost:9514/feedback/NCTS"
