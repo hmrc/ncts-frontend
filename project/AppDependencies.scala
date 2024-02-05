@@ -1,7 +1,6 @@
 import sbt._
 
 object AppDependencies {
-  import play.core.PlayVersion
 
   val bootstrapVersion = "8.4.0"
 
@@ -12,7 +11,7 @@ object AppDependencies {
   )
 
   val test: Seq[ModuleID] = Seq(
-    "org.jsoup"                     % "jsoup"                   % "1.15.3",
+    "org.jsoup"                     % "jsoup"                   % "1.15.4",
     "uk.gov.hmrc"                  %% "bootstrap-test-play-30"  % bootstrapVersion
 
   ).map(_ % "test, it")
