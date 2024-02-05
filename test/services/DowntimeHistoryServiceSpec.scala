@@ -24,6 +24,7 @@ import models.responses.{Downtime, DowntimeResponse}
 import org.mockito.ArgumentMatchers.any
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import uk.gov.hmrc.http.UpstreamErrorResponse
+import org.mockito.Mockito._
 
 import java.time.{LocalDateTime, ZoneId, ZonedDateTime}
 import scala.concurrent.Future

@@ -20,20 +20,20 @@ import base.SpecBase
 import models.responses.Downtime
 import models.{DowntimeHistoryRow, GBDepartures}
 import org.mockito.ArgumentMatchers.any
-import play.api.inject.bind
+import play.api.inject.{Binding, bind}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.DowntimeHistoryService
+import org.mockito.Mockito._
 
 import java.time.LocalDateTime
-
 import scala.concurrent.Future
 
 class DowntimeHistoryControllerSpec extends SpecBase {
 
   val downtimeHistoryService: DowntimeHistoryService = mock[DowntimeHistoryService]
 
-  val mocks = Seq(
+  val mocks: Seq[Binding[DowntimeHistoryService]] = Seq(
     bind[DowntimeHistoryService].to(downtimeHistoryService)
   )
   "DowntimeHistoryController" - {

@@ -21,6 +21,7 @@ import connectors.NCTSConnector
 import models.responses.StatusResponse
 import org.mockito.ArgumentMatchers.any
 import utils.HealthDetailsExamples._
+import org.mockito.Mockito._
 
 import java.time.LocalDateTime
 import scala.concurrent.Future
