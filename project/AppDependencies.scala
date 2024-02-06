@@ -14,7 +14,9 @@ object AppDependencies {
     "org.jsoup"                     % "jsoup"                   % "1.15.4",
     "uk.gov.hmrc"                  %% "bootstrap-test-play-30"  % bootstrapVersion
 
-  ).map(_ % "test, it")
+  ).map(_ % "test")
+
+  val it: Seq[ModuleID] = Seq()
 
   def apply(): Seq[ModuleID] = compile ++ test
 }

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package controllers
+package test.controllers
 
 import models.responses.{HealthDetails, StatusResponse}
 import org.jsoup.Jsoup
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import utils.SpecCommonHelper
+import test.utils.SpecCommonHelper
 
 import java.time.LocalDateTime
 import scala.concurrent.Await

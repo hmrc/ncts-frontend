@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package utils
+package test.utils
 
 import org.scalatest._
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}

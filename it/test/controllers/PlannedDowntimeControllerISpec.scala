@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package controllers
+package test.controllers
 
 import com.typesafe.config.ConfigFactory
 import org.scalatest.time.SpanSugar.convertIntToGrainOfTime
 import play.api.Configuration
 import play.api.http.Status.OK
 import play.api.inject.guice.GuiceApplicationBuilder
-import utils.SpecCommonHelper
+import test.utils.SpecCommonHelper
 
 import java.io.File
 import scala.concurrent.Await
