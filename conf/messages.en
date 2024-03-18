@@ -150,6 +150,12 @@ planned-downtime.no.downtime.planned.departures=There is no downtime currently p
 planned-downtime.related.links.service.availability=Service availability
 planned-downtime.related.links.downtime.history=Downtime history
 
+planned-downtime.temp.p1 = Saturday 06 April 2024, 10pm to 11:59pm
+planned-downtime.temp.h2 = NCTS GB and XI Channels
+planned-downtime.temp.p2 = Due to scheduled maintenance on the New Computerised Transit System (NCTS).
+planned-downtime.temp.p3 = NCTS GB and XI data submitted during the period above via the NCTS GB and XI service channels will be held and processed once the maintenance activity has concluded and the service is available again.
+
+
 service.downtime.history.title=Downtime history
 service.downtime.history.heading=Downtime history
 service.downtime.history.h2=History of NCTS downtime
