@@ -317,7 +317,7 @@
             )
         </div>
     </div>
-    <div class="govuk-grid-row">
+    <div class="govuk-grid-row govuk-!-margin-bottom-6">
         <div class="govuk-grid-column-full">
             <h2 class="govuk-heading-l">@messages("service.availability.related.links")</h2>
 
@@ -333,12 +333,15 @@
                     </a>
                 </li>
             </ul>
-
-            <p class="govuk-body">
-                <a class="govuk-link" href="@appConfig.feedbackFrontendUrl">@messages("exitSurvey.p1")</a>
-                 @messages("exitSurvey.p2")
-            </p>
-
         </div>
+    </div>
+
+    <div id="exit-survey" class="govuk-!-margin-bottom-8">
+        <h2 class="govuk-heading-m">@messages("exitSurvey.heading")</h2>
+        <p class="govuk-body">@messages("exitSurvey.p1")</p>
+        <p class="govuk-body">
+            <a class="govuk-link" href="@appConfig.feedbackFrontendUrl">@messages("exitSurvey.link")</a>
+            @messages("exitSurvey.p2")
+        </p>
     </div>
 }

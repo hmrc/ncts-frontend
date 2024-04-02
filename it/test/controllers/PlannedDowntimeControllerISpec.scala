@@ -18,7 +18,7 @@ package test.controllers
 
 import com.typesafe.config.ConfigFactory
 import org.scalatest.time.SpanSugar.convertIntToGrainOfTime
-import play.api.Configuration
+import play.api.{Application, Configuration}
 import play.api.http.Status.OK
 import play.api.inject.guice.GuiceApplicationBuilder
 import test.utils.SpecCommonHelper
@@ -28,7 +28,7 @@ import scala.concurrent.Await
 
 class PlannedDowntimeControllerISpec extends SpecCommonHelper {
 
-  override implicit lazy val app = {
+  override implicit lazy val app: Application = {
 
     val downtimeConfig = ConfigFactory.parseFile(new File("it/config/planned-downtime.conf"))
 
