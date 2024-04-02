@@ -178,5 +178,7 @@ service.downtime.history.related.links.service.availability=Service availability
 service.downtime.history.related.links.planned.downtime=Planned downtime
 
 
-exitSurvey.p1 = What do you think of this service?
-exitSurvey.p2 = (takes 30 seconds)
+exitSurvey.heading = Before you go
+exitSurvey.p1 = Your feedback helps us make our service better.
+exitSurvey.link = Take a short survey
+exitSurvey.p2 = to share your feedback on this service.
