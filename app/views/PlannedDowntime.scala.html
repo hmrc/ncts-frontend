@@ -35,14 +35,46 @@
 
     <h1 class="govuk-heading-l">@messages("planned-downtime.heading")</h1>
 
-    <p class="govuk-body">@messages("planned-downtime.temp.p1")</p>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
 
-    <h2 class="govuk-heading-m">@messages("planned-downtime.temp.h2")</h2>
+        <h2 class="govuk-heading-m">@messages("planned-downtime.ncts.arrivals")</h2>
 
-    <p class="govuk-body">@messages("planned-downtime.temp.p2")</p>
+        @if(plannedDowntimes.isEmpty){
+                <p class="govuk-body">@messages("planned-downtime.no.downtime.planned.arrivals")</p>
+                        } else {
+                            @plannedDowntimes.map { downtimes =>
+                            @if(downtimes.arrivalsAffected){
+                                @PlannedDowntimeTable(downtimes.arrivalDowntimes)
+                                @PlannedDowntimeTableMobile(downtimes.arrivalDowntimes)
+                            } else {
+                                <p class="govuk-body">@messages("planned-downtime.no.downtime.planned.arrivals")</p>
+                        }
+                }
+        }
 
-    <p class="govuk-body">@messages("planned-downtime.temp.p3")</p>
+        <h2 class="govuk-heading-m">@messages("planned-downtime.ncts.departures")</h2>
 
+        @if(plannedDowntimes.isEmpty){
+                <p class="govuk-body">@messages("planned-downtime.no.downtime.planned.departures")</p>
+                        } else {
+                            @plannedDowntimes.map { downtimes =>
+                            @if(downtimes.departuresAffected){
+                                @PlannedDowntimeTable(downtimes.departureDowntimes)
+                                @PlannedDowntimeTableMobile(downtimes.departureDowntimes)
+                            } else {
+                                <p class="govuk-body">@messages("planned-downtime.no.downtime.planned.departures")</p>
+                        }
+                }
+        }
+
+        @if(plannedDowntimes.isDefined){
+            <p class="govuk-body">@messages("planned-downtime.p1")</p>
+                <p class="govuk-body">@messages("planned-downtime.p2")</p>
+        }
+
+        </div>
+    </div>
 
     <div class="govuk-grid-row govuk-!-margin-bottom-6">
         <div class="govuk-grid-column-full">
