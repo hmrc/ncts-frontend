@@ -32,7 +32,7 @@ import java.time.{LocalDate, LocalDateTime, ZoneId, ZonedDateTime}
 class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
   val view: ServiceAvailability = inject[ServiceAvailability]
-  val transitManualLink         = "https://www.gov.uk/guidance/transit-manual-supplement"
+  val transitManualLink         = "https://www.gov.uk/guidance/transit-manual-supplement/6-the-business-continuity-procedure"
   val nctsGuidanceLink          = "https://www.gov.uk/guidance/submit-union-transit-declarations-through-ncts"
 
   val now                           = ZonedDateTime.now(ZoneId.of("Europe/London")).toLocalDateTime
