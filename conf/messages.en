@@ -123,7 +123,7 @@ service.availability.help.with.channels.p3=Users of the extensible markup langua
 service.availability.help.with.channels.p4=The Push Pull Notification Service (PPNS) is a part of the XML channel that sends users their notifications once they make a submission.
 
 service.availability.bcp.invoked=Business Continuity Procedure invoked
-service.availability.bcp.invoked.p1=The Business Continuity Procedure has been invoked by HMRC. Information on the Business Continuity Procedure can be found in the
+service.availability.bcp.invoked.p1=The Business Continuity Procedure has been invoked by HMRC. Information on the Business Continuity Procedure can be found in
 service.availability.bcp.invoked.eta.unknown=We will notify you here and HMRC will advise you by email when the component is available. We will notify you here once an estimated time of availability is known.
 service.availability.bcp.invoked.eta.known=We will notify you here and HMRC will advise you by email when the component is available. We estimate the {0} component to be available at {1}.
 
