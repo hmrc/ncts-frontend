@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,17 @@ import config.FrontendAppConfig
 import models.responses.{DowntimeResponse, StatusResponse}
 import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Reads}
-import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.HttpReads.Implicits._
 
+import java.net.URL
 import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class NCTSConnector @Inject() (
-  httpClient: HttpClient,
+  httpClient: HttpClientV2,
   config: FrontendAppConfig
 )(implicit ec: ExecutionContext) {
 
@@ -40,7 +42,9 @@ class NCTSConnector @Inject() (
     makeGetCall[DowntimeResponse]("/downtime-history")
 
   private def makeGetCall[A](requestUrl: String)(implicit hc: HeaderCarrier, reads: Reads[A]): Future[Option[A]] =
-    httpClient.GET[HttpResponse](s"${config.nctsUrl}$requestUrl") map { response =>
+    httpClient
+      .get(new URL(s"${config.nctsUrl}$requestUrl"))
+      .execute[HttpResponse] map { response =>
       response.status match {
         case OK        => validateJsonResponse[A](response.json, requestUrl)
         case NOT_FOUND => None
@@ -55,7 +59,7 @@ class NCTSConnector @Inject() (
         throw new RuntimeException(s"[NCTSConnector] - Could not parse json for $requestUrl: $errors")
     }
 
-  private def throwError(response: HttpResponse, requestUrl: String) =
+  private def throwError(response: HttpResponse, requestUrl: String): Nothing =
     throw UpstreamErrorResponse(
       s"[NCTSConnector]: $requestUrl resulted in an error - ${response.body}",
       response.status,
