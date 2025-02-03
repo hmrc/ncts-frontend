@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import services.PlannedDowntimeService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
 class PlannedDowntimeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
@@ -32,9 +33,9 @@ class PlannedDowntimeController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
+  def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = true) match {
-      case Right(downtimes) => Ok(view(downtimes))
+      case Right(downtimes) => Future.successful(Ok(view(downtimes)))
       case _                => errorHandler.showInternalServerError
     }
   }

@@ -19,6 +19,7 @@
 @import config.FrontendAppConfig
 @import views.html.helpers.Breadcrumbs
 @import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
+@import uk.gov.hmrc.govukfrontend.views.Aliases.BackLink
 
 @this(
     hmrcLayout: HmrcLayout,
@@ -42,11 +43,12 @@ useFullWidth: Boolean = false
 
 @hmrcLayout(
     pageTitle   = Some(pageTitle),
-    additionalHeadBlock = Some(additionalHeadBlock),
+    serviceName = Some(appConfig.appName),
     isWelshTranslationAvailable = appConfig.languageTranslationEnabled,
     serviceUrl  = Some(routes.IndexController.onPageLoad.url),
     signOutUrl  = None,
-    backLinkUrl = backUrl,
+    backLink    = backUrl.map(url => BackLink(href = url)), // Adjusted to match expected type
+    additionalHeadBlock = Some(additionalHeadBlock),
     mainContentLayout = if(useFullWidth) Some(identity) else Some(defaultMainContentLayout(_)),
     beforeContentBlock = Some(Breadcrumbs(headingFromTitle(pageTitle), appConfig))
 )(content)
