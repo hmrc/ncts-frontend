@@ -72,8 +72,8 @@ To check if there are any scalastyle errors, warnings or infos:
 
 The following grafana and kibana dashboards are available for this service:
 
-* [Grafana](https://grafana.tools.production.tax.service.gov.uk/d/ncts-admin-frontend/ncts-admin-frontend?orgId=1&from=now-24h&to=now&timezone=browser&var-ecsServiceName=ecs-ncts-admin-frontend-public-Service-5OzJF2wP2Zmk&var-ecsServicePrefix=ecs-ncts-admin-frontend-public&refresh=15m)
-* [Kibana](https://kibana.tools.production.tax.service.gov.uk/app/dashboards#/view/ncts-admin-frontend?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))
+* [Grafana](https://grafana.tools.production.tax.service.gov.uk/d/ncts-frontend/ncts-frontend?orgId=1&from=now-24h&to=now&timezone=browser&var-ecsServiceName=ecs-ncts-frontend-public-Service-kqJAHw6b5cKg&var-ecsServicePrefix=ecs-ncts-frontend-public&refresh=15m)
+* [Kibana](https://kibana.tools.production.tax.service.gov.uk/app/dashboards#/view/ncts-frontend?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))
 
 ## Other helpful documentation
 
