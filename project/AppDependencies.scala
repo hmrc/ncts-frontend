@@ -22,7 +22,7 @@ object AppDependencies {
 
   val compile: Seq[ModuleID] = Seq(
     play.sbt.PlayImport.ws,
-    "uk.gov.hmrc" %% "play-frontend-hmrc-play-30"         % "12.6.0",
+    "uk.gov.hmrc" %% "play-frontend-hmrc-play-30"         % "12.7.0",
     "uk.gov.hmrc" %% "bootstrap-frontend-play-30"         % bootstrapVersion
   )
 
