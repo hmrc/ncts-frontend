@@ -3,7 +3,7 @@ $hmrc-assets-path: "/new-computerised-transit-system-service-availability/assets
 @import "lib/hmrc-frontend/hmrc/all";
 @import "lib/govuk-frontend/dist/govuk/all";
 
-$govuk-new-organisation-colours: true
+$govuk-new-organisation-colours: true;
 
 // Components
 @import "components/_typography";
