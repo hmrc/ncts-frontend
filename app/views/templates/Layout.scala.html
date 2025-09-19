@@ -43,7 +43,7 @@ useFullWidth: Boolean = false
 
 @hmrcLayout(
     pageTitle   = Some(pageTitle),
-    serviceName = Some(appConfig.appName),
+    serviceName = Some(messages("service.name")),
     isWelshTranslationAvailable = appConfig.languageTranslationEnabled,
     serviceUrl  = Some(routes.IndexController.onPageLoad.url),
     signOutUrl  = None,
