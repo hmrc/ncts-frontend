@@ -27,50 +27,56 @@
         @if(ch.isBCP){
             @BCPTimelineSnippet(ch, appConfig)
         }else {
-            <li class="hmrc-timeline__event">
-                @{ch.eta.fold(
-                    <h2 class="hmrc-timeline__event-title govuk-table__caption--s">
-                        {messages("service.availability.status.issues")} - {ch.channel.caption}
-                    </h2>
-                    <span class="hmrc-timeline__event-meta">{formatDateTime(ch.issueSince)}</span>
-                    <div class="hmrc-timeline__event-content">
-                        <p class="govuk-body">
-                            {if(ch.channel.isPPN){
-                                {messages("service.availability.issues.ppn")}
+            @ch.eta match {
+                case None => {
+                    <li class="hmrc-timeline__event">
+                        <h2 class="hmrc-timeline__event-title govuk-table__caption--s">
+                            @messages("service.availability.status.issues") - @ch.channel.caption
+                        </h2>
+                        <span class="hmrc-timeline__event-meta">@formatDateTime(ch.issueSince)</span>
+                        <div class="hmrc-timeline__event-content">
+                            @if(ch.channel.isPPN) {
+                                <p class="govuk-body">
+                                    @messages("service.availability.issues.ppn")
+                                </p>
                             } else {
-                                {messages("service.availability.issues.p1")} + " " +
-                                {ch.channel.displayName}  + " " +
-                                {messages("service.availability.issues.webXML.channel")}  + " " +
-                                {messages("service.availability.issues.p3")}
-                            }}
-                        </p>
-                        {if(ch.channel.isGbOrXi){
-                        <p class="govuk-body">
-                            {messages("service.availability.issues.p4")}
-                            <a href={appConfig.govUKTransitManualLink}>{messages("service.availability.issues.p5")}</a>.
-                        </p>
-                        }}
-                    </div>
-                ) { eta =>
-                    <h2 class="hmrc-timeline__event-title govuk-table__caption--s">{messages("service.availability.eta")} - {ch.channel.caption}</h2>
-                    <span class="hmrc-timeline__event-meta">{formatDateTime(ch.issueSince)}</span>
-                    <div class="hmrc-timeline__event-content">
-                        <p class="govuk-body">
-                            {messages("service.availability.eta.estimate")}
-                            {ch.channel.displayName}
-                            {messages("service.availability.eta.availability")} {eta}.
-                        </p>
-                        <p class="govuk-body">
-                            {if(ch.channel.isGbOrXi){
-                                {messages("service.availability.eta.notify.component")}
-                            } else {
-                                {messages("service.availability.eta.notify.channel")}
-                            }}
-                        </p>
-                    </div>
-                  }
+                                <p class="govuk-body">
+                                    @messages("service.availability.issues.p1")
+                                    @ch.channel.displayName
+                                    @messages("service.availability.issues.webXML.channel")
+                                    @messages("service.availability.issues.p3")
+                                </p>
+                            }
+                            @if(ch.channel.isGbOrXi) {
+                                <p class="govuk-body">
+                                    @messages("service.availability.issues.p4")
+                                    <a href="@appConfig.govUKTransitManualLink">@messages("service.availability.issues.p5")</a>.
+                                </p>
+                            }
+                        </div>
+                    </li>
                 }
-            </li>
+                case Some(eta) => {
+                    <li class="hmrc-timeline__event">
+                        <h2 class="hmrc-timeline__event-title govuk-table__caption--s">@messages("service.availability.eta") - @ch.channel.caption</h2>
+                        <span class="hmrc-timeline__event-meta">@formatDateTime(ch.issueSince)</span>
+                        <div class="hmrc-timeline__event-content">
+                            <p class="govuk-body">
+                                @messages("service.availability.eta.estimate")
+                                @ch.channel.displayName
+                                @messages("service.availability.eta.availability") @eta.
+                            </p>
+                            <p class="govuk-body">
+                                @if(ch.channel.isGbOrXi) {
+                                    @messages("service.availability.eta.notify.component")
+                                } else {
+                                    @messages("service.availability.eta.notify.channel")
+                                }
+                            </p>
+                        </div>
+                    </li>
+                }
+            }
         }
         }
     </ol>

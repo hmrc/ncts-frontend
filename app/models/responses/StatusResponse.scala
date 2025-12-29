@@ -123,7 +123,19 @@ object StatusResponse {
         (__ \ "ppnStatus").write[HealthDetails] and
         (__ \ "timelineEntries").write[Seq[TimelineUpdate]] and
         (__ \ "createdTs").write[LocalDateTime]
-    )(unlift(StatusResponse.unapply))
+    )((s: StatusResponse) =>
+      (
+        s.gbDeparturesStatus,
+        s.xiDeparturesStatus,
+        s.gbArrivalsStatus,
+        s.xiArrivalsStatus,
+        s.xmlChannelStatus,
+        s.webChannelStatus,
+        s.ppnStatus,
+        s.timelineEntries,
+        s.createdTs
+      )
+    )
 
   }
 
@@ -175,7 +187,7 @@ object TimelineUpdate {
         (__ \ "date").writeNullable[LocalDate] and
         (__ \ "businessContinuityFlag").write[Boolean] and
         (__ \ "createdTs").write(MongoDateTimeFormats.DefaultLocalDateTimeWrites)
-    )(unlift(TimelineUpdate.unapply))
+    )((t: TimelineUpdate) => (t.channel, t.time, t.date, t.businessContinuityFlag, t.createdTs))
   implicit val reads: Reads[TimelineUpdate]   =
     (
       (__ \ "channel").read[Channel](Channel.format) and
