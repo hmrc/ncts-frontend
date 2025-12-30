@@ -35,7 +35,7 @@ object Downtime {
       (__ \ "affectedChannel").write[Channel](Channel.format) and
         (__ \ "start").write(MongoDateTimeFormats.localDateTimeWrite) and
         (__ \ "end").write(MongoDateTimeFormats.localDateTimeWrite)
-    )(unlift(Downtime.unapply))
+    )((d: Downtime) => (d.affectedChannel, d.start, d.end))
 
   implicit val reads: Reads[Downtime] =
     (

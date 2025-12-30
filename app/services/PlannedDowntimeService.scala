@@ -32,7 +32,7 @@ class PlannedDowntimeService @Inject() (appConfig: FrontendAppConfig) extends Lo
 
   def getPlannedDowntime(forPlannedDowntime: Boolean): Either[DowntimeConfigParseError, Option[PlannedDowntimes]] =
     appConfig.plannedDowntimesConfig.fold[Either[DowntimeConfigParseError, Option[PlannedDowntimes]]](Right(None)) {
-      downtimeConfig: ConfigList =>
+      (downtimeConfig: ConfigList) =>
         try
           Json.parse(downtimeConfig.render(ConfigRenderOptions.concise())).validate[Seq[PlannedDowntime]] match {
             case JsSuccess(downtimes, _) if downtimes.nonEmpty =>
