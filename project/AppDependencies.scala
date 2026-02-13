@@ -23,9 +23,10 @@ object AppDependencies {
   val compile: Seq[ModuleID] = Seq(
     play.sbt.PlayImport.ws,
     "uk.gov.hmrc" %% "play-frontend-hmrc-play-30"         % "12.31.0",
-    "uk.gov.hmrc" %% "bootstrap-frontend-play-30" % bootstrapVersion exclude("org.apache.commons", "commons-lang3"),
+    "uk.gov.hmrc" %% "bootstrap-frontend-play-30" % bootstrapVersion,
     "at.yawk.lz4"        % "lz4-java"                  % "1.10.3",
     "ch.qos.logback"     % "logback-core"              % "1.5.27",
+    "ch.qos.logback"     % "logback-classic"           % "1.5.27",
     "org.apache.commons" % "commons-lang3"             % "3.18.0"
   )
 
