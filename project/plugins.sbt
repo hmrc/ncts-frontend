@@ -33,7 +33,7 @@ addSbtPlugin("org.scalameta"       % "sbt-scalafmt"           % "2.4.6")
 
 addSbtPlugin("uk.gov.hmrc"         % "sbt-distributables"     % "2.6.0")
 
-addSbtPlugin("org.playframework"    % "sbt-plugin"            % "3.0.9")
+addSbtPlugin("org.playframework"    % "sbt-plugin"            % "3.0.9" exclude ("ch.qos.logback", "logback-core"))
 
 addSbtPlugin("org.scalastyle"      %% "scalastyle-sbt-plugin" % "1.0.0")
 
