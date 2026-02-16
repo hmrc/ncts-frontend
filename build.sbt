@@ -52,6 +52,7 @@ lazy val root = (project in file("."))
     ScoverageKeys.coverageHighlighting := true,
     scalacOptions ++= Seq("-feature"),
     libraryDependencies ++= AppDependencies(),
+    excludeDependencies += ExclusionRule("org.lz4", "lz4-java"),
     retrieveManaged := true,
     // concatenate js
     Concat.groups := Seq(
