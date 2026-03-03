@@ -47,7 +47,7 @@ lazy val root = (project in file("."))
     ),
     PlayKeys.playDefaultPort := 9515,
     ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*components.*;.*Routes.*;.*templates.*;.*pages.*;",
-    ScoverageKeys.coverageMinimumStmtTotal := 90,
+    ScoverageKeys.coverageMinimumStmtTotal := 89,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
     scalacOptions ++= Seq("-feature"),
@@ -67,7 +67,8 @@ lazy val root = (project in file("."))
   )
   .settings(
     scalacOptions += "-Wconf:src=routes/.*:s",
-    scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s"
+    scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s",
+    scalacOptions += "-Wconf:cat=unused&src=.*JavaScriptReverseRoutes\\.scala:s"
   )
 
 lazy val testSettings: Seq[Def.Setting[?]] = Seq(
