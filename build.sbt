@@ -46,11 +46,18 @@ lazy val root = (project in file("."))
       "controllers.routes._"
     ),
     PlayKeys.playDefaultPort := 9515,
-    ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*components.*;.*Routes.*;.*templates.*;.*pages.*;",
+    ScoverageKeys.coverageExcludedPackages := "<empty>; Reverse.*;*JavaScript*;.*Routes.*;.*templates.*;.*pages.*;",
+    ScoverageKeys.coverageExcludedFiles := "<empty>;*JavaScript*;Reverse.*;.*components.*;.*Routes.*;.*templates.*;.*pages.*;",
     ScoverageKeys.coverageMinimumStmtTotal := 89,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
-    scalacOptions ++= Seq("-feature"),
+    scalacOptions ++= Seq("-feature",
+      "-Wconf:cat=unused-imports&site=.*views\\.html.*:s",
+      "-Wconf:cat=unused-imports&site=<empty>:s",
+      "-Wconf:cat=unused&src=.*RoutesPrefix\\.scala:s",
+      "-Wconf:cat=unused&src=.*Routes\\.scala:s",
+      "-Wconf:cat=unused&src=.*ReverseRoutes\\.scala:s",
+      "-Wconf:cat=unused&src=.*JavaScriptReverseRoutes\\.scala:s"),
     libraryDependencies ++= AppDependencies(),
     excludeDependencies += ExclusionRule("org.lz4", "lz4-java"),
     retrieveManaged := true,
@@ -64,11 +71,6 @@ lazy val root = (project in file("."))
         )
     ),
     scalafmtOnCompile := true
-  )
-  .settings(
-    scalacOptions += "-Wconf:src=routes/.*:s",
-    scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s",
-    scalacOptions += "-Wconf:cat=unused&src=.*JavaScriptReverseRoutes\\.scala:s"
   )
 
 lazy val testSettings: Seq[Def.Setting[?]] = Seq(
