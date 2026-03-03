@@ -46,7 +46,8 @@ lazy val root = (project in file("."))
       "controllers.routes._"
     ),
     PlayKeys.playDefaultPort := 9515,
-    ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*components.*;.*Routes.*;.*templates.*;.*pages.*;",
+    ScoverageKeys.coverageExcludedFiles :=
+      """.*<empty>.*|.*Reverse.*|.*components.*|.*Routes.*|.*pages.*|.*templates.*""",
     ScoverageKeys.coverageMinimumStmtTotal := 90,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
