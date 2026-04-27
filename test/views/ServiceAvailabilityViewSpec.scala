@@ -32,7 +32,7 @@ import java.time.{LocalDate, LocalDateTime, ZoneId, ZonedDateTime}
 class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
   val view: ServiceAvailability = inject[ServiceAvailability]
-  val transitManualLink         = "https://www.gov.uk/guidance/transit-manual-supplement/6-the-business-continuity-procedure"
+  val transitManualLink         = "https://www.gov.uk/guidance/transit-manual-supplement"
   val nctsGuidanceLink          = "https://www.gov.uk/guidance/submit-union-transit-declarations-through-ncts"
 
   val now                           = ZonedDateTime.now(ZoneId.of("Europe/London")).toLocalDateTime
@@ -75,14 +75,29 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
     TimeLine(caption, time, message, bcpLink)
   }
 
-  def checkGbOrXiIssueContent(timelineEvent: TimeLine, channel: String) = {
+  def checkGbOrXiArvIssueContent(timelineEvent: TimeLine, channel: String) = {
     timelineEvent.caption mustBe
       s"""${messages("service.availability.status.issues")} - ${messages(s"service.availability.ncts.$channel")}"""
     timelineEvent.message mustBe (s"${messages("service.availability.issues.p1")} " +
-      s"${messages(s"service.availability.ncts.$channel")} " +
-      s"${messages("service.availability.issues.single.channel")} " +
-      s"${messages("service.availability.issues.p3")} " +
-      s"${messages("service.availability.issues.p4")} " +
+      s"${messages(s"service.availability.timeline.channel.display.$channel")} " +
+      s"${messages("service.availability.issues.webXML.channel")} " +
+      s"${messages("service.availability.issues.aware")} " +
+      s"${messages("service.availability.issues.p1.arv")} " +
+      s"${messages("service.availability.issues.p2.arv")} " +
+      s"${messages("service.availability.issues.p5")}. " +
+      s"${messages("service.availability.issues.p4.arv")}")
+    timelineEvent.bcpLink mustBe transitManualLink
+  }
+
+  def checkGbOrXiDepIssueContent(timelineEvent: TimeLine, channel: String) = {
+    timelineEvent.caption mustBe
+      s"""${messages("service.availability.status.issues")} - ${messages(s"service.availability.ncts.$channel")}"""
+    timelineEvent.message mustBe (s"${messages("service.availability.issues.p1")} " +
+      s"${messages(s"service.availability.timeline.channel.display.$channel")} " +
+      s"${messages("service.availability.issues.webXML.channel")} " +
+      s"${messages("service.availability.issues.aware")} " +
+      s"${messages("service.availability.issues.p1.dep")} " +
+      s"${messages("service.availability.issues.p2.dep")} " +
       s"${messages("service.availability.issues.p5")}.")
     timelineEvent.bcpLink mustBe transitManualLink
   }
@@ -494,12 +509,12 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           .text() mustBe DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)
 
         val gbArrivalEvent = timeLineContent(allUnhealthyView, 0)
-        checkGbOrXiIssueContent(gbArrivalEvent, "gb.arrivals")
+        checkGbOrXiArvIssueContent(gbArrivalEvent, "gb.arrivals")
         gbArrivalEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.gbArrivalsStatus.statusChangedAt)
 
         val xiArrivalEvent = timeLineContent(allUnhealthyView, 1)
         xiArrivalEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)
-        checkGbOrXiIssueContent(xiArrivalEvent, "xi.arrivals")
+        checkGbOrXiArvIssueContent(xiArrivalEvent, "xi.arrivals")
       }
 
       "should show that services have known issues and known issues since time for departures" in {
@@ -522,11 +537,11 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val xiDepartureEvent = timeLineContent(allUnhealthyView, 2)
         xiDepartureEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)
-        checkGbOrXiIssueContent(xiDepartureEvent, "xi.departures")
+        checkGbOrXiDepIssueContent(xiDepartureEvent, "xi.departures")
 
         val gbDepartureEvent = timeLineContent(allUnhealthyView, 3)
         gbDepartureEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.gbDeparturesStatus.statusChangedAt)
-        checkGbOrXiIssueContent(gbDepartureEvent, "gb.departures")
+        checkGbOrXiDepIssueContent(gbDepartureEvent, "gb.departures")
       }
 
       "should show that services have known issues and known issues since time for other systems" in {
@@ -642,9 +657,10 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val arrivalsKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
-            s"${messages("service.availability.ncts.gb.arrivals")} " +
-            s"${messages("service.availability.issues.single.channel")} " +
-            s"${messages("service.availability.issues.p3")}"
+            s"${messages("service.availability.timeline.channel.display.gb.arrivals")} " +
+            s"${messages("service.availability.issues.webXML.channel")} " +
+            s"${messages("service.availability.issues.aware")} " +
+            s"${messages("service.availability.issues.p1.arv")}"
 
         someUnhealthyView
           .getElementsByClass("govuk-body")
@@ -654,7 +670,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           .getElementsByClass("govuk-body")
           .get(1)
           .text() mustBe
-          s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}."
+          s"${messages("service.availability.issues.p2.arv")} ${messages("service.availability.issues.p5")}."
       }
 
       "should show that the GB departures has known issues" in {
@@ -669,19 +685,19 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val departuresKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
-            s"${messages("service.availability.ncts.gb.departures")} " +
-            s"${messages("service.availability.issues.single.channel")} " +
-            s"${messages("service.availability.issues.p3")}"
+            s"${messages("service.availability.timeline.channel.display.gb.departures")} " +
+            s"${messages("service.availability.issues.webXML.channel")} " +
+            s"${messages("service.availability.issues.aware")}"
 
         someUnhealthyView
           .getElementsByClass("govuk-body")
-          .get(2)
+          .get(3)
           .text() mustBe departuresKnownIssuesParagraph
         someUnhealthyView
           .getElementsByClass("govuk-body")
-          .get(3)
+          .get(5)
           .text() mustBe
-          s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}."
+          s"${messages("service.availability.issues.p2.dep")} ${messages("service.availability.issues.p5")}."
       }
 
       "should show that the Web channel has known issues" in {
@@ -725,9 +741,10 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val arrivalsKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
-            s"${messages("service.availability.ncts.xi.arrivals")} " +
-            s"${messages("service.availability.issues.single.channel")} " +
-            s"${messages("service.availability.issues.p3")}"
+            s"${messages("service.availability.timeline.channel.display.xi.arrivals")} " +
+            s"${messages("service.availability.issues.webXML.channel")} " +
+            s"${messages("service.availability.issues.aware")} " +
+            s"${messages("service.availability.issues.p1.arv")}"
 
         someUnhealthyView
           .getElementsByClass("govuk-body")
@@ -737,7 +754,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
           .getElementsByClass("govuk-body")
           .get(1)
           .text() mustBe
-          s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}."
+          s"${messages("service.availability.issues.p2.arv")} ${messages("service.availability.issues.p5")}."
       }
 
       "should show that the XI channel has known issues for departures" in {
@@ -752,19 +769,19 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val departuresKnownIssuesParagraph =
           s"${messages("service.availability.issues.p1")} " +
-            s"${messages("service.availability.ncts.xi.departures")} " +
-            s"${messages("service.availability.issues.single.channel")} " +
-            s"${messages("service.availability.issues.p3")}"
+            s"${messages("service.availability.timeline.channel.display.xi.departures")} " +
+            s"${messages("service.availability.issues.webXML.channel")} " +
+            s"${messages("service.availability.issues.aware")}"
 
         someUnhealthyView
           .getElementsByClass("govuk-body")
-          .get(2)
+          .get(3)
           .text() mustBe departuresKnownIssuesParagraph
         someUnhealthyView
           .getElementsByClass("govuk-body")
-          .get(3)
+          .get(5)
           .text() mustBe
-          s"${messages("service.availability.issues.p4")} ${messages("service.availability.issues.p5")}."
+          s"${messages("service.availability.issues.p2.dep")} ${messages("service.availability.issues.p5")}."
       }
 
       "should show that the XML channel has known issues" in {
@@ -790,7 +807,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         someUnhealthyView
           .getElementsByClass("govuk-body")
-          .get(9)
+          .get(11)
           .text() must include(xmlChannelKnownIssuesParagraph)
       }
     }
@@ -902,10 +919,10 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val xiDepartureEvent = timeLineContent(unhealthyDeparturesView, 1)
         xiDepartureEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)
-        checkGbOrXiIssueContent(xiDepartureEvent, "xi.departures")
+        checkGbOrXiDepIssueContent(xiDepartureEvent, "xi.departures")
 
         val gbDeparturesEvent = timeLineContent(unhealthyDeparturesView, 2)
-        checkGbOrXiIssueContent(gbDeparturesEvent, "gb.departures")
+        checkGbOrXiDepIssueContent(gbDeparturesEvent, "gb.departures")
         gbDeparturesEvent.time mustBe DateTimeFormatter.formatDateTime(
           statusResponse.gbDeparturesStatus.statusChangedAt
         )
@@ -925,10 +942,10 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val xiArrivalsEvent = timeLineContent(unhealthyArrivalsView, 1)
         xiArrivalsEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)
-        checkGbOrXiIssueContent(xiArrivalsEvent, "xi.arrivals")
+        checkGbOrXiArvIssueContent(xiArrivalsEvent, "xi.arrivals")
 
         val gbArrivalsEvent = timeLineContent(unhealthyArrivalsView, 2)
-        checkGbOrXiIssueContent(gbArrivalsEvent, "gb.arrivals")
+        checkGbOrXiArvIssueContent(gbArrivalsEvent, "gb.arrivals")
         gbArrivalsEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.gbArrivalsStatus.statusChangedAt)
       }
 
@@ -985,10 +1002,10 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val xiDepartureEvent = timeLineContent(unhealthyDeparturesView, 1)
         xiDepartureEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)
-        checkGbOrXiIssueContent(xiDepartureEvent, "xi.departures")
+        checkGbOrXiDepIssueContent(xiDepartureEvent, "xi.departures")
 
         val gbDeparturesEvent = timeLineContent(unhealthyDeparturesView, 2)
-        checkGbOrXiIssueContent(gbDeparturesEvent, "gb.departures")
+        checkGbOrXiDepIssueContent(gbDeparturesEvent, "gb.departures")
         gbDeparturesEvent.time mustBe DateTimeFormatter.formatDateTime(
           statusResponse.gbDeparturesStatus.statusChangedAt
         )
@@ -1003,7 +1020,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         val unhealthyArrivalsView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
 
         val gbArrivalsEvent = timeLineContent(unhealthyArrivalsView, 0)
-        checkGbOrXiIssueContent(gbArrivalsEvent, "gb.arrivals")
+        checkGbOrXiArvIssueContent(gbArrivalsEvent, "gb.arrivals")
         gbArrivalsEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.gbArrivalsStatus.statusChangedAt)
 
         val xiArrivalsBcpWithoutEta = timeLineContent(unhealthyArrivalsView, 1)
@@ -1012,7 +1029,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val xiArrivalsEvent = timeLineContent(unhealthyArrivalsView, 2)
         xiArrivalsEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)
-        checkGbOrXiIssueContent(xiArrivalsEvent, "xi.arrivals")
+        checkGbOrXiArvIssueContent(xiArrivalsEvent, "xi.arrivals")
       }
 
       "when GB and XI Departures are unhealthy and GB has BCP invoked with an ETA" in {
@@ -1030,10 +1047,10 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val xiDepartureEvent = timeLineContent(unhealthyDeparturesView, 1)
         xiDepartureEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiDeparturesStatus.statusChangedAt)
-        checkGbOrXiIssueContent(xiDepartureEvent, "xi.departures")
+        checkGbOrXiDepIssueContent(xiDepartureEvent, "xi.departures")
 
         val gbDeparturesEvent = timeLineContent(unhealthyDeparturesView, 2)
-        checkGbOrXiIssueContent(gbDeparturesEvent, "gb.departures")
+        checkGbOrXiDepIssueContent(gbDeparturesEvent, "gb.departures")
         gbDeparturesEvent.time mustBe DateTimeFormatter.formatDateTime(
           statusResponse.gbDeparturesStatus.statusChangedAt
         )
@@ -1048,7 +1065,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
         val unhealthyArrivalsView: Document = Jsoup.parse(view(statusResponse, PlannedDowntimeViewModel.default).body)
 
         val gbArrivalsEvent = timeLineContent(unhealthyArrivalsView, 0)
-        checkGbOrXiIssueContent(gbArrivalsEvent, "gb.arrivals")
+        checkGbOrXiArvIssueContent(gbArrivalsEvent, "gb.arrivals")
         gbArrivalsEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.gbArrivalsStatus.statusChangedAt)
 
         val xiArrivalsBcpWithEta  = timeLineContent(unhealthyArrivalsView, 1)
@@ -1058,7 +1075,7 @@ class ServiceAvailabilityViewSpec extends SpecBase with Injecting {
 
         val xiArrivalsEvent = timeLineContent(unhealthyArrivalsView, 2)
         xiArrivalsEvent.time mustBe DateTimeFormatter.formatDateTime(statusResponse.xiArrivalsStatus.statusChangedAt)
-        checkGbOrXiIssueContent(xiArrivalsEvent, "xi.arrivals")
+        checkGbOrXiArvIssueContent(xiArrivalsEvent, "xi.arrivals")
       }
     }
   }
