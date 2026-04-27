@@ -30,7 +30,7 @@
             @ch.eta match {
                 case None => {
                     <li class="hmrc-timeline__event">
-                        <h2 class="hmrc-timeline__event-title govuk-table__caption--s">
+                        <h2 class="hmrc-timeline__event-title govuk-table__caption--s" id="known-issue-id">
                             @messages("service.availability.status.issues") - @ch.channel.caption
                         </h2>
                         <span class="hmrc-timeline__event-meta">@formatDateTime(ch.issueSince)</span>
@@ -39,7 +39,8 @@
                                 <p class="govuk-body">
                                     @messages("service.availability.issues.ppn")
                                 </p>
-                            } else {
+                            }
+                            @if(ch.channel.displayName.contains("XML")){
                                 <p class="govuk-body">
                                     @messages("service.availability.issues.p1")
                                     @ch.channel.displayName
@@ -47,10 +48,43 @@
                                     @messages("service.availability.issues.p3")
                                 </p>
                             }
-                            @if(ch.channel.isGbOrXi) {
+                            @if(ch.channel.displayName.contains("Web")){
+                            <p class="govuk-body">
+                                @messages("service.availability.issues.p1")
+                                @ch.channel.displayName
+                                @messages("service.availability.issues.webXML.channel")
+                                @messages("service.availability.issues.p3")
+                            </p>
+                            }
+                            @if(ch.channel.displayName.contains("Departures")) {
                                 <p class="govuk-body">
-                                    @messages("service.availability.issues.p4")
+                                    @messages("service.availability.issues.p1")
+                                    @ch.channel.displayName
+                                    @messages("service.availability.issues.webXML.channel")
+                                    @messages("service.availability.issues.aware")
+                                </p>
+                                <p class="govuk-body">
+                                    @messages("service.availability.issues.p1.dep")
+                                </p>
+                                <p class="govuk-body">
+                                    @messages("service.availability.issues.p2.dep")
                                     <a href="@appConfig.govUKTransitManualLink">@messages("service.availability.issues.p5")</a>.
+                                </p>
+                            }
+                            @if(ch.channel.displayName.contains("Arrivals")) {
+                                <p class="govuk-body">
+                                    @messages("service.availability.issues.p1")
+                                    @ch.channel.displayName
+                                    @messages("service.availability.issues.webXML.channel")
+                                    @messages("service.availability.issues.aware")
+                                    @messages("service.availability.issues.p1.arv")
+                                </p>
+                                <p class="govuk-body">
+                                    @messages("service.availability.issues.p2.arv")
+                                    <a href="@appConfig.govUKTransitManualLink">@messages("service.availability.issues.p5")</a>.
+                                </p>
+                                <p class="govuk-body">
+                                   @messages("service.availability.issues.p4.arv")
                                 </p>
                             }
                         </div>
