@@ -1,7 +1,8 @@
 $govuk-assets-path: "/new-computerised-transit-system-service-availability/assets/lib/govuk-frontend/dist/govuk/assets/";
 $hmrc-assets-path: "/new-computerised-transit-system-service-availability/assets/lib/hmrc-frontend/hmrc/";
 @import "lib/hmrc-frontend/hmrc/all";
-@import "lib/govuk-frontend/dist/govuk/all";
+
+@import "lib/govuk-frontend/dist/govuk/index";
 
 $govuk-new-organisation-colours: true;
 
