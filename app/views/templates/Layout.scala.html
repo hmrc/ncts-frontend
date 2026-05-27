@@ -44,7 +44,7 @@ useFullWidth: Boolean = false
 @hmrcLayout(
     pageTitle   = Some(pageTitle),
     serviceName = Some(messages("service.name")),
-    isWelshTranslationAvailable = appConfig.languageTranslationEnabled,
+    isWelshTranslationAvailable = false,
     serviceUrl  = Some(routes.IndexController.onPageLoad.url),
     signOutUrl  = None,
     backLink    = backUrl.map(url => BackLink(href = url)), // Adjusted to match expected type
