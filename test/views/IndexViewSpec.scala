@@ -51,7 +51,7 @@ class IndexViewSpec extends SpecBase with Injecting {
     "should have the correct banner title" in {
       document
         .body()
-        .getElementsByClass("govuk-header__link govuk-header__service-name")
+        .getElementsByClass("govuk-service-navigation__link")
         .first()
         .text() mustBe "NCTS service availability"
     }

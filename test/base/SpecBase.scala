@@ -73,7 +73,7 @@ trait SpecBase
     "/new-computerised-transit-system-service-availability-and-issues"
 
   val getHelpUrl: String = "http://localhost:9250/contact/report-technical-problem?" +
-    "service=ncts-frontend&referrerUrl=%2F"
+    "service=ncts-frontend&referrerUrl=%2F&useServiceNavigation"
 
   val feedbackFrontendUrl = "http://localhost:9514/feedback/NCTS"
 }
