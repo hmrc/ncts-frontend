@@ -59,4 +59,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val govUKNCTSGuidanceLink: String = configuration.get[String]("govUKLinks.govUKNCTSGuidanceLink")
 
+  val researchBannerLink: String     = configuration.get[String]("researchBannerLink.researchBanner")
+  val researchBannerEnabled: Boolean = configuration.get[Boolean]("features.researchBannerEnabled")
+
 }

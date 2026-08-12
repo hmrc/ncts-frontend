@@ -24,7 +24,8 @@
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle = title(messages("index.title"))
+    pageTitle = title(messages("index.title")),
+    showResearchBanner = true
 ) {
 
     <h1 class="govuk-heading-l">@messages("index.heading")</h1>
