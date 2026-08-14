@@ -84,7 +84,7 @@ class IndexViewSpec extends SpecBase with Injecting {
       document
         .body()
         .getElementsByTag("h2")
-        .get(3)
+        .get(4)
         .text() mustBe "Other services"
     }
 
