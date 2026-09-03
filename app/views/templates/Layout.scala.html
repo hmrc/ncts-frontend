@@ -20,35 +20,47 @@
 @import views.html.helpers.Breadcrumbs
 @import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
 @import uk.gov.hmrc.govukfrontend.views.Aliases.BackLink
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.{Banners, HmrcStandardPageParams, ServiceURLs, TemplateOverrides}
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.userresearchbanner.UserResearchBanner
 
 @this(
     hmrcLayout: HmrcLayout,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
+    hmrcStandardPage: HmrcStandardPage,
     defaultMainContentLayout: TwoThirdsMainContent,
     appConfig: FrontendAppConfig
 )
 
-@(pageTitle: String, backUrl: Option[String] = None,
-useFullWidth: Boolean = false
+@(
+    pageTitle: String, backUrl: Option[String] = None,
+    useFullWidth: Boolean = false,
+    showResearchBanner: Boolean = false
 )(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
 
-@additionalHeadBlock = {
-    <!--[if gt IE 8]><!--><link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" /><!--<![endif]-->
-}
+    <link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css"/>
 
 @content = {
     @contentBlock
     @hmrcReportTechnicalIssueHelper()
 }
 
-@hmrcLayout(
+@hmrcStandardPage(HmrcStandardPageParams(
     pageTitle   = Some(pageTitle),
     serviceName = Some(messages("service.name")),
     isWelshTranslationAvailable = false,
-    serviceUrl  = Some(routes.IndexController.onPageLoad.url),
-    signOutUrl  = None,
+    serviceURLs = ServiceURLs(Some(routes.IndexController.onPageLoad.url)),
     backLink    = backUrl.map(url => BackLink(href = url)), // Adjusted to match expected type
-    additionalHeadBlock = Some(additionalHeadBlock),
-    mainContentLayout = if(useFullWidth) Some(identity) else Some(defaultMainContentLayout(_)),
-    beforeContentBlock = Some(Breadcrumbs(headingFromTitle(pageTitle), appConfig))
+    templateOverrides = TemplateOverrides(
+            mainContentLayout = if(useFullWidth) Some(identity) else Some(defaultMainContentLayout(_)),
+            beforeContentBlock = Some(Breadcrumbs(headingFromTitle(pageTitle), appConfig))
+        ),
+    banners = Banners(
+                userResearchBanner =
+                    if(showResearchBanner && appConfig.researchBannerEnabled)
+                        Some(UserResearchBanner(
+                            url = appConfig.researchBannerLink,
+                        ))
+                    else None
+        ),
+    )
 )(content)

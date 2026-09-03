@@ -67,8 +67,12 @@ lazy val root = (project in file("."))
     scalafmtOnCompile := true
   )
   .settings(
-    scalacOptions += "-Wconf:src=routes/.*:s",
-    scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s"
+      scalacOptions ++= Seq(
+        "-Wconf:src=routes/.*:s",
+        "-Wconf:msg=unused.import&src=html/.*:s",
+        "-Wconf:msg=unused.explicit.parameter&src=html/.*:s",
+        "-Wconf:msg=Flag.*repeatedly:s"
+      )
   )
 
 lazy val testSettings: Seq[Def.Setting[?]] = Seq(
