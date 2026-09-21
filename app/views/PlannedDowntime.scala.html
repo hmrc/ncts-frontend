@@ -68,9 +68,10 @@
                 }
         }
 
-        @if(plannedDowntimes.isDefined){
+        @plannedDowntimes.map { downtimes => @if(downtimes.arrivalsAffected || downtimes.departuresAffected){
             <p class="govuk-body">@messages("planned-downtime.p1")</p>
                 <p class="govuk-body">@messages("planned-downtime.p2")</p>
+        }
         }
 
         </div>
