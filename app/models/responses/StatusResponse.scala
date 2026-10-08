@@ -29,22 +29,22 @@ import utils.DateTimeFormatter
 import java.time.{LocalDate, LocalDateTime}
 
 case class ChannelKnownIssue(
-  channel: Channel,
-  issueSince: LocalDateTime,
-  isBCP: Boolean = false,
-  eta: Option[String] = None
+    channel: Channel,
+    issueSince: LocalDateTime,
+    isBCP: Boolean = false,
+    eta: Option[String] = None
 )
 
 case class StatusResponse(
-  gbDeparturesStatus: HealthDetails,
-  xiDeparturesStatus: HealthDetails,
-  gbArrivalsStatus: HealthDetails,
-  xiArrivalsStatus: HealthDetails,
-  xmlChannelStatus: HealthDetails,
-  webChannelStatus: HealthDetails,
-  ppnStatus: HealthDetails,
-  timelineEntries: Seq[TimelineUpdate] = Nil,
-  createdTs: LocalDateTime
+    gbDeparturesStatus: HealthDetails,
+    xiDeparturesStatus: HealthDetails,
+    gbArrivalsStatus: HealthDetails,
+    xiArrivalsStatus: HealthDetails,
+    xmlChannelStatus: HealthDetails,
+    webChannelStatus: HealthDetails,
+    ppnStatus: HealthDetails,
+    timelineEntries: Seq[TimelineUpdate] = Nil,
+    createdTs: LocalDateTime
 ) {
   def xmlAndWebHealthy: Boolean = xmlChannelStatus.healthy && webChannelStatus.healthy
 
@@ -84,6 +84,7 @@ case class StatusResponse(
     val channelIssues = unhealthyChannels(List((xmlChannelStatus, XML), (webChannelStatus, Web), (ppnStatus, PPN)))
     knownIssuesAndCorrespondingEtas(channelIssues)
   }
+
 }
 
 object StatusResponse {
@@ -96,59 +97,58 @@ object StatusResponse {
 
     implicit val healthDetailsReads: Reads[HealthDetails] = HealthDetails.format
 
-    (
-      (__ \ "gbDeparturesStatus").read[HealthDetails] and
-        (__ \ "xiDeparturesStatus").read[HealthDetails] and
-        (__ \ "gbArrivalsStatus").read[HealthDetails] and
-        (__ \ "xiArrivalsStatus").read[HealthDetails] and
-        (__ \ "xmlChannelStatus").read[HealthDetails] and
-        (__ \ "webChannelStatus").read[HealthDetails] and
-        (__ \ "ppnStatus").read[HealthDetails] and
-        (__ \ "timelineEntries").read[Seq[TimelineUpdate]] and
-        (__ \ "createdTs").read[LocalDateTime]
-    )(StatusResponse.apply _)
+    (__ \ "gbDeparturesStatus")
+      .read[HealthDetails]
+      .and((__ \ "xiDeparturesStatus").read[HealthDetails])
+      .and((__ \ "gbArrivalsStatus").read[HealthDetails])
+      .and((__ \ "xiArrivalsStatus").read[HealthDetails])
+      .and((__ \ "xmlChannelStatus").read[HealthDetails])
+      .and((__ \ "webChannelStatus").read[HealthDetails])
+      .and((__ \ "ppnStatus").read[HealthDetails])
+      .and((__ \ "timelineEntries").read[Seq[TimelineUpdate]])
+      .and((__ \ "createdTs").read[LocalDateTime])(StatusResponse.apply _)
   }
 
   implicit lazy val writes: OWrites[StatusResponse] = {
 
     implicit val healthDetailsWrites: Writes[HealthDetails] = HealthDetails.format
 
-    (
-      (__ \ "gbDeparturesStatus").write[HealthDetails] and
-        (__ \ "xiDeparturesStatus").write[HealthDetails] and
-        (__ \ "gbArrivalsStatus").write[HealthDetails] and
-        (__ \ "xiArrivalsStatus").write[HealthDetails] and
-        (__ \ "xmlChannelStatus").write[HealthDetails] and
-        (__ \ "webChannelStatus").write[HealthDetails] and
-        (__ \ "ppnStatus").write[HealthDetails] and
-        (__ \ "timelineEntries").write[Seq[TimelineUpdate]] and
-        (__ \ "createdTs").write[LocalDateTime]
-    )((s: StatusResponse) =>
-      (
-        s.gbDeparturesStatus,
-        s.xiDeparturesStatus,
-        s.gbArrivalsStatus,
-        s.xiArrivalsStatus,
-        s.xmlChannelStatus,
-        s.webChannelStatus,
-        s.ppnStatus,
-        s.timelineEntries,
-        s.createdTs
+    (__ \ "gbDeparturesStatus")
+      .write[HealthDetails]
+      .and((__ \ "xiDeparturesStatus").write[HealthDetails])
+      .and((__ \ "gbArrivalsStatus").write[HealthDetails])
+      .and((__ \ "xiArrivalsStatus").write[HealthDetails])
+      .and((__ \ "xmlChannelStatus").write[HealthDetails])
+      .and((__ \ "webChannelStatus").write[HealthDetails])
+      .and((__ \ "ppnStatus").write[HealthDetails])
+      .and((__ \ "timelineEntries").write[Seq[TimelineUpdate]])
+      .and((__ \ "createdTs").write[LocalDateTime])((s: StatusResponse) =>
+        (
+          s.gbDeparturesStatus,
+          s.xiDeparturesStatus,
+          s.gbArrivalsStatus,
+          s.xiArrivalsStatus,
+          s.xmlChannelStatus,
+          s.webChannelStatus,
+          s.ppnStatus,
+          s.timelineEntries,
+          s.createdTs
+        )
       )
-    )
 
   }
 
   implicit val dateTimeOrdering: Ordering[LocalDateTime] = _ compareTo _
 
   implicit object StatusResponseReads extends HttpReads[Either[ErrorResponse, StatusResponse]] {
+
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, StatusResponse] =
       response.status match {
-        case OK     =>
+        case OK =>
           response.json.validate[StatusResponse] match {
             case JsSuccess(model, _) =>
               Right(model)
-            case JsError(error)      =>
+            case JsError(error) =>
               val errorMessage = error.flatMap(_._2.map(_.message)).mkString("\n")
               logger.error(s"Error parsing StatusResponse: $errorMessage")
               Left(StatusResponseError(s"Response in an unexpected format: $errorMessage"))
@@ -157,7 +157,9 @@ object StatusResponse {
           logger.error(s"Error retrieving StatusResponse : Status '$status' \n ${response.body}")
           Left(StatusResponseError(s"Unexpected error occurred when checking service status: ${response.body}"))
       }
+
   }
+
 }
 
 case class HealthDetails(healthy: Boolean, statusChangedAt: LocalDateTime, lastMessageAccepted: Option[LocalDateTime])
@@ -167,33 +169,38 @@ object HealthDetails {
 }
 
 case class TimelineUpdate(
-  channel: Channel,
-  time: Option[String],
-  date: Option[LocalDate],
-  businessContinuityFlag: Boolean,
-  createdTs: LocalDateTime
+    channel: Channel,
+    time: Option[String],
+    date: Option[LocalDate],
+    businessContinuityFlag: Boolean,
+    createdTs: LocalDateTime
 ) {
+
   def toChannelWithKnownIssue: ChannelKnownIssue = {
     val dateTimeStr = (time ++ date.map(DateTimeFormatter.formatDateWithoutDayOfWeek)).reduceOption(_ + ", " + _)
     ChannelKnownIssue(channel, createdTs, businessContinuityFlag, dateTimeStr)
   }
+
 }
 
 object TimelineUpdate {
+
   implicit val writes: Writes[TimelineUpdate] =
-    (
-      (__ \ "channel").write[Channel](Channel.format) and
-        (__ \ "time").writeNullable[String] and
-        (__ \ "date").writeNullable[LocalDate] and
-        (__ \ "businessContinuityFlag").write[Boolean] and
-        (__ \ "createdTs").write(MongoDateTimeFormats.DefaultLocalDateTimeWrites)
-    )((t: TimelineUpdate) => (t.channel, t.time, t.date, t.businessContinuityFlag, t.createdTs))
-  implicit val reads: Reads[TimelineUpdate]   =
-    (
-      (__ \ "channel").read[Channel](Channel.format) and
-        (__ \ "time").readNullable[String] and
-        (__ \ "date").readNullable[LocalDate] and
-        (__ \ "businessContinuityFlag").read[Boolean].orElse(Reads.pure(false)) and
-        (__ \ "createdTs").read(MongoDateTimeFormats.DefaultLocalDateTimeReads)
-    )(TimelineUpdate.apply _)
+    (__ \ "channel")
+      .write[Channel](Channel.format)
+      .and((__ \ "time").writeNullable[String])
+      .and((__ \ "date").writeNullable[LocalDate])
+      .and((__ \ "businessContinuityFlag").write[Boolean])
+      .and((__ \ "createdTs").write(MongoDateTimeFormats.DefaultLocalDateTimeWrites))((t: TimelineUpdate) =>
+        (t.channel, t.time, t.date, t.businessContinuityFlag, t.createdTs)
+      )
+
+  implicit val reads: Reads[TimelineUpdate] =
+    (__ \ "channel")
+      .read[Channel](Channel.format)
+      .and((__ \ "time").readNullable[String])
+      .and((__ \ "date").readNullable[LocalDate])
+      .and((__ \ "businessContinuityFlag").read[Boolean].orElse(Reads.pure(false)))
+      .and((__ \ "createdTs").read(MongoDateTimeFormats.DefaultLocalDateTimeReads))(TimelineUpdate.apply _)
+
 }

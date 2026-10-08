@@ -280,4 +280,5 @@ class NCTSConnectorSpec
       }
     }
   }
+
 }

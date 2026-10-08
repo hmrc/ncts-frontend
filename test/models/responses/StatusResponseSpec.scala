@@ -36,13 +36,16 @@ class StatusResponseSpec extends SpecBase with Matchers {
   private val lastMessageAccepted =
     LocalDateTime.of(2022, 1, 1, 10, 25, 55)
 
-  private val etaDate                = LocalDate.of(2022, 3, 23)
-  private val etaTime                = "10am BST"
-  private val healthDetailsHealthy   =
+  private val etaDate = LocalDate.of(2022, 3, 23)
+  private val etaTime = "10am BST"
+
+  private val healthDetailsHealthy =
     HealthDetails(healthy = true, statusChangedAt = statusChangedAt, lastMessageAccepted = Some(lastMessageAccepted))
+
   private val healthDetailsUnhealthy =
     HealthDetails(healthy = false, statusChangedAt = statusChangedAt, lastMessageAccepted = Some(lastMessageAccepted))
-  lazy val allHealthyResp            = StatusResponse(
+
+  lazy val allHealthyResp = StatusResponse(
     healthDetailsHealthy,
     healthDetailsHealthy,
     healthDetailsHealthy,
@@ -53,11 +56,12 @@ class StatusResponseSpec extends SpecBase with Matchers {
     Nil,
     LocalDateTime.now
   )
-  private val twentyMinutesAgo       = LocalDateTime.now.minusMinutes(20)
-  private val tenMinutesAgo          = LocalDateTime.now.minusMinutes(10)
-  private val fiveMinutesAgo         = LocalDateTime.now.minusMinutes(5)
-  private val twoMinutesAgo          = LocalDateTime.now.minusMinutes(2)
-  private val fewSecondsAgo          = LocalDateTime.now.minusSeconds(15)
+
+  private val twentyMinutesAgo = LocalDateTime.now.minusMinutes(20)
+  private val tenMinutesAgo    = LocalDateTime.now.minusMinutes(10)
+  private val fiveMinutesAgo   = LocalDateTime.now.minusMinutes(5)
+  private val twoMinutesAgo    = LocalDateTime.now.minusMinutes(2)
+  private val fewSecondsAgo    = LocalDateTime.now.minusSeconds(15)
 
   implicit val dateTimeReverseSortable: Sortable[Seq[LocalDateTime]] =
     Sortable.sortableNatureOfSeq(dateTimeOrdering.reverse)
@@ -70,11 +74,11 @@ class StatusResponseSpec extends SpecBase with Matchers {
 
       val depHealthyArrUnhealthyJson = json(true, false, false, timelineEntriesJson(etaDate, etaTime))
       val createdTimestamp           = LocalDateTime.of(2022, 1, 1, 10, 25, 55)
-      val etas                       = Seq(
+      val etas = Seq(
         TimelineUpdate(XIArrivals, Option(etaTime), Option(etaDate), businessContinuityFlag = false, createdTimestamp),
         TimelineUpdate(XML, Option(etaTime), Option(etaDate), businessContinuityFlag = false, createdTimestamp)
       )
-      val expectedResult             =
+      val expectedResult =
         Right(
           StatusResponse(
             gbDeparturesStatus = healthDetailsHealthy,
@@ -177,7 +181,7 @@ class StatusResponseSpec extends SpecBase with Matchers {
   }
 
   "arrivalsWithKnownIssuesAndEta should return ETA and Known issues sorted - recent to old" in {
-    val resp     = allHealthyResp.copy(
+    val resp = allHealthyResp.copy(
       gbArrivalsStatus = healthDetailsUnhealthy.copy(statusChangedAt = twoMinutesAgo),
       xiArrivalsStatus = healthDetailsUnhealthy.copy(statusChangedAt = tenMinutesAgo),
       timelineEntries = Seq(eta(XIArrivals, fiveMinutesAgo), eta(GBArrivals, LocalDateTime.now))
@@ -196,7 +200,7 @@ class StatusResponseSpec extends SpecBase with Matchers {
   }
 
   "departureWithKnownIssuesAndEta should return ETA and Known issues sorted - recent to old" in {
-    val resp     = allHealthyResp.copy(
+    val resp = allHealthyResp.copy(
       gbDeparturesStatus = healthDetailsUnhealthy.copy(statusChangedAt = fiveMinutesAgo),
       xiDeparturesStatus = healthDetailsUnhealthy.copy(statusChangedAt = tenMinutesAgo),
       timelineEntries = Seq(eta(GBDepartures, twoMinutesAgo), eta(XIDepartures, LocalDateTime.now))
@@ -215,7 +219,7 @@ class StatusResponseSpec extends SpecBase with Matchers {
   }
 
   "channelsWithKnownIssuesAndEta should return ETA and Known issues sorted - recent to old" in {
-    val resp     = allHealthyResp.copy(
+    val resp = allHealthyResp.copy(
       webChannelStatus = healthDetailsUnhealthy.copy(statusChangedAt = fiveMinutesAgo),
       xmlChannelStatus = healthDetailsUnhealthy.copy(statusChangedAt = tenMinutesAgo),
       ppnStatus = healthDetailsUnhealthy.copy(statusChangedAt = twentyMinutesAgo),
@@ -257,10 +261,10 @@ class StatusResponseSpec extends SpecBase with Matchers {
   }
 
   def json(
-    departuresHealthy: Boolean,
-    arrivalsHealthy: Boolean,
-    otherChannelsHealthy: Boolean,
-    timelineEntriesJson: String = "[]"
+      departuresHealthy: Boolean,
+      arrivalsHealthy: Boolean,
+      otherChannelsHealthy: Boolean,
+      timelineEntriesJson: String = "[]"
   ): String =
     s"""
        |{

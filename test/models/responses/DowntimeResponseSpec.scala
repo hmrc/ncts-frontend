@@ -35,7 +35,8 @@ class DowntimeResponseSpec extends AnyWordSpec with Matchers {
   val jsonStartFromMongo: JsObject = Json.obj("$date" -> 1517443200000L)
   val jsonEndFromMongo: JsObject   = Json.obj("$date" -> 1517463200000L)
 
-  val channels     = Seq(GBDepartures, XIDepartures, GBArrivals, XIArrivals, Web, XML)
+  val channels = Seq(GBDepartures, XIDepartures, GBArrivals, XIArrivals, Web, XML)
+
   val channelsJson = Seq(
     JsString("GB Departures"),
     JsString("XI Departures"),
@@ -102,4 +103,5 @@ class DowntimeResponseSpec extends AnyWordSpec with Matchers {
        |],
        |"createdTs":"2022-01-01T10:25:55"
        |}""".stripMargin
+
 }

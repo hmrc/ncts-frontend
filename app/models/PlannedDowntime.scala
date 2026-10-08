@@ -22,11 +22,11 @@ import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime}
 
 case class PlannedDowntime(
-  startDate: LocalDate,
-  startTime: LocalTime,
-  endDate: LocalDate,
-  endTime: LocalTime,
-  affectedChannel: Channel
+    startDate: LocalDate,
+    startTime: LocalTime,
+    endDate: LocalDate,
+    endTime: LocalTime,
+    affectedChannel: Channel
 )
 
 object PlannedDowntime {
@@ -39,11 +39,12 @@ object PlannedDowntime {
   implicit val timeFormat: Reads[LocalTime] =
     Reads[LocalTime](js => js.validate[String].map(LocalTime.parse(_, DateTimeFormatter.ofPattern("HH:mm"))))
 
-  implicit lazy val reads: Reads[PlannedDowntime] = (
-    (__ \ "startDate").read[LocalDate] and
-      (__ \ "startTime").read[LocalTime] and
-      (__ \ "endDate").read[LocalDate] and
-      (__ \ "endTime").read[LocalTime] and
-      (__ \ "affectedChannel").read[Channel]
-  )(PlannedDowntime.apply _)
+  implicit lazy val reads: Reads[PlannedDowntime] =
+    (__ \ "startDate")
+      .read[LocalDate]
+      .and((__ \ "startTime").read[LocalTime])
+      .and((__ \ "endDate").read[LocalDate])
+      .and((__ \ "endTime").read[LocalTime])
+      .and((__ \ "affectedChannel").read[Channel])(PlannedDowntime.apply _)
+
 }

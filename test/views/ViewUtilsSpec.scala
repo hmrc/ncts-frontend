@@ -33,4 +33,5 @@ class ViewUtilsSpec extends SpecBase {
     }
 
   }
+
 }

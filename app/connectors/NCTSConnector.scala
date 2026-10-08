@@ -31,8 +31,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class NCTSConnector @Inject() (
-  httpClient: HttpClientV2,
-  config: FrontendAppConfig
+    httpClient: HttpClientV2,
+    config: FrontendAppConfig
 )(implicit ec: ExecutionContext) {
 
   def checkStatus()(implicit hc: HeaderCarrier): Future[Option[StatusResponse]] =
@@ -44,18 +44,19 @@ class NCTSConnector @Inject() (
   private def makeGetCall[A](requestUrl: String)(implicit hc: HeaderCarrier, reads: Reads[A]): Future[Option[A]] =
     httpClient
       .get(new URL(s"${config.nctsUrl}$requestUrl"))
-      .execute[HttpResponse] map { response =>
-      response.status match {
-        case OK        => validateJsonResponse[A](response.json, requestUrl)
-        case NOT_FOUND => None
-        case _         => throwError(response, requestUrl)
+      .execute[HttpResponse]
+      .map { response =>
+        response.status match {
+          case OK        => validateJsonResponse[A](response.json, requestUrl)
+          case NOT_FOUND => None
+          case _         => throwError(response, requestUrl)
+        }
       }
-    }
 
   private def validateJsonResponse[A](json: JsValue, requestUrl: String)(implicit reads: Reads[A]): Option[A] =
     json.validateOpt[A] match {
       case JsSuccess(value, _) => value
-      case JsError(errors)     =>
+      case JsError(errors) =>
         throw new RuntimeException(s"[NCTSConnector] - Could not parse json for $requestUrl: $errors")
     }
 
@@ -66,4 +67,5 @@ class NCTSConnector @Inject() (
       response.status,
       response.headers
     )
+
 }

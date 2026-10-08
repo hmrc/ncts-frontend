@@ -28,14 +28,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ErrorHandler @Inject() (
-  val messagesApi: MessagesApi,
-  view: ErrorTemplate
+    val messagesApi: MessagesApi,
+    view: ErrorTemplate
 )(implicit val ec: ExecutionContext)
     extends FrontendErrorHandler
     with I18nSupport {
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit
-    request: RequestHeader
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(
+      implicit request: RequestHeader
   ): Future[Html] =
     Future.successful(
       view(pageTitle, heading, message)
@@ -43,4 +43,5 @@ class ErrorHandler @Inject() (
 
   def showInternalServerError(implicit request: RequestHeader): Future[Result] =
     standardErrorTemplate("error.title", "error.heading", "error.message").map(InternalServerError(_))
+
 }
