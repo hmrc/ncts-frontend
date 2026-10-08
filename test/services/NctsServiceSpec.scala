@@ -47,15 +47,16 @@ class NctsServiceSpec extends SpecBase {
         )
       )
 
-      when(nctsConnector.checkStatus()(any())) thenReturn Future.successful(response)
+      when(nctsConnector.checkStatus()(any())).thenReturn(Future.successful(response))
 
       service.checkStatus().futureValue mustBe response
     }
 
     "return an error response when error occurs" in {
-      when(nctsConnector.checkStatus()(any())) thenReturn Future.successful(None)
+      when(nctsConnector.checkStatus()(any())).thenReturn(Future.successful(None))
 
       service.checkStatus().futureValue mustBe None
     }
   }
+
 }

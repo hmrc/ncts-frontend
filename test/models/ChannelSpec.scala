@@ -34,25 +34,21 @@ class ChannelSpec extends AnyWordSpec with Matchers {
 
   "Channel" should {
 
-    "serialise" when {
-
+    "serialise" when
       testElements.foreach { elem =>
         s"${elem._1} is applied" in {
 
           Channel(JsString(elem._1)) mustBe JsSuccess(elem._2)
         }
       }
-    }
 
-    "de-serialise" when {
-
+    "de-serialise" when
       testElements.foreach { elem =>
         s"${elem._1} is un-applied" in {
 
           Channel.unapply(elem._2) mustBe JsString(elem._1)
         }
       }
-    }
 
     "return a JsError if the channel cannot be parsed from Json" in {
 
@@ -62,4 +58,5 @@ class ChannelSpec extends AnyWordSpec with Matchers {
       Channel(fakeChannel) mustBe expectedResult
     }
   }
+
 }

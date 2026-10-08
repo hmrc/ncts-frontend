@@ -21,10 +21,10 @@ import models.responses.ErrorResponse.DowntimeConfigParseError
 import scala.annotation.tailrec
 
 case class PlannedDowntimeViewModel(
-  gbArrivals: Option[PlannedDowntime],
-  xiArrivals: Option[PlannedDowntime],
-  gbDepartures: Option[PlannedDowntime],
-  xiDepartures: Option[PlannedDowntime]
+    gbArrivals: Option[PlannedDowntime],
+    xiArrivals: Option[PlannedDowntime],
+    gbDepartures: Option[PlannedDowntime],
+    xiDepartures: Option[PlannedDowntime]
 )
 
 object PlannedDowntimeViewModel {
@@ -38,7 +38,7 @@ object PlannedDowntimeViewModel {
     )
 
   def fromPlannedDowntimes(
-    downtimes: Either[DowntimeConfigParseError, Option[PlannedDowntimes]]
+      downtimes: Either[DowntimeConfigParseError, Option[PlannedDowntimes]]
   ): PlannedDowntimeViewModel =
     downtimes match {
       case Right(downtimes) =>
@@ -47,9 +47,9 @@ object PlannedDowntimeViewModel {
 
         @tailrec
         def loop(
-          plannedDowntimes: Seq[PlannedDowntime],
-          index: Int,
-          result: PlannedDowntimeViewModel
+            plannedDowntimes: Seq[PlannedDowntime],
+            index: Int,
+            result: PlannedDowntimeViewModel
         ): PlannedDowntimeViewModel =
           if (index >= plannedDowntimes.size) result
           else {
@@ -63,7 +63,8 @@ object PlannedDowntimeViewModel {
           }
 
         loop(plannedDowntimes, 0, defaultPlannedDowntime)
-      case Left(_)          =>
+      case Left(_) =>
         PlannedDowntimeViewModel.default
     }
+
 }

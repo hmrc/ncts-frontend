@@ -31,6 +31,7 @@ trait MongoDateTimeFormats {
     Json.obj(
       "$date" -> dateTime.atZone(ZoneId.of("Europe/London")).toInstant.toEpochMilli
     )
+
 }
 
 object MongoDateTimeFormats extends MongoDateTimeFormats with DefaultReads with DefaultWrites

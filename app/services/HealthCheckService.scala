@@ -29,4 +29,5 @@ class HealthCheckService @Inject() (nctsConnector: NCTSConnector) {
 
   def checkStatus()(implicit hc: HeaderCarrier): Future[Option[StatusResponse]] =
     nctsConnector.checkStatus()
+
 }

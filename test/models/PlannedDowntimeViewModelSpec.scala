@@ -34,7 +34,7 @@ class PlannedDowntimeViewModelSpec extends AnyWordSpec with Matchers {
         Seq(GBArrivals, XIArrivals, GBDepartures, XIDepartures).map(channel =>
           createPlannedDowntime(date, time, date, time, channel)
         )
-      val downtimes                              = Right(Some(PlannedDowntimes(plannedDowntimes)))
+      val downtimes = Right(Some(PlannedDowntimes(plannedDowntimes)))
 
       val result = PlannedDowntimeViewModel.fromPlannedDowntimes(downtimes)
       result mustBe PlannedDowntimeViewModel(
@@ -51,7 +51,7 @@ class PlannedDowntimeViewModelSpec extends AnyWordSpec with Matchers {
 
       val plannedDowntimes: Seq[PlannedDowntime] =
         Seq(GBDepartures, XIDepartures).map(channel => createPlannedDowntime(date, time, date, time, channel))
-      val downtimes                              = Right(Some(PlannedDowntimes(plannedDowntimes)))
+      val downtimes = Right(Some(PlannedDowntimes(plannedDowntimes)))
 
       val result = PlannedDowntimeViewModel.fromPlannedDowntimes(downtimes)
       result mustBe PlannedDowntimeViewModel(
@@ -100,11 +100,12 @@ class PlannedDowntimeViewModelSpec extends AnyWordSpec with Matchers {
   }
 
   def createPlannedDowntime(
-    startDate: LocalDate,
-    startTime: LocalTime,
-    endDate: LocalDate,
-    endTime: LocalTime,
-    affectedChannel: Channel
+      startDate: LocalDate,
+      startTime: LocalTime,
+      endDate: LocalDate,
+      endTime: LocalTime,
+      affectedChannel: Channel
   ) =
     PlannedDowntime(startDate, startTime, endDate, endTime, affectedChannel)
+
 }

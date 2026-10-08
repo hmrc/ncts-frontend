@@ -40,33 +40,34 @@ class PlannedDowntimeServiceSpec extends SpecBase {
     "return a Left if an exception is thrown when the planned downtime json is invalid" in {
 
       when(mockConfigList.render(ArgumentMatchers.any())).thenReturn("""
-          |]invalid-json]]{}{{}{
-          |""".stripMargin)
+                                                                       |]invalid-json]]{}{{}{
+                                                                       |""".stripMargin)
 
       service
         .getPlannedDowntime(forPlannedDowntime = true)
         .left
         .getOrElse(throw new Exception("No value found"))
         .message must
-        (fullyMatch regex "Exception thrown when trying to parse downtime config((.|\n)+)")
+        (fullyMatch.regex("Exception thrown when trying to parse downtime config((.|\n)+)"))
     }
 
     "return a Left if the planned downtime json is valid but cannot be parsed" in {
 
-      when(mockConfigList.render(ArgumentMatchers.any())).thenReturn("""
-          |"planned-downtime" [
-          |    { "incorrectKey": "2021-03-15", "startTime": "08:15",
-          |     "endDate": "2021-03-16", "endTime": "17:00", "affectedChannel": "gbArrivals"
-          |     }
-          |]
-          |""".stripMargin)
+      when(mockConfigList.render(ArgumentMatchers.any()))
+        .thenReturn("""
+                      |"planned-downtime" [
+                      |    { "incorrectKey": "2021-03-15", "startTime": "08:15",
+                      |     "endDate": "2021-03-16", "endTime": "17:00", "affectedChannel": "gbArrivals"
+                      |     }
+                      |]
+                      |""".stripMargin)
 
       service
         .getPlannedDowntime(forPlannedDowntime = true)
         .left
         .getOrElse(throw new Exception("No value found"))
         .message must
-        (fullyMatch regex "Error parsing downtime config((.|\n)+)")
+        (fullyMatch.regex("Error parsing downtime config((.|\n)+)"))
     }
 
     "return a Right(None) if there is no config for planned-downtime" in {
@@ -111,4 +112,5 @@ class PlannedDowntimeServiceSpec extends SpecBase {
       )
     }
   }
+
 }
