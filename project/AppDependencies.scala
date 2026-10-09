@@ -22,18 +22,17 @@ object AppDependencies {
 
   val compile: Seq[ModuleID] = Seq(
     play.sbt.PlayImport.ws,
-    "uk.gov.hmrc" %% "play-frontend-hmrc-play-30"         % "13.13.0",
-    "uk.gov.hmrc" %% "bootstrap-frontend-play-30" % bootstrapVersion,
-    "at.yawk.lz4"        % "lz4-java"                  % "1.10.3",
-    "ch.qos.logback"     % "logback-core"              % "1.5.27",
-    "ch.qos.logback"     % "logback-classic"           % "1.5.27",
-    "org.apache.commons" % "commons-lang3"             % "3.18.0"
+    "uk.gov.hmrc"       %% "play-frontend-hmrc-play-30" % "13.13.0",
+    "uk.gov.hmrc"       %% "bootstrap-frontend-play-30" % bootstrapVersion,
+    "at.yawk.lz4"        % "lz4-java"                   % "1.10.3",
+    "ch.qos.logback"     % "logback-core"               % "1.5.27",
+    "ch.qos.logback"     % "logback-classic"            % "1.5.27",
+    "org.apache.commons" % "commons-lang3"              % "3.18.0"
   )
 
   val test: Seq[ModuleID] = Seq(
     "org.jsoup"    % "jsoup"                  % "1.15.4",
     "uk.gov.hmrc" %% "bootstrap-test-play-30" % bootstrapVersion
-
   ).map(_ % Test)
 
   val it: Seq[ModuleID] = Seq()
