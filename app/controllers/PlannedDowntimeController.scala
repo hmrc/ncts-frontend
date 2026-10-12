@@ -26,10 +26,10 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class PlannedDowntimeController @Inject() (
-  val controllerComponents: MessagesControllerComponents,
-  val plannedDowntimeService: PlannedDowntimeService,
-  view: views.html.PlannedDowntime,
-  errorHandler: ErrorHandler
+    val controllerComponents: MessagesControllerComponents,
+    val plannedDowntimeService: PlannedDowntimeService,
+    view: views.html.PlannedDowntime,
+    errorHandler: ErrorHandler
 ) extends FrontendBaseController
     with I18nSupport {
 

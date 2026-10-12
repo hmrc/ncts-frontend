@@ -49,8 +49,8 @@ lazy val root = (project in file("."))
     ScoverageKeys.coverageExcludedFiles :=
       """.*<empty>.*|.*Reverse.*|.*components.*|.*Routes.*|.*pages.*|.*templates.*""",
     ScoverageKeys.coverageMinimumStmtTotal := 90,
-    ScoverageKeys.coverageFailOnMinimum := true,
-    ScoverageKeys.coverageHighlighting := true,
+    ScoverageKeys.coverageFailOnMinimum    := true,
+    ScoverageKeys.coverageHighlighting     := true,
     scalacOptions ++= Seq("-feature"),
     libraryDependencies ++= AppDependencies(),
     excludeDependencies += ExclusionRule("org.lz4", "lz4-java"),

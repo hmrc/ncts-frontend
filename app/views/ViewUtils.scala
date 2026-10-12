@@ -29,4 +29,5 @@ object ViewUtils {
 
   def headingFromTitle(title: String)(implicit messages: Messages): String =
     messages(title).split(" - ")(0)
+
 }

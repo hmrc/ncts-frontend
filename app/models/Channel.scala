@@ -35,17 +35,22 @@ sealed trait Channel {
 case object GBDepartures extends Channel {
   override def isGbOrXi: Boolean = true
 }
+
 case object XIDepartures extends Channel {
   override def isGbOrXi: Boolean = true
 }
+
 case object GBArrivals extends Channel {
   override def isGbOrXi: Boolean = true
 }
+
 case object XIArrivals extends Channel {
   override def isGbOrXi: Boolean = true
 }
+
 case object Web extends Channel
 case object XML extends Channel
+
 case object PPN extends Channel {
   override def isPPN: Boolean = true
 }
@@ -77,4 +82,5 @@ object Channel {
     def reads(json: JsValue): JsResult[Channel] = apply(json)
     def writes(Channel: Channel): JsString      = unapply(Channel)
   }
+
 }

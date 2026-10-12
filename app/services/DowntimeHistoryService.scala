@@ -28,15 +28,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class DowntimeHistoryService @Inject() (
-  nctsConnector: NCTSConnector,
-  plannedDowntimeService: PlannedDowntimeService
+    nctsConnector: NCTSConnector,
+    plannedDowntimeService: PlannedDowntimeService
 )(implicit ec: ExecutionContext) {
 
   def getDowntimeHistory()(implicit hc: HeaderCarrier): Future[Option[Seq[DowntimeHistoryRow]]] =
-    nctsConnector.getDowntimeHistory() map { response =>
-      response flatMap { history =>
-        historyWithReasons(filterInvalidDowntimes(history.downtimes))
-      }
+    nctsConnector.getDowntimeHistory().map { response =>
+      response.flatMap(history => historyWithReasons(filterInvalidDowntimes(history.downtimes)))
     }
 
   def filterInvalidDowntimes(downtimes: Seq[Downtime]): Seq[Downtime] = {
@@ -52,7 +50,7 @@ class DowntimeHistoryService @Inject() (
 
   def historyWithReasons(downtimes: Seq[Downtime]): Option[Seq[DowntimeHistoryRow]] =
     plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false) match {
-      case Left(_)                => None
+      case Left(_) => None
       case Right(plannedDowntime) =>
         Some(downtimes.foldLeft(Seq[DowntimeHistoryRow]()) { (downtimes, downtime) =>
           val isPlanned = isPlannedDowntime(downtime, plannedDowntime)
@@ -85,4 +83,5 @@ class DowntimeHistoryService @Inject() (
       false
     }
   }
+
 }

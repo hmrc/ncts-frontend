@@ -23,6 +23,7 @@ import java.time.{LocalDate, LocalDateTime, LocalTime, ZoneId}
 import java.util.Locale
 
 object DateTimeFormatter {
+
   def formatDate(localDate: LocalDate): String = {
     val formatter = DateTimeGen.ofPattern("EEEE d MMMM yyyy")
     formatter.format(localDate)
@@ -109,4 +110,5 @@ object DateTimeFormatter {
 
   def createDateTime(date: LocalDate, time: LocalTime) =
     LocalDateTime.of(date, time)
+
 }

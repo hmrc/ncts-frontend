@@ -38,4 +38,5 @@ class IndexControllerSpec extends SpecBase {
       }
     }
   }
+
 }

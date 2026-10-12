@@ -40,7 +40,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
   "Service Status Check Controller" - {
 
     "must return OK and the correct view for a GET with GB/XI departures true and GB/XI arrivals false" in {
-      when(healthCheckService.checkStatus()(any())) thenReturn
+      when(healthCheckService.checkStatus()(any())).thenReturn(
         Future(
           Some(
             StatusResponse(
@@ -55,6 +55,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
             )
           )
         )(ec)
+      )
 
       val application = applicationBuilder().overrides(mocks).build()
 
@@ -69,7 +70,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
     }
 
     "must return OK and the correct view for a GET with GB/XI departures false and GB/XI arrivals true" in {
-      when(healthCheckService.checkStatus()(any())) thenReturn
+      when(healthCheckService.checkStatus()(any())).thenReturn(
         Future(
           Some(
             StatusResponse(
@@ -84,6 +85,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
             )
           )
         )(ec)
+      )
 
       val application = applicationBuilder().overrides(mocks).build()
 
@@ -99,7 +101,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
 
     "must return INTERNAL_SERVER_ERROR when backend returns an error response" in {
 
-      when(healthCheckService.checkStatus()(any())) thenReturn Future(None)(ec)
+      when(healthCheckService.checkStatus()(any())).thenReturn(Future(None)(ec))
 
       val application = applicationBuilder().overrides(mocks).build()
 
@@ -113,4 +115,5 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
       }
     }
   }
+
 }

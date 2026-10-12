@@ -52,4 +52,5 @@ class PlannedDowntimeControllerSpec extends SpecBase {
       }
     }
   }
+
 }

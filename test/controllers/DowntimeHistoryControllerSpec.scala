@@ -36,16 +36,18 @@ class DowntimeHistoryControllerSpec extends SpecBase {
   val mocks: Seq[Binding[DowntimeHistoryService]] = Seq(
     bind[DowntimeHistoryService].to(downtimeHistoryService)
   )
+
   "DowntimeHistoryController" - {
 
     "must return OK for a GET with downtime history" in {
 
-      when(downtimeHistoryService.getDowntimeHistory()(any())) thenReturn
+      when(downtimeHistoryService.getDowntimeHistory()(any())).thenReturn(
         Future(
           Some(
             Seq(DowntimeHistoryRow(Downtime(GBDepartures, LocalDateTime.now(), LocalDateTime.now()), planned = false))
           )
         )(ec)
+      )
 
       val application = applicationBuilder().overrides(mocks).build()
 
@@ -61,7 +63,7 @@ class DowntimeHistoryControllerSpec extends SpecBase {
 
     "must return INTERNAL_SERVER_ERROR when backend returns an error response" in {
 
-      when(downtimeHistoryService.getDowntimeHistory()(any())) thenReturn Future(None)(ec)
+      when(downtimeHistoryService.getDowntimeHistory()(any())).thenReturn(Future(None)(ec))
 
       val application = applicationBuilder().overrides(mocks).build()
 
@@ -75,4 +77,5 @@ class DowntimeHistoryControllerSpec extends SpecBase {
       }
     }
   }
+
 }

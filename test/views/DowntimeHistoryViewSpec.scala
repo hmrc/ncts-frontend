@@ -271,4 +271,5 @@ class DowntimeHistoryViewSpec extends SpecBase with Injecting {
     DowntimeHistoryRow(downtime.copy(affectedChannel = Web), planned = false),
     DowntimeHistoryRow(downtime.copy(affectedChannel = XML), planned = false)
   )
+
 }

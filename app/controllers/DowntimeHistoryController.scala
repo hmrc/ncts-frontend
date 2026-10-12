@@ -28,21 +28,21 @@ import views.html.DowntimeHistoryView
 import scala.concurrent.{ExecutionContext, Future}
 
 class DowntimeHistoryController @Inject() (
-  val controllerComponents: MessagesControllerComponents,
-  outageHistoryService: DowntimeHistoryService,
-  errorHandler: ErrorHandler,
-  view: DowntimeHistoryView
-)(implicit
-  ec: ExecutionContext
-) extends FrontendBaseController
+    val controllerComponents: MessagesControllerComponents,
+    outageHistoryService: DowntimeHistoryService,
+    errorHandler: ErrorHandler,
+    view: DowntimeHistoryView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     outageHistoryService.getDowntimeHistory().flatMap {
       case Some(downtimeHistory: Seq[DowntimeHistoryRow]) =>
         Future.successful(Ok(view(downtimeHistory)))
-      case _                                              =>
+      case _ =>
         errorHandler.showInternalServerError
     }
   }
+
 }
