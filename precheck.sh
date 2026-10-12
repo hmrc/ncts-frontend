@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sbt clean scalafmt test:scalafmt coverage test it/test coverageReport
+sbt clean scalafmtSbt scalafmt Test/scalafmt it/scalafmt coverage test it/test coverageReport
