@@ -22,9 +22,9 @@ import models.{DowntimeHistoryRow, GBDepartures}
 import org.mockito.ArgumentMatchers.any
 import play.api.inject.{Binding, bind}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.DowntimeHistoryService
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 
 import java.time.LocalDateTime
 import scala.concurrent.Future
@@ -41,7 +41,7 @@ class DowntimeHistoryControllerSpec extends SpecBase {
 
     "must return OK for a GET with downtime history" in {
 
-      when(downtimeHistoryService.getDowntimeHistory()(any())).thenReturn(
+      when(downtimeHistoryService.getDowntimeHistory()(using any())).thenReturn(
         Future(
           Some(
             Seq(DowntimeHistoryRow(Downtime(GBDepartures, LocalDateTime.now(), LocalDateTime.now()), planned = false))
@@ -63,7 +63,7 @@ class DowntimeHistoryControllerSpec extends SpecBase {
 
     "must return INTERNAL_SERVER_ERROR when backend returns an error response" in {
 
-      when(downtimeHistoryService.getDowntimeHistory()(any())).thenReturn(Future(None)(ec))
+      when(downtimeHistoryService.getDowntimeHistory()(using any())).thenReturn(Future(None)(ec))
 
       val application = applicationBuilder().overrides(mocks).build()
 

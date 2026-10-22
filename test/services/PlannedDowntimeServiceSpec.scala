@@ -21,7 +21,7 @@ import com.typesafe.config.ConfigList
 import config.FrontendAppConfig
 import models.{GBArrivals, PlannedDowntime}
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 
 import java.time.{ZoneId, ZonedDateTime}
 

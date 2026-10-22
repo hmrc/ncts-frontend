@@ -35,7 +35,7 @@ import org.jsoup.nodes.Document
 import play.api.test.Injecting
 import utils.DateTimeFormatter
 import utils.DateTimeFormatter.formatTime
-import utils.HealthDetailsExamples._
+import utils.HealthDetailsExamples.*
 import views.html.ServiceAvailability
 
 import java.time.{LocalDate, LocalDateTime, ZoneId, ZonedDateTime}

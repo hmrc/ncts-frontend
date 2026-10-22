@@ -46,7 +46,7 @@ sbt run
 Unit and integration tests can be run using the command `sbt test it/test`
 
 
-## Scalafmt and Scalastyle
+## Scalafmt
 
 To check if all the scala files in the project are formatted correctly:
 > `sbt scalafmtCheckAll`
@@ -54,5 +54,3 @@ To check if all the scala files in the project are formatted correctly:
 To format all the scala files in the project correctly:
 > `sbt scalafmtAll`
 
-To check if there are any scalastyle errors, warnings or infos:
-> `sbt scalastyle`

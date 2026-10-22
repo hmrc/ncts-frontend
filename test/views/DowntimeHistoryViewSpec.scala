@@ -17,7 +17,7 @@
 package views
 
 import base.SpecBase
-import models._
+import models.*
 import models.responses.Downtime
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

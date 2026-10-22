@@ -18,13 +18,13 @@ package services
 
 import base.SpecBase
 import connectors.NCTSConnector
-import models._
+import models.*
 import models.responses.ErrorResponse.DowntimeConfigParseError
 import models.responses.{Downtime, DowntimeResponse}
 import org.mockito.ArgumentMatchers.any
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import uk.gov.hmrc.http.UpstreamErrorResponse
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 
 import java.time.{LocalDateTime, ZoneId, ZonedDateTime}
 import scala.concurrent.Future
@@ -33,7 +33,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
 
   val nctsConnector: NCTSConnector                   = mock[NCTSConnector]
   val plannedDowntimeService: PlannedDowntimeService = mock[PlannedDowntimeService]
-  val service: DowntimeHistoryService = new DowntimeHistoryService(nctsConnector, plannedDowntimeService)(ec)
+  val service: DowntimeHistoryService = new DowntimeHistoryService(nctsConnector, plannedDowntimeService)(using ec)
 
   "getDowntimeHistory" - {
     "when there is no planned downtime" - {
@@ -41,7 +41,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
 
         when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)).thenReturn(Right(None))
 
-        when(nctsConnector.getDowntimeHistory()(any())).thenReturn(
+        when(nctsConnector.getDowntimeHistory()(using any())).thenReturn(
           Future(
             Some(
               DowntimeResponse(
@@ -85,7 +85,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
             )
           )
 
-          when(nctsConnector.getDowntimeHistory()(any())).thenReturn(
+          when(nctsConnector.getDowntimeHistory()(using any())).thenReturn(
             Future(
               Some(
                 DowntimeResponse(
@@ -109,7 +109,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
 
           when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)).thenReturn(Right(None))
 
-          when(nctsConnector.getDowntimeHistory()(any())).thenReturn(Future.successful(None))
+          when(nctsConnector.getDowntimeHistory()(using any())).thenReturn(Future.successful(None))
 
           service.getDowntimeHistory().futureValue mustBe None
         }
@@ -119,7 +119,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
 
         when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)).thenReturn(Right(None))
 
-        when(nctsConnector.getDowntimeHistory()(any())).thenReturn(
+        when(nctsConnector.getDowntimeHistory()(using any())).thenReturn(
           Future.failed(UpstreamErrorResponse("Something went wrong", INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR))
         )
 
@@ -187,7 +187,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
           )
         )
 
-        when(nctsConnector.getDowntimeHistory()(any())).thenReturn(
+        when(nctsConnector.getDowntimeHistory()(using any())).thenReturn(
           Future(
             Some(
               DowntimeResponse(
@@ -278,7 +278,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
 
         when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)).thenReturn(plannedDowntime)
 
-        when(nctsConnector.getDowntimeHistory()(any())).thenReturn(
+        when(nctsConnector.getDowntimeHistory()(using any())).thenReturn(
           Future(
             Some(
               DowntimeResponse(
@@ -330,7 +330,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
 
         when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)).thenReturn(plannedDowntime)
 
-        when(nctsConnector.getDowntimeHistory()(any())).thenReturn(
+        when(nctsConnector.getDowntimeHistory()(using any())).thenReturn(
           Future(
             Some(
               DowntimeResponse(
@@ -382,7 +382,7 @@ class DowntimeHistoryServiceSpec extends SpecBase {
 
         when(plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = false)).thenReturn(plannedDowntime)
 
-        when(nctsConnector.getDowntimeHistory()(any())).thenReturn(
+        when(nctsConnector.getDowntimeHistory()(using any())).thenReturn(
           Future(
             Some(
               DowntimeResponse(

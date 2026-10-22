@@ -19,7 +19,7 @@ package test.controllers
 import models.responses.{HealthDetails, StatusResponse}
 import org.jsoup.Jsoup
 import play.api.libs.json.Json
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import test.utils.SpecCommonHelper
 
 import java.time.LocalDateTime

@@ -35,8 +35,6 @@ addSbtPlugin("uk.gov.hmrc" % "sbt-distributables" % "2.6.0")
 
 addSbtPlugin("org.playframework" % "sbt-plugin" % "3.0.10")
 
-addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
-
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.3.1")
 
 addSbtPlugin("uk.gov.hmrc" % "sbt-sass-compiler" % "0.13.0")

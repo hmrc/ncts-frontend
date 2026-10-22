@@ -16,7 +16,7 @@
 
 package connectors
 
-import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import models.GBDepartures
 import models.responses.{Downtime, DowntimeResponse, StatusResponse}
 import org.scalatest.concurrent.ScalaFutures
@@ -28,7 +28,7 @@ import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
-import utils.HealthDetailsExamples._
+import utils.HealthDetailsExamples.*
 import utils.WireMockHelper
 
 import java.time.LocalDateTime
@@ -43,11 +43,11 @@ class NCTSConnectorSpec
     with WireMockHelper
     with ScalaFutures {
 
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+  override given app: Application = new GuiceApplicationBuilder()
     .configure("microservice.services.ncts.port" -> server.port())
     .build()
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  given HeaderCarrier = HeaderCarrier()
 
   private lazy val nctsConnector: NCTSConnector = app.injector.instanceOf[NCTSConnector]
 

@@ -27,7 +27,7 @@ import scala.concurrent.Future
 @Singleton
 class HealthCheckService @Inject() (nctsConnector: NCTSConnector) {
 
-  def checkStatus()(implicit hc: HeaderCarrier): Future[Option[StatusResponse]] =
+  def checkStatus()(using HeaderCarrier): Future[Option[StatusResponse]] =
     nctsConnector.checkStatus()
 
 }

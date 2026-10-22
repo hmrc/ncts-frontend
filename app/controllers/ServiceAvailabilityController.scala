@@ -19,7 +19,7 @@ package controllers
 import handlers.ErrorHandler
 import models.PlannedDowntimeViewModel
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import services.{HealthCheckService, PlannedDowntimeService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ServiceAvailability
@@ -33,11 +33,12 @@ class ServiceAvailabilityController @Inject() (
     plannedDowntimeService: PlannedDowntimeService,
     errorHandler: ErrorHandler,
     view: ServiceAvailability
-)(implicit ec: ExecutionContext)
+)(using ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
+  def onPageLoad: Action[AnyContent] = Action.async { request =>
+    given Request[AnyContent] = request
     healthCheckService.checkStatus().flatMap {
       case Some(statusResponse) =>
         val plannedDowntimeViewModel: PlannedDowntimeViewModel =
