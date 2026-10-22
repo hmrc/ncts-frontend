@@ -16,7 +16,7 @@
 
 package models.responses
 
-import models._
+import models.*
 import models.responses.DowntimeResponse.DowntimeResponseReads
 import models.responses.ErrorResponse.DowntimeResponseError
 import org.scalatest.matchers.must.Matchers

@@ -22,12 +22,12 @@ import java.time.{Instant, LocalDateTime, ZoneId}
 
 trait MongoDateTimeFormats {
 
-  implicit val localDateTimeRead: Reads[LocalDateTime] =
+  given localDateTimeRead: Reads[LocalDateTime] =
     (__ \ "$date").read[Long].map { millis =>
       LocalDateTime.ofInstant(Instant.ofEpochMilli(millis.toLong), ZoneId.of("Europe/London"))
     }
 
-  implicit val localDateTimeWrite: Writes[LocalDateTime] = (dateTime: LocalDateTime) =>
+  given localDateTimeWrite: Writes[LocalDateTime] = (dateTime: LocalDateTime) =>
     Json.obj(
       "$date" -> dateTime.atZone(ZoneId.of("Europe/London")).toInstant.toEpochMilli
     )

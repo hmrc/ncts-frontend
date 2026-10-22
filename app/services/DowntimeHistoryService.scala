@@ -30,9 +30,9 @@ import scala.concurrent.{ExecutionContext, Future}
 class DowntimeHistoryService @Inject() (
     nctsConnector: NCTSConnector,
     plannedDowntimeService: PlannedDowntimeService
-)(implicit ec: ExecutionContext) {
+)(using ExecutionContext) {
 
-  def getDowntimeHistory()(implicit hc: HeaderCarrier): Future[Option[Seq[DowntimeHistoryRow]]] =
+  def getDowntimeHistory()(using HeaderCarrier): Future[Option[Seq[DowntimeHistoryRow]]] =
     nctsConnector.getDowntimeHistory().map { response =>
       response.flatMap(history => historyWithReasons(filterInvalidDowntimes(history.downtimes)))
     }

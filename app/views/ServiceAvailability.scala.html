@@ -16,7 +16,7 @@
 
 @import models.responses.StatusResponse
 @import models.PlannedDowntimeViewModel
-@import utils.DateTimeFormatter._
+@import utils.DateTimeFormatter.*
 @import helpers.SubmissionChannelsAvailability
 @import helpers.TimelineOfKnownIssues
 @import helpers.HelpWithChannels
@@ -29,7 +29,7 @@
     layout: templates.Layout
 )
 
-@(status: StatusResponse, plannedDowntimeViewModel: PlannedDowntimeViewModel)(implicit request: Request[_], messages: Messages)
+@(status: StatusResponse, plannedDowntimeViewModel: PlannedDowntimeViewModel)(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = title(messages("service.availability.title")),

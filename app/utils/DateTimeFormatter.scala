@@ -18,7 +18,7 @@ package utils
 
 import play.api.i18n.Messages
 
-import java.time.format.{DateTimeFormatter => DateTimeGen}
+import java.time.format.DateTimeFormatter as DateTimeGen
 import java.time.{LocalDate, LocalDateTime, LocalTime, ZoneId}
 import java.util.Locale
 
@@ -45,7 +45,7 @@ object DateTimeFormatter {
     }
   }
 
-  def formatTimePlannedDowntime(dateTime: LocalDateTime)(implicit messages: Messages): String = {
+  def formatTimePlannedDowntime(dateTime: LocalDateTime)(using Messages): String = {
     val timeFormat = if (dateTime.toLocalTime.getMinute > 0) {
       DateTimeGen.ofPattern("h:mma")
     } else {
@@ -55,7 +55,7 @@ object DateTimeFormatter {
     s"${dateTime.format(timeFormat).toLowerCase(Locale.ENGLISH)} ${getTimeZone(dateTime)}"
   }
 
-  def formatTime(dateTime: LocalDateTime)(implicit messages: Messages): String = {
+  def formatTime(dateTime: LocalDateTime)(using Messages): String = {
 
     val timeFormat = if (dateTime.toLocalTime.getMinute > 0) {
       DateTimeGen.ofPattern("h:mma")
@@ -68,7 +68,7 @@ object DateTimeFormatter {
     s"${offsetTime.format(timeFormat).toLowerCase(Locale.ENGLISH)} ${getTimeZone(dateTime)}"
   }
 
-  def formatTimeDowntimeHistory(dateTime: LocalDateTime)(implicit messages: Messages): String = {
+  def formatTimeDowntimeHistory(dateTime: LocalDateTime)(using Messages): String = {
 
     val timeFormat = if (dateTime.toLocalTime.getMinute > 0) {
       DateTimeGen.ofPattern("h:mma")
@@ -79,7 +79,7 @@ object DateTimeFormatter {
     s"${dateTime.format(timeFormat).toLowerCase(Locale.ENGLISH)} ${getTimeZone(dateTime)}"
   }
 
-  def getTimeZone(localDateTime: LocalDateTime)(implicit messages: Messages): String = {
+  def getTimeZone(localDateTime: LocalDateTime)(using messages: Messages): String = {
     val dateTimeWithZone = localDateTime.atZone(ZoneId.of("Europe/London"))
 
     val isGMT = dateTimeWithZone.getOffset.getTotalSeconds == 0
@@ -94,7 +94,7 @@ object DateTimeFormatter {
   def formatDateDowntimeHistory(dateTime: LocalDateTime): String =
     s"${dateTime.format(DateTimeGen.ofPattern("d MMMM yyyy"))}"
 
-  def formatDateTime(dateTime: LocalDateTime)(implicit messages: Messages): String = {
+  def formatDateTime(dateTime: LocalDateTime)(using Messages): String = {
     val knownIssueSince = dateTime.toLocalDate
     val now             = LocalDate.now
 

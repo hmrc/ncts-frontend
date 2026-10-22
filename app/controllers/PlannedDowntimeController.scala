@@ -18,7 +18,7 @@ package controllers
 
 import handlers.ErrorHandler
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import services.PlannedDowntimeService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
@@ -33,7 +33,8 @@ class PlannedDowntimeController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
+  def onPageLoad: Action[AnyContent] = Action.async { request =>
+    given Request[AnyContent] = request
     plannedDowntimeService.getPlannedDowntime(forPlannedDowntime = true) match {
       case Right(downtimes) => Future.successful(Ok(view(downtimes)))
       case _                => errorHandler.showInternalServerError

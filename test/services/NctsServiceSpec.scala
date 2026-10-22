@@ -20,8 +20,8 @@ import base.SpecBase
 import connectors.NCTSConnector
 import models.responses.StatusResponse
 import org.mockito.ArgumentMatchers.any
-import utils.HealthDetailsExamples._
-import org.mockito.Mockito._
+import utils.HealthDetailsExamples.*
+import org.mockito.Mockito.*
 
 import java.time.LocalDateTime
 import scala.concurrent.Future
@@ -47,13 +47,13 @@ class NctsServiceSpec extends SpecBase {
         )
       )
 
-      when(nctsConnector.checkStatus()(any())).thenReturn(Future.successful(response))
+      when(nctsConnector.checkStatus()(using any())).thenReturn(Future.successful(response))
 
       service.checkStatus().futureValue mustBe response
     }
 
     "return an error response when error occurs" in {
-      when(nctsConnector.checkStatus()(any())).thenReturn(Future.successful(None))
+      when(nctsConnector.checkStatus()(using any())).thenReturn(Future.successful(None))
 
       service.checkStatus().futureValue mustBe None
     }

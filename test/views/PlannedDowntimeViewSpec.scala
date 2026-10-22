@@ -21,7 +21,7 @@ import models.{GBArrivals, GBDepartures, PlannedDowntime, PlannedDowntimes, XIAr
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.test.Injecting
-import views.html.{PlannedDowntime => PlannedDowntimeView}
+import views.html.PlannedDowntime as PlannedDowntimeView
 
 import java.time.{LocalDate, LocalTime}
 
