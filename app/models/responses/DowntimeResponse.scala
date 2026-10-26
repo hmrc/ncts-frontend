@@ -20,8 +20,8 @@ import models.responses.ErrorResponse.DowntimeResponseError
 import models.{Channel, MongoDateTimeFormats}
 import org.slf4j.LoggerFactory
 import play.api.http.Status.OK
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 import java.time.LocalDateTime
@@ -30,7 +30,7 @@ case class Downtime(affectedChannel: Channel, start: LocalDateTime, end: LocalDa
 
 object Downtime {
 
-  implicit val writes: Writes[Downtime] =
+  given Writes[Downtime] =
     (__ \ "affectedChannel")
       .write[Channel](Channel.format)
       .and((__ \ "start").write(MongoDateTimeFormats.localDateTimeWrite))
@@ -38,7 +38,7 @@ object Downtime {
         (d.affectedChannel, d.start, d.end)
       )
 
-  implicit val reads: Reads[Downtime] =
+  given Reads[Downtime] =
     (__ \ "affectedChannel")
       .read[Channel](Channel.format)
       .and((__ \ "start").read(MongoDateTimeFormats.localDateTimeRead))
@@ -51,9 +51,9 @@ case class DowntimeResponse(downtimes: Seq[Downtime], createdTs: LocalDateTime)
 object DowntimeResponse {
   private val logger = LoggerFactory.getLogger(classOf[DowntimeResponse])
 
-  implicit val format: OFormat[DowntimeResponse] = Json.format[DowntimeResponse]
+  given OFormat[DowntimeResponse] = Json.format[DowntimeResponse]
 
-  implicit object DowntimeResponseReads extends HttpReads[Either[ErrorResponse, DowntimeResponse]] {
+  object DowntimeResponseReads extends HttpReads[Either[ErrorResponse, DowntimeResponse]] {
 
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, DowntimeResponse] =
       response.status match {

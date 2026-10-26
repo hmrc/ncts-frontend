@@ -19,7 +19,7 @@ package models.responses
 import base.SpecBase
 import models.responses.ErrorResponse.StatusResponseError
 import models.responses.StatusResponse.{StatusResponseReads, dateTimeOrdering}
-import models._
+import models.*
 import org.scalatest.enablers.Sortable
 import org.scalatest.matchers.must.Matchers
 import play.api.http.Status
@@ -63,7 +63,7 @@ class StatusResponseSpec extends SpecBase with Matchers {
   private val twoMinutesAgo    = LocalDateTime.now.minusMinutes(2)
   private val fewSecondsAgo    = LocalDateTime.now.minusSeconds(15)
 
-  implicit val dateTimeReverseSortable: Sortable[Seq[LocalDateTime]] =
+  given Sortable[Seq[LocalDateTime]] =
     Sortable.sortableNatureOfSeq(dateTimeOrdering.reverse)
 
   private def eta(ch: Channel, createdTs: LocalDateTime) =

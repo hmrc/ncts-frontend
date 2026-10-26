@@ -31,15 +31,15 @@ case class PlannedDowntime(
 
 object PlannedDowntime {
 
-  import play.api.libs.functional.syntax._
+  import play.api.libs.functional.syntax.*
 
-  implicit val dateFormat: Reads[LocalDate] =
+  given Reads[LocalDate] =
     Reads[LocalDate](js => js.validate[String].map(LocalDate.parse(_, DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
 
-  implicit val timeFormat: Reads[LocalTime] =
+  given Reads[LocalTime] =
     Reads[LocalTime](js => js.validate[String].map(LocalTime.parse(_, DateTimeFormatter.ofPattern("HH:mm"))))
 
-  implicit lazy val reads: Reads[PlannedDowntime] =
+  given Reads[PlannedDowntime] =
     (__ \ "startDate")
       .read[LocalDate]
       .and((__ \ "startTime").read[LocalTime])

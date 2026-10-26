@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import models.Channel._
+@import models.Channel.*
 @import models.PlannedDowntimes
 @import helpers.PlannedDowntimeTable
 @import helpers.PlannedDowntimeTableMobile
@@ -25,7 +25,7 @@
     appConfig: FrontendAppConfig
 )
 
-@(plannedDowntimes: Option[PlannedDowntimes])(implicit request: Request[_], messages: Messages)
+@(plannedDowntimes: Option[PlannedDowntimes])(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = title(messages("planned-downtime.title")),

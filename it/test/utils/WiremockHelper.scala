@@ -18,7 +18,7 @@ package test.utils
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import org.scalatestplus.play.BaseOneServerPerSuite
@@ -31,7 +31,7 @@ object WiremockHelper {
 trait WiremockHelper {
   self: BaseOneServerPerSuite =>
 
-  import WiremockHelper._
+  import WiremockHelper.*
   lazy val wmConfig  = wireMockConfig().port(wiremockPort)
   val wireMockServer = new WireMockServer(wmConfig)
 

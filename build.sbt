@@ -22,7 +22,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 lazy val appName: String = "ncts-frontend"
 
-ThisBuild / scalaVersion := "3.3.6"
+ThisBuild / scalaVersion := "3.3.7"
 
 ThisBuild / majorVersion := 0
 
@@ -34,16 +34,16 @@ lazy val root = (project in file("."))
   .settings(
     name := appName,
     RoutesKeys.routesImport ++= Seq(
-      "models._",
+      "models.*",
       "uk.gov.hmrc.play.bootstrap.binders.RedirectUrl"
     ),
     TwirlKeys.templateImports ++= Seq(
       "play.twirl.api.HtmlFormat",
-      "play.twirl.api.HtmlFormat._",
-      "uk.gov.hmrc.hmrcfrontend.views.html.components._",
-      "uk.gov.hmrc.hmrcfrontend.views.html.helpers._",
-      "views.ViewUtils._",
-      "controllers.routes._"
+      "play.twirl.api.HtmlFormat.*",
+      "uk.gov.hmrc.hmrcfrontend.views.html.components.*",
+      "uk.gov.hmrc.hmrcfrontend.views.html.helpers.*",
+      "views.ViewUtils.*",
+      "controllers.routes.*"
     ),
     PlayKeys.playDefaultPort := 9515,
     ScoverageKeys.coverageExcludedFiles :=

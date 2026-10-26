@@ -23,7 +23,7 @@ import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Reads}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.HttpReads.Implicits.*
 
 import java.net.URL
 import javax.inject.Singleton
@@ -33,15 +33,15 @@ import scala.concurrent.{ExecutionContext, Future}
 class NCTSConnector @Inject() (
     httpClient: HttpClientV2,
     config: FrontendAppConfig
-)(implicit ec: ExecutionContext) {
+)(using ExecutionContext) {
 
-  def checkStatus()(implicit hc: HeaderCarrier): Future[Option[StatusResponse]] =
+  def checkStatus()(using HeaderCarrier): Future[Option[StatusResponse]] =
     makeGetCall[StatusResponse]("/status-check")
 
-  def getDowntimeHistory()(implicit hc: HeaderCarrier): Future[Option[DowntimeResponse]] =
+  def getDowntimeHistory()(using HeaderCarrier): Future[Option[DowntimeResponse]] =
     makeGetCall[DowntimeResponse]("/downtime-history")
 
-  private def makeGetCall[A](requestUrl: String)(implicit hc: HeaderCarrier, reads: Reads[A]): Future[Option[A]] =
+  private def makeGetCall[A](requestUrl: String)(using HeaderCarrier, Reads[A]): Future[Option[A]] =
     httpClient
       .get(new URL(s"${config.nctsUrl}$requestUrl"))
       .execute[HttpResponse]
@@ -53,7 +53,7 @@ class NCTSConnector @Inject() (
         }
       }
 
-  private def validateJsonResponse[A](json: JsValue, requestUrl: String)(implicit reads: Reads[A]): Option[A] =
+  private def validateJsonResponse[A](json: JsValue, requestUrl: String)(using Reads[A]): Option[A] =
     json.validateOpt[A] match {
       case JsSuccess(value, _) => value
       case JsError(errors) =>

@@ -44,12 +44,12 @@ trait SpecBase
     with IntegrationPatience
     with Injecting {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  given HeaderCarrier = HeaderCarrier()
 
-  implicit val fakeRequest: FakeRequest[_] = FakeRequest()
+  given FakeRequest[?] = FakeRequest()
 
-  lazy val messagesApi: MessagesApi        = inject[MessagesApi]
-  implicit lazy val messages: MessagesImpl = MessagesImpl(Lang("en-GB"), messagesApi)
+  lazy val messagesApi: MessagesApi = inject[MessagesApi]
+  given messages: MessagesImpl      = MessagesImpl(Lang("en-GB"), messagesApi)
 
   val ec: ExecutionContext = ExecutionContext.global
 

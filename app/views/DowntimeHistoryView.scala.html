@@ -24,7 +24,7 @@
     appConfig: FrontendAppConfig
 )
 
-@(downtimes: Seq[DowntimeHistoryRow])(implicit request: Request[_], messages: Messages)
+@(downtimes: Seq[DowntimeHistoryRow])(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = title(messages("service.downtime.history.title")),

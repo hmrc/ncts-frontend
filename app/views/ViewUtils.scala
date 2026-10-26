@@ -20,14 +20,14 @@ import play.api.i18n.Messages
 
 object ViewUtils {
 
-  def title(title: String)(implicit messages: Messages): String =
+  def title(title: String)(using messages: Messages): String =
     if (title == "NCTS") {
       s"$title - ${messages("index.service.availability")} - ${messages("site.govuk")}"
     } else {
       s"${messages(title)} - ${messages("service.name")} - ${messages("site.govuk")}"
     }
 
-  def headingFromTitle(title: String)(implicit messages: Messages): String =
+  def headingFromTitle(title: String)(using messages: Messages): String =
     messages(title).split(" - ")(0)
 
 }

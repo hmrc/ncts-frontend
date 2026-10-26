@@ -16,10 +16,11 @@
 
 package test.utils
 
-import org.scalatest._
+import org.scalatest.*
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api
 import play.api.Application
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -35,11 +36,13 @@ trait SpecCommonHelper
     with BeforeAndAfterEach
     with BeforeAndAfterAll {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  given HeaderCarrier = HeaderCarrier()
 
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+  def appBuilder: GuiceApplicationBuilder = new GuiceApplicationBuilder()
     .configure(config)
-    .build()
+    
+  override given app: Application =   
+    appBuilder.build()
 
   val mockHost = WiremockHelper.wiremockHost
   val mockPort = WiremockHelper.wiremockPort.toString
@@ -54,7 +57,7 @@ trait SpecCommonHelper
       "microservice.services.ncts.port" -> mockPort
     )
 
-  implicit val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(Lang.defaultLang))
+  given messages: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(Lang.defaultLang))
 
   protected val ws: WSClient = app.injector.instanceOf[WSClient]
 

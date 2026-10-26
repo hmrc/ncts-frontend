@@ -21,10 +21,10 @@ import models.responses.StatusResponse
 import org.mockito.ArgumentMatchers.any
 import play.api.inject.{Binding, bind}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.HealthCheckService
-import utils.HealthDetailsExamples._
-import org.mockito.Mockito._
+import utils.HealthDetailsExamples.*
+import org.mockito.Mockito.*
 
 import java.time.LocalDateTime
 import scala.concurrent.Future
@@ -40,7 +40,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
   "Service Status Check Controller" - {
 
     "must return OK and the correct view for a GET with GB/XI departures true and GB/XI arrivals false" in {
-      when(healthCheckService.checkStatus()(any())).thenReturn(
+      when(healthCheckService.checkStatus()(using any())).thenReturn(
         Future(
           Some(
             StatusResponse(
@@ -70,7 +70,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
     }
 
     "must return OK and the correct view for a GET with GB/XI departures false and GB/XI arrivals true" in {
-      when(healthCheckService.checkStatus()(any())).thenReturn(
+      when(healthCheckService.checkStatus()(using any())).thenReturn(
         Future(
           Some(
             StatusResponse(
@@ -101,7 +101,7 @@ class ServiceAvailabilityControllerSpec extends SpecBase {
 
     "must return INTERNAL_SERVER_ERROR when backend returns an error response" in {
 
-      when(healthCheckService.checkStatus()(any())).thenReturn(Future(None)(ec))
+      when(healthCheckService.checkStatus()(using any())).thenReturn(Future(None)(ec))
 
       val application = applicationBuilder().overrides(mocks).build()
 

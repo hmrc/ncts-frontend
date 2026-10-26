@@ -28,13 +28,10 @@ import scala.concurrent.Await
 
 class PlannedDowntimeControllerISpec extends SpecCommonHelper {
 
-  override implicit lazy val app: Application = {
-
+  override def appBuilder: GuiceApplicationBuilder = {
     val downtimeConfig = ConfigFactory.parseFile(new File("it/config/planned-downtime.conf"))
-
     new GuiceApplicationBuilder()
       .configure(Configuration(downtimeConfig))
-      .build()
   }
 
   "planned-downtime" should {

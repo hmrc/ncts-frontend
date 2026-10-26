@@ -22,10 +22,10 @@ import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsVal
 sealed trait Channel {
   private val mesgKey = Channel.unapply(this).value.replace(' ', '.').toLowerCase()
 
-  def caption(implicit messages: Messages): String =
+  def caption(using messages: Messages): String =
     messages(s"service.availability.timeline.channel.caption.$mesgKey")
 
-  def displayName(implicit messages: Messages): String =
+  def displayName(using messages: Messages): String =
     messages(s"service.availability.timeline.channel.display.$mesgKey")
 
   def isPPN: Boolean    = false
@@ -78,7 +78,7 @@ object Channel {
     case PPN          => JsString("PPN")
   }
 
-  implicit val format: Format[Channel] = new Format[Channel] {
+  given format: Format[Channel] = new Format[Channel] {
     def reads(json: JsValue): JsResult[Channel] = apply(json)
     def writes(Channel: Channel): JsString      = unapply(Channel)
   }

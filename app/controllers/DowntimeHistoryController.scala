@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import handlers.ErrorHandler
 import models.DowntimeHistoryRow
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import services.DowntimeHistoryService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.DowntimeHistoryView
@@ -32,11 +32,12 @@ class DowntimeHistoryController @Inject() (
     outageHistoryService: DowntimeHistoryService,
     errorHandler: ErrorHandler,
     view: DowntimeHistoryView
-)(implicit ec: ExecutionContext)
+)(using ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
+  def onPageLoad: Action[AnyContent] = Action.async { request =>
+    given Request[AnyContent] = request
     outageHistoryService.getDowntimeHistory().flatMap {
       case Some(downtimeHistory: Seq[DowntimeHistoryRow]) =>
         Future.successful(Ok(view(downtimeHistory)))

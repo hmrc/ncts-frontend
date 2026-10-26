@@ -16,13 +16,13 @@
 
 package models.responses
 
-import models._
+import models.*
 import models.responses.ErrorResponse.StatusResponseError
 import models.responses.StatusResponse.dateTimeOrdering
 import org.slf4j.LoggerFactory
 import play.api.http.Status.OK
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import utils.DateTimeFormatter
 
@@ -91,11 +91,11 @@ object StatusResponse {
 
   private val logger = LoggerFactory.getLogger(classOf[StatusResponse])
 
-  implicit val etaReads: Reads[TimelineUpdate] = TimelineUpdate.reads
+  given Reads[TimelineUpdate] = TimelineUpdate.reads
 
-  implicit lazy val reads: Reads[StatusResponse] = {
+  given Reads[StatusResponse] = {
 
-    implicit val healthDetailsReads: Reads[HealthDetails] = HealthDetails.format
+    given Reads[HealthDetails] = HealthDetails.format
 
     (__ \ "gbDeparturesStatus")
       .read[HealthDetails]
@@ -109,9 +109,9 @@ object StatusResponse {
       .and((__ \ "createdTs").read[LocalDateTime])(StatusResponse.apply _)
   }
 
-  implicit lazy val writes: OWrites[StatusResponse] = {
+  given OWrites[StatusResponse] = {
 
-    implicit val healthDetailsWrites: Writes[HealthDetails] = HealthDetails.format
+    given Writes[HealthDetails] = HealthDetails.format
 
     (__ \ "gbDeparturesStatus")
       .write[HealthDetails]
@@ -138,9 +138,9 @@ object StatusResponse {
 
   }
 
-  implicit val dateTimeOrdering: Ordering[LocalDateTime] = _ compareTo _
+  given dateTimeOrdering: Ordering[LocalDateTime] = _ compareTo _
 
-  implicit object StatusResponseReads extends HttpReads[Either[ErrorResponse, StatusResponse]] {
+  object StatusResponseReads extends HttpReads[Either[ErrorResponse, StatusResponse]] {
 
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, StatusResponse] =
       response.status match {
@@ -165,7 +165,7 @@ object StatusResponse {
 case class HealthDetails(healthy: Boolean, statusChangedAt: LocalDateTime, lastMessageAccepted: Option[LocalDateTime])
 
 object HealthDetails {
-  implicit val format: OFormat[HealthDetails] = Json.format[HealthDetails]
+  given format: OFormat[HealthDetails] = Json.format[HealthDetails]
 }
 
 case class TimelineUpdate(
@@ -185,7 +185,7 @@ case class TimelineUpdate(
 
 object TimelineUpdate {
 
-  implicit val writes: Writes[TimelineUpdate] =
+  given Writes[TimelineUpdate] =
     (__ \ "channel")
       .write[Channel](Channel.format)
       .and((__ \ "time").writeNullable[String])
@@ -195,7 +195,7 @@ object TimelineUpdate {
         (t.channel, t.time, t.date, t.businessContinuityFlag, t.createdTs)
       )
 
-  implicit val reads: Reads[TimelineUpdate] =
+  given reads: Reads[TimelineUpdate] =
     (__ \ "channel")
       .read[Channel](Channel.format)
       .and((__ \ "time").readNullable[String])
